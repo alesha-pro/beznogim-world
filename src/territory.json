@@ -1,0 +1,183 @@
+{
+  "version": 1,
+  "size": 120,
+  "sectorSize": 24,
+  "origin": "The original yard remains at world x=0, z=0. Sectors are future building space, not prebuilt attractions. Expand this registry and geometry together.",
+  "sectors": [
+    {
+      "id": "-2:-2",
+      "x": -48,
+      "z": -48,
+      "status": "frontier",
+      "name": "свободная земля"
+    },
+    {
+      "id": "-1:-2",
+      "x": -24,
+      "z": -48,
+      "status": "frontier",
+      "name": "свободная земля"
+    },
+    {
+      "id": "0:-2",
+      "x": 0,
+      "z": -48,
+      "status": "frontier",
+      "name": "свободная земля"
+    },
+    {
+      "id": "1:-2",
+      "x": 24,
+      "z": -48,
+      "status": "frontier",
+      "name": "свободная земля"
+    },
+    {
+      "id": "2:-2",
+      "x": 48,
+      "z": -48,
+      "status": "frontier",
+      "name": "свободная земля"
+    },
+    {
+      "id": "-2:-1",
+      "x": -48,
+      "z": -24,
+      "status": "frontier",
+      "name": "свободная земля"
+    },
+    {
+      "id": "-1:-1",
+      "x": -24,
+      "z": -24,
+      "status": "frontier",
+      "name": "свободная земля"
+    },
+    {
+      "id": "0:-1",
+      "x": 0,
+      "z": -24,
+      "status": "frontier",
+      "name": "свободная земля"
+    },
+    {
+      "id": "1:-1",
+      "x": 24,
+      "z": -24,
+      "status": "frontier",
+      "name": "свободная земля"
+    },
+    {
+      "id": "2:-1",
+      "x": 48,
+      "z": -24,
+      "status": "frontier",
+      "name": "свободная земля"
+    },
+    {
+      "id": "-2:0",
+      "x": -48,
+      "z": 0,
+      "status": "frontier",
+      "name": "свободная земля"
+    },
+    {
+      "id": "-1:0",
+      "x": -24,
+      "z": 0,
+      "status": "frontier",
+      "name": "свободная земля"
+    },
+    {
+      "id": "0:0",
+      "x": 0,
+      "z": 0,
+      "status": "settled",
+      "name": "двор тихого хода"
+    },
+    {
+      "id": "1:0",
+      "x": 24,
+      "z": 0,
+      "status": "frontier",
+      "name": "свободная земля"
+    },
+    {
+      "id": "2:0",
+      "x": 48,
+      "z": 0,
+      "status": "frontier",
+      "name": "свободная земля"
+    },
+    {
+      "id": "-2:1",
+      "x": -48,
+      "z": 24,
+      "status": "frontier",
+      "name": "свободная земля"
+    },
+    {
+      "id": "-1:1",
+      "x": -24,
+      "z": 24,
+      "status": "frontier",
+      "name": "свободная земля"
+    },
+    {
+      "id": "0:1",
+      "x": 0,
+      "z": 24,
+      "status": "frontier",
+      "name": "свободная земля"
+    },
+    {
+      "id": "1:1",
+      "x": 24,
+      "z": 24,
+      "status": "frontier",
+      "name": "свободная земля"
+    },
+    {
+      "id": "2:1",
+      "x": 48,
+      "z": 24,
+      "status": "frontier",
+      "name": "свободная земля"
+    },
+    {
+      "id": "-2:2",
+      "x": -48,
+      "z": 48,
+      "status": "frontier",
+      "name": "свободная земля"
+    },
+    {
+      "id": "-1:2",
+      "x": -24,
+      "z": 48,
+      "status": "frontier",
+      "name": "свободная земля"
+    },
+    {
+      "id": "0:2",
+      "x": 0,
+      "z": 48,
+      "status": "frontier",
+      "name": "свободная земля"
+    },
+    {
+      "id": "1:2",
+      "x": 24,
+      "z": 48,
+      "status": "frontier",
+      "name": "свободная земля"
+    },
+    {
+      "id": "2:2",
+      "x": 48,
+      "z": 48,
+      "status": "frontier",
+      "name": "свободная земля"
+    }
+  ]
+}

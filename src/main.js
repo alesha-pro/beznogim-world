@@ -4,6 +4,7 @@ import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.j
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import './style.css';
 import { createDockLife } from './dock-life.js';
+import { createTerritory } from './territory.js';
 import { createGreenhouse } from './greenhouse.js';
 
 // Everything in the yard is made here. No remote assets, no telemetry.
@@ -18,10 +19,10 @@ renderer.setPixelRatio(Math.min(devicePixelRatio,mobile()?1.5:2));renderer.setSi
 renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFShadowMap;renderer.shadowMap.autoUpdate=false;renderer.shadowMap.needsUpdate=true;
 renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.22;
 $('#world').append(renderer.domElement);
-const scene=new THREE.Scene();scene.background=new THREE.Color('#182e32');scene.fog=new THREE.FogExp2('#182e32',.003);
-const camera=new THREE.OrthographicCamera(-10,10,10,-10,.1,150);
+const scene=new THREE.Scene();scene.background=new THREE.Color('#182e32');scene.fog=new THREE.FogExp2('#182e32',.0008);
+const camera=new THREE.OrthographicCamera(-10,10,10,-10,.1,600);
 const target=new THREE.Vector3(0,1.0,0);camera.position.set(20,20,24);camera.lookAt(target);
-const controls=new OrbitControls(camera,renderer.domElement);controls.target.copy(target);controls.enableDamping=true;controls.enableRotate=false;controls.enablePan=true;controls.minZoom=.65;controls.maxZoom=2.5;controls.screenSpacePanning=true;controls.mouseButtons.LEFT=THREE.MOUSE.PAN;controls.mouseButtons.RIGHT=THREE.MOUSE.PAN;controls.touches.ONE=THREE.TOUCH.PAN;controls.touches.TWO=THREE.TOUCH.DOLLY_PAN;
+const controls=new OrbitControls(camera,renderer.domElement);controls.target.copy(target);controls.enableDamping=true;controls.enableRotate=false;controls.enablePan=true;controls.minZoom=.075;controls.maxZoom=2.5;controls.screenSpacePanning=false;controls.mouseButtons.LEFT=THREE.MOUSE.PAN;controls.mouseButtons.RIGHT=THREE.MOUSE.PAN;controls.touches.ONE=THREE.TOUCH.PAN;controls.touches.TWO=THREE.TOUCH.DOLLY_PAN;
 scene.add(new THREE.HemisphereLight('#d9eedc','#334d53',2.3));
 const sun=new THREE.DirectionalLight('#ffe2ac',3.3);sun.position.set(-7,14,6);sun.castShadow=true;sun.shadow.mapSize.set(mobile()?512:1024,mobile()?512:1024);Object.assign(sun.shadow.camera,{left:-12,right:12,top:12,bottom:-12,near:1,far:40});sun.shadow.bias=-.0004;sun.shadow.normalBias=.025;scene.add(sun);
 const rim=new THREE.DirectionalLight('#8ad5d8',1.3);rim.position.set(5,7,-8);scene.add(rim);
@@ -200,7 +201,20 @@ $('#markers').onclick=()=>{state.markers=!state.markers;$('#markers').setAttribu
 let focused=null;const view={angle:Math.PI/4,targetAngle:Math.PI/4};
 function resize(){const aspect=innerWidth/innerHeight;const h=mobile()?19.6:9.6;camera.left=-h*aspect;camera.right=h*aspect;camera.top=h-(mobile()?2.8:0);camera.bottom=-h-(mobile()?2.8:0);camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);renderer.setPixelRatio(Math.min(devicePixelRatio,mobile()?1.5:2));}
 function home(){if(dreamCamera){exitDream();return;}focused=null;document.body.classList.remove('close-look');$('#focus-object').textContent='осмотреть ближе ⊕';controls.enableDamping=false;controls.update();controls.enableDamping=true;camera.zoom=1;controls.target.copy(target);view.targetAngle=Math.PI/4;camera.updateProjectionMatrix();}
-$('#focus-object').onclick=()=>{if(!state.selected)return;if(focused===state.selected){home();return;}focused=state.selected;document.body.classList.add('close-look');$('#focus-object').textContent='весь двор ⌂';controls.enableDamping=false;controls.update();controls.enableDamping=true;controls.target.copy(entries[state.selected].position);if(mobile())controls.target.y+=1.6;camera.zoom=mobile()?2.5:2.1;camera.updateProjectionMatrix();};$('#home').onclick=home;$('#zoom-in').onclick=()=>{camera.zoom=Math.min(2.5,camera.zoom*1.2);camera.updateProjectionMatrix()};$('#zoom-out').onclick=()=>{camera.zoom=Math.max(.65,camera.zoom/1.2);camera.updateProjectionMatrix()};$('#rotate').onclick=()=>view.targetAngle+=Math.PI/2;addEventListener('resize',resize);resize();
+$('#focus-object').onclick=()=>{if(!state.selected)return;if(focused===state.selected){home();return;}focused=state.selected;document.body.classList.add('close-look');$('#focus-object').textContent='весь двор ⌂';controls.enableDamping=false;controls.update();controls.enableDamping=true;controls.target.copy(entries[state.selected].position);if(mobile())controls.target.y+=1.6;camera.zoom=mobile()?2.5:2.1;camera.updateProjectionMatrix();};$('#home').onclick=home;$('#zoom-in').onclick=()=>{camera.zoom=Math.min(2.5,camera.zoom*1.2);camera.updateProjectionMatrix()};$('#zoom-out').onclick=()=>{camera.zoom=Math.max(controls.minZoom,camera.zoom/1.2);camera.updateProjectionMatrix()};$('#rotate').onclick=()=>view.targetAngle+=Math.PI/2;addEventListener('resize',resize);resize();
+// A continent around the first yard. New constructions retain world coordinates.
+function travel(x,z,isHome=false){
+ if(dreamCamera)exitDream();
+ home();controls.target.set(x,1,z);camera.zoom=isHome?1:.65;
+ camera.updateProjectionMatrix();$('#inspector').classList.add('collapsed');
+}
+function overview(){
+ travel(0,0);const aspect=innerWidth/innerHeight,h=mobile()?19.6:9.6;
+ camera.zoom=Math.min(h*aspect/(territory.half*1.57),h/(territory.half*1.3));camera.updateProjectionMatrix();
+}
+const territory=createTerritory({root,camera,controls,mobile,go:travel,overview,home});
+// Arrive near home with enough surrounding land visible to invite travel.
+camera.zoom=.72;camera.updateProjectionMatrix();
 // Ray picking catches nearby points on the actual object silhouettes. No clicks while dragging.
 const raycaster=new THREE.Raycaster(),pointer=new THREE.Vector2();let down=null;
 renderer.domElement.addEventListener('pointerdown',e=>{down={x:e.clientX,y:e.clientY,time:performance.now()}});
@@ -211,7 +225,7 @@ function setAudioTone(){if(!audio)return;const t=audio.ctx.currentTime;audio.fil
 $('#sound').onclick=async()=>{try{audio ||= createAudio();await audio.ctx.resume();state.sound=!state.sound;audio.gain.gain.setTargetAtTime(state.sound?.08:0,audio.ctx.currentTime,.3);$('#sound').textContent=state.sound?'звук включён':'звук выключен';$('#sound').setAttribute('aria-pressed',state.sound);setAudioTone();refresh();}catch{say('со звуком не сложилось')}};
 function chime(freq=330){if(!audio||!state.sound)return;const t=audio.ctx.currentTime;const o=audio.ctx.createOscillator(),g=audio.ctx.createGain();o.type='sine';o.frequency.value=freq;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.12,t+.012);g.gain.exponentialRampToValueAtTime(.001,t+1);o.connect(g);g.connect(audio.gain);o.start(t);o.stop(t+1.1);}
 $('#about').onclick=()=>$('#about-dialog').showModal();$('#close-about').onclick=$('#back-to-yard').onclick=()=>$('#about-dialog').close();
-addEventListener('keydown',e=>{if($('#about-dialog').open)return;if(e.key==='Escape'&&dreamCamera){exitDream();return;}if(e.key==='Escape')$('#inspector').classList.add('collapsed');if(e.key==='+'||e.key==='=')$('#zoom-in').click();if(e.key==='-')$('#zoom-out').click();if(e.key.toLowerCase()==='r')$('#rotate').click();if(e.key.toLowerCase()==='h')home();});
+addEventListener('keydown',e=>{if($('#about-dialog').open||$('#territory-dialog')?.open)return;if(e.key==='Escape'&&dreamCamera){exitDream();return;}if(e.key==='Escape')$('#inspector').classList.add('collapsed');if(e.key==='+'||e.key==='=')$('#zoom-in').click();if(e.key==='-')$('#zoom-out').click();if(e.key.toLowerCase()==='r')$('#rotate').click();if(e.key.toLowerCase()==='h')home();});
 for(const b of document.querySelectorAll('[data-thermal]'))b.onclick=()=>{greenhouse.step(b.dataset.thermal);shadowRefreshAt=performance.now()+2200;};
 function enterDream(){if(dreamCamera)return;dreamCamera={target:controls.target.clone(),zoom:camera.zoom,angle:view.targetAngle};greenhouse.enter();controls.enableDamping=false;controls.update();controls.enableDamping=true;controls.target.set(0,mobile()?3:2,0);camera.zoom=mobile()?1.65:1.75;camera.updateProjectionMatrix();view.targetAngle=Math.PI/4;document.body.classList.add('dreaming');$('#dream-panel').hidden=false;$('#dream-text').textContent='Планета не помещалась в парник. Я выдохнул, и лестница начала уступать место.';$('#dream-breathe').textContent='выдохнуть тепло · 1/3';renderer.shadowMap.needsUpdate=true;}
 function exitDream(){if(!dreamCamera)return;const back=dreamCamera;dreamCamera=null;greenhouse.exit();controls.enableDamping=false;controls.update();controls.enableDamping=true;controls.target.copy(back.target);camera.zoom=back.zoom;view.targetAngle=back.angle;camera.updateProjectionMatrix();document.body.classList.remove('dreaming');$('#dream-panel').hidden=true;renderer.shadowMap.needsUpdate=true;select('greenhouse');}
@@ -220,7 +234,8 @@ $('#dream-breathe').onclick=()=>{greenhouse.breathe();shadowRefreshAt=performanc
 let previousFrame=performance.now(),elapsed=0,lastChime=0;
 function project(v){v.project(camera);return {x:(v.x+1)*innerWidth/2,y:(1-v.y)*innerHeight/2,z:v.z};}
 function loop(){const now=performance.now(),dt=(now-previousFrame)/1000;previousFrame=now;elapsed+=dt;state.energy=THREE.MathUtils.damp(state.energy,state.running?1:0,1.6,dt);const time=reduced?elapsed*.2:elapsed;
- view.angle=THREE.MathUtils.damp(view.angle,view.targetAngle,5,dt);const distance=34;camera.position.set(controls.target.x+Math.sin(view.angle)*distance,controls.target.y+distance*Math.SQRT1_2,controls.target.z+Math.cos(view.angle)*distance);camera.lookAt(controls.target);controls.update();
+ view.angle=THREE.MathUtils.damp(view.angle,view.targetAngle,5,dt);const distance=160;camera.position.set(controls.target.x+Math.sin(view.angle)*distance,controls.target.y+distance*Math.SQRT1_2,controls.target.z+Math.cos(view.angle)*distance);camera.lookAt(controls.target);controls.update();
+ if(!dreamCamera){controls.target.x=THREE.MathUtils.clamp(controls.target.x,-territory.half-2,territory.half+2);controls.target.z=THREE.MathUtils.clamp(controls.target.z,-territory.half-2,territory.half+2);}territory.update();
  for(const p of pendulums)p.group.rotation.x=Math.sin(time*(1.45+p.phase*.07))*state.energy*.45;
  roof.position.z=THREE.MathUtils.damp(roof.position.z,(state.roof||state.running||state.loop>0)?-2.5:0,2,dt);roof.position.y=THREE.MathUtils.damp(roof.position.y,(state.roof||state.running||state.loop>0)?.4:0,2,dt);wheel.rotation.z=time*state.energy*.28;needle.rotation.z=-.7+state.energy*1.35+Math.sin(time*4)*state.energy*.08;engineLamp.material.emissiveIntensity=.45+state.energy*1.5;
  waterMat.uniforms.uTime.value=time;waterMat.uniforms.uEnergy.value=state.energy;windmill.rotation.z=time*(.09+state.energy*.23);yardLamps.forEach(l=>l.intensity=.65+state.energy*1.5);workshopLight.intensity=2+state.energy*4;
@@ -237,10 +252,10 @@ function loop(){const now=performance.now(),dt=(now-previousFrame)/1000;previous
  greenhouse.update(dt,time);dockLife.update(dt,time);hotspotElements.dock.classList.toggle('waiting',state.dockPending);
  falls.forEach((o,i)=>{o.scale.y=.8+Math.sin(time*2+i)*.12;o.material.opacity=.25+state.energy*.23;});dustPoints.rotation.y=time*.003;
  if(state.running&&time-lastChime>3.5){lastChime=time;chime([220,277,330,415,440][Math.floor(time)%5]);}
- for(const [id,e]of Object.entries(entries)){const p=project(e.point());const b=hotspotElements[id];b.style.left=p.x+'px';b.style.top=p.y+'px';b.classList.toggle('hidden',!!dreamCamera||!state.markers||p.z>1||p.x<10||p.x>innerWidth-10||p.y<10||p.y>innerHeight-55);}
+ for(const [id,e]of Object.entries(entries)){const p=project(e.point());const b=hotspotElements[id];b.style.left=p.x+'px';b.style.top=p.y+'px';b.classList.toggle('hidden',!!dreamCamera||camera.zoom<.4||!state.markers||p.z>1||p.x<10||p.x>innerWidth-10||p.y<10||p.y>innerHeight-55);}
  const sp=project(head.position.clone().add(new THREE.Vector3(0,1.52,0)));$('#speech').style.left=Math.max(85,Math.min(innerWidth-85,sp.x))+'px';$('#speech').style.top=sp.y+'px';if(dreamCamera||performance.now()>speechUntil)$('#speech').classList.remove('visible');
  if(shadowRefreshAt&&performance.now()>shadowRefreshAt){renderer.shadowMap.needsUpdate=true;shadowRefreshAt=0;}renderer.render(scene,camera);
 }
 if(state.running)$('#object-action').innerHTML='остановить двор <span>↗</span>';refresh();renderer.setAnimationLoop(loop);requestAnimationFrame(()=>$('#loading').classList.add('done'));
 // Inspection surface for repeatable browser smoke tests.
-window.__yard={state,select,inspect:()=>({objects:Object.keys(entries),greenhouse:greenhouse.inspect(),dock:dockLife.inspect(),boatScreen:project(new THREE.Vector3(...dockLife.inspect().boat).add(new THREE.Vector3(0,.20,0))),drawCalls:renderer.info.render.calls,triangles:renderer.info.render.triangles,gpuGeometries:renderer.info.memory.geometries,zoom:camera.zoom,target:controls.target.toArray(),angle:view.angle,head:head.position.toArray(),roof:roof.position.toArray(),pendulums:pendulums.map(p=>p.group.rotation.x),growth,meshes:(()=>{let n=0;scene.traverse(o=>{if(o.isMesh)n++});return n;})(),canvas:[renderer.domElement.width,renderer.domElement.height]})};
+window.__yard={state,select,inspect:()=>({territory:territory.inspect(),objects:Object.keys(entries),greenhouse:greenhouse.inspect(),dock:dockLife.inspect(),boatScreen:project(new THREE.Vector3(...dockLife.inspect().boat).add(new THREE.Vector3(0,.20,0))),drawCalls:renderer.info.render.calls,triangles:renderer.info.render.triangles,gpuGeometries:renderer.info.memory.geometries,zoom:camera.zoom,target:controls.target.toArray(),angle:view.angle,head:head.position.toArray(),roof:roof.position.toArray(),pendulums:pendulums.map(p=>p.group.rotation.x),growth,meshes:(()=>{let n=0;scene.traverse(o=>{if(o.isMesh)n++});return n;})(),canvas:[renderer.domElement.width,renderer.domElement.height]})};
