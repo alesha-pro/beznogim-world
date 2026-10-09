@@ -1,1 +1,119 @@
-{"version": 1, "modules": []}
+{
+  "version": 1,
+  "modules": [
+    {
+      "id": "cellar",
+      "title": "Сырный погреб",
+      "version": 1,
+      "file": "mechanics/cellar.js",
+      "tick_seconds": 30,
+      "tools": [
+        {
+          "name": "set_batch",
+          "description": "Заложить колесо на 6 минут. moon любит сырой воздух, stone сухой. Не заменяет уже зреющий сыр. Готовый сыр не портится.",
+          "object": "cheese_cellar",
+          "seconds": 35,
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "culture": {
+                "type": "string",
+                "enum": [
+                  "moon",
+                  "stone"
+                ],
+                "maxLength": 10
+              }
+            },
+            "required": [
+              "culture"
+            ],
+            "additionalProperties": false
+          }
+        },
+        {
+          "name": "tend",
+          "description": "Выбрать воздух damp/dry и при желании перевернуть сыр. Для ровной корки переверни примерно посередине созревания: обе стороны должны получить хотя бы 120 секунд. Воздух влияет на внутренность, а не на скорость.",
+          "object": "cheese_cellar",
+          "seconds": 20,
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "air": {
+                "type": "string",
+                "enum": [
+                  "damp",
+                  "dry"
+                ],
+                "maxLength": 10
+              },
+              "turn": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "air",
+              "turn"
+            ],
+            "additionalProperties": false
+          }
+        },
+        {
+          "name": "cut",
+          "description": "Разрезать зрелое колесо. Ровный moon в сырости открывает лестницу, ровный stone в сухости каменный сыр, другая смесь даёт дырки. Неперевёрнутое колесо однобокое. Последние шесть разрезов стоят на полке.",
+          "object": "cheese_cellar",
+          "seconds": 30,
+          "parameters": {
+            "type": "object",
+            "properties": {},
+            "additionalProperties": false
+          }
+        }
+      ],
+      "tests": [
+        {
+          "tool": "set_batch",
+          "args": {
+            "culture": "moon"
+          },
+          "expect": {
+            "result.ok": true,
+            "state.batch.culture": "moon",
+            "state.batch.age": 0
+          }
+        },
+        {
+          "tool": "set_batch",
+          "args": {
+            "culture": "stone"
+          },
+          "expect": {
+            "result.ok": false,
+            "state.batch.culture": "moon"
+          }
+        },
+        {
+          "tool": "tend",
+          "args": {
+            "air": "dry",
+            "turn": true
+          },
+          "expect": {
+            "state.air": "dry",
+            "state.batch.face": 1,
+            "state.batch.turns": 1
+          }
+        },
+        {
+          "tool": "cut",
+          "args": {},
+          "expect": {
+            "result.ok": false,
+            "result.reason": "not_ready",
+            "state.cutCount": 0
+          }
+        }
+      ]
+    }
+  ]
+}

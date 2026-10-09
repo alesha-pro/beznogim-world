@@ -34,3 +34,14 @@ body::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:2;b
 .resident-thought[hidden]{display:none}.resident-thought::after,.resident-thought::before{content:'';position:absolute;background:#f1ebd9;border-radius:50%;left:50%;bottom:-12px;width:10px;height:10px}.resident-thought::before{bottom:-22px;left:calc(50% - 5px);width:5px;height:5px}
 .resident-thought.below-head::after{bottom:auto;top:-12px}.resident-thought.below-head::before{bottom:auto;top:-22px}.thought-kicker{font:9px monospace;letter-spacing:.08em;color:#78806a}.resident-thought p{font-size:13px;line-height:1.45;margin:6px 0 0;overflow-wrap:anywhere;white-space:pre-wrap}.resident-strip button[aria-pressed=false]{opacity:.55}.dreaming .resident-thought{display:none}
 @media(max-width:700px){.resident-thought{width:210px;padding:11px 14px}.resident-thought p{font-size:12px;line-height:1.4}}
+/* The new room uses the same small inspector, not a second dashboard. */
+#cellar-controls {margin:12px 0 8px;border-top:1px solid #738b7255;padding-top:10px;}
+#cellar-controls[hidden]{display:none}
+#cellar-readout{display:block;font:11px monospace;line-height:1.5;color:#47665e;margin-bottom:7px}
+.cellar-buttons{display:flex;gap:6px;margin:6px 0}
+#cellar-controls button{border:1px solid #788c7155;background:#c8cfb1;color:#263b3c;border-radius:5px;padding:8px;font:11px monospace;cursor:pointer;flex:1;min-height:34px}
+#cellar-controls button:disabled{opacity:.45;cursor:default}
+#cellar-wait{width:100%}
+#cellar-controls small{display:block;font-size:11px;line-height:1.45;margin:8px 0;color:#53675b}
+@media(max-width:700px){#inspector:has(#cellar-controls:not([hidden])){max-height:35vh;overflow-y:auto;overscroll-behavior:contain}}
+@media(min-width:701px){#inspector:has(#cellar-controls:not([hidden])){max-height:calc(100vh - 175px);overflow-y:auto;overscroll-behavior:contain}}
