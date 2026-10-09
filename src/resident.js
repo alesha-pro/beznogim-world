@@ -1,3 +1,4 @@
+import {createResidentHistory} from './resident-history.js';
 // One shared body, driven by server timestamps. Visitors never receive a write key.
 export function createResident({head,headDestination,state,controls,camera,refresh,setAudioTone,say,onHarvest}) {
   let latest=null,received=0,offset=0,connected=false,sandbox=false,follow=false,seenSpeech=0,seenCommit=null,lastRadio=null,lastHarvest=null,lastStatus='',showThoughts=true;
@@ -7,6 +8,7 @@ export function createResident({head,headDestination,state,controls,camera,refre
   const thoughtText=document.createElement('p');bubble.append(kicker,thoughtText);document.body.append(bubble);
   const enabled=['head.alesha.pro','alesha-pro.github.io','192.168.1.211'].includes(location.hostname);
   const api=location.hostname==='alesha-pro.github.io'?'https://head.alesha.pro':'';
+  createResidentHistory({api,enabled});
   const nav=document.querySelector('.territory-nav');
   const strip=document.createElement('div');strip.className='resident-strip';strip.hidden=true;
   const status=document.createElement('span');status.className='resident-status';status.textContent='подключаюсь к голове';

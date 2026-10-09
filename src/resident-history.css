@@ -1,0 +1,50 @@
+/* Notes on the edge of a place; the world stays visible through the paper. */
+.resident-history{position:absolute;z-index:8;top:106px;bottom:100px;right:104px;width:300px;display:flex;flex-direction:column;overflow:hidden;color:#e9e6cf;border:1px solid #d5d9b725;border-radius:5px 5px 32px 5px;background:linear-gradient(150deg,#193a36da,#193a369e 60%,#193a3652);box-shadow:0 16px 60px #0a251a16;backdrop-filter:blur(15px);-webkit-backdrop-filter:blur(15px);text-shadow:none;transition:background .3s}
+.resident-history:hover{background-color:#193a3660}
+.history-heading{display:flex;justify-content:space-between;align-items:flex-start;padding:22px 22px 15px;flex-shrink:0}
+.history-eyebrow{font:8px/1.5 monospace;letter-spacing:.15em;color:#c6cfa7}
+.history-heading h3{font:italic 30px/1.1 Georgia,serif;font-weight:400;letter-spacing:-.8px;margin:9px 0 8px;color:#f0e5c5;display:flex;align-items:center;gap:16px}
+.history-eyes{display:inline-block;position:relative;width:19px;height:12px;transform:rotate(-10deg)}
+.history-eyes::before,.history-eyes::after{content:'';position:absolute;top:4px;width:4px;height:5px;border-radius:50%;background:#ecc689}
+.history-eyes::after{right:0;top:2px}
+.history-subtitle{margin:0;font:11px/1.5 Arial,sans-serif;color:#becbb2}
+.history-close{width:32px;height:32px;flex-shrink:0;background:#d4dfb808;border:1px solid #d4dfb824;border-radius:50%;color:#d8d8be;font:23px/1 Arial,sans-serif;margin:-5px -6px 0 0}
+.history-close:hover{background:#d4dfb81f;color:#ffe2ab}
+.history-filters{display:flex;gap:5px;margin:0 20px 12px;padding-bottom:14px;border-bottom:1px solid #d2dbb821;flex-shrink:0}
+.history-filters button{background:transparent;color:#b6c5ab;border:1px solid transparent;border-radius:20px;padding:7px 13px;font:10px/1.2 monospace}
+.history-filters button[aria-pressed=true]{background:#dfdeb818;color:#f1dfb4;border-color:#dfdeb82b}
+.history-filters button:hover{color:#fff0cb}
+.history-scroll{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;overflow-anchor:none;scrollbar-width:thin;scrollbar-color:#c5d1b540 transparent;padding:0 22px 26px;mask-image:linear-gradient(#000 0,#000 calc(100% - 24px),transparent);-webkit-mask-image:linear-gradient(#000 0,#000 calc(100% - 24px),transparent)}
+.history-scroll:focus-visible{outline:1px solid #e7c790;outline-offset:-3px}
+.history-list{list-style:none;margin:0;padding:0}
+.history-day{font:9px/1.4 monospace;letter-spacing:.05em;color:#b8c5a8;display:flex;align-items:center;gap:10px;margin:5px 0 21px}
+.history-day::after{content:'';height:1px;flex:1;background:#bccbac1c}
+.history-day:not(:first-child){margin-top:26px}
+.history-entry{position:relative;margin:0 0 19px 4px;padding:0 0 0 17px;border-left:1px solid #b7c79d35;overflow-wrap:anywhere}
+.history-entry::before{content:'';position:absolute;left:-3px;top:3px;width:5px;height:5px;border-radius:50%;background:#9fb08e}
+.history-meta{font:8px/1.4 monospace;letter-spacing:.02em;color:#b2c2a6;display:flex;justify-content:space-between;gap:8px}
+.history-meta time{white-space:nowrap;color:#9fae98;font-variant-numeric:tabular-nums}
+.history-entry p{margin:6px 0 0;white-space:pre-wrap}
+.history-thought{border-color:#edc88e75;padding-top:1px}
+.history-thought::before{width:5px;height:5px;left:-3px;background:#f1c88a;box-shadow:0 0 9px #f1c88a29}
+.history-thought .history-meta>span{color:#e1cda1}
+.history-thought p{font:italic 16px/1.5 Georgia,serif;color:#f0e6cc}
+.history-action p{font:11px/1.55 Arial,sans-serif;color:#c0ceb5}
+.history-entry[data-type=release] p{color:#e4c68e}
+.history-entry[data-type=wait]{opacity:.7}
+.history-entry.is-new{animation:note-arrives .65s ease-out both}
+@keyframes note-arrives{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+.history-empty{font:italic 15px/1.6 Georgia,serif;color:#c1c9b0;margin:30px 0}
+.history-foot{padding:12px 22px 18px;display:flex;flex-direction:column;gap:7px;flex-shrink:0;border-top:1px solid #d2dbb815;background:#18393233}
+.history-live{font:10px/1.5 monospace;color:#c9d5b5;white-space:nowrap}
+.history-live::before{content:'';display:inline-block;width:5px;height:5px;border-radius:50%;background:#c7d691;box-shadow:0 0 8px #c7d69145;margin-right:8px;vertical-align:1px}
+.history-offline .history-live::before{background:#b3a17e;box-shadow:none}
+.history-count{font:8px/1.3 monospace;color:#a2b399;margin-left:13px}
+.history-new{position:absolute;top:154px;z-index:2;left:50%;transform:translateX(-50%);white-space:nowrap;border:1px solid #e4c89566;border-radius:20px;background:#e8d7ac;color:#28463a;padding:8px 14px;box-shadow:0 3px 18px #11291e50;font:10px monospace}
+.history-toggle{position:absolute;right:104px;top:106px;z-index:8;display:flex;align-items:center;gap:10px;background:#1b3c35d9;backdrop-filter:blur(12px);color:#f0e5c5;border:1px solid #d3d5ac38;border-radius:4px 4px 20px 4px;padding:13px 17px;font:italic 17px Georgia,serif;box-shadow:0 6px 25px #082c2520}
+.history-toggle-icon{font:21px/1 Georgia,serif;color:#dfc593}
+.history-badge{min-width:18px;height:18px;border-radius:50%;padding:3px 4px;background:#dfc593;color:#26463c;font:10px/12px monospace}
+.dreaming .resident-history,.dreaming .history-toggle{display:none}
+@media(min-width:901px) and (max-width:1199px){.resident-history{right:90px;width:265px}.history-heading{padding-left:18px}.history-scroll{padding-left:18px;padding-right:18px}.history-toggle{right:90px}}
+@media(max-width:900px){.resident-history{left:auto;right:18px;top:auto;bottom:70px;width:min(350px,calc(100vw - 36px));height:min(62dvh,560px);max-height:calc(100dvh - 115px);background:linear-gradient(150deg,#193a36f5,#193a36ec);border-radius:6px 6px 26px 6px;box-shadow:0 16px 70px #071e3260}.history-heading{padding:18px 20px 12px}.history-heading h3{font-size:27px;margin:6px 0}.history-filters{padding-bottom:9px;margin-bottom:10px}.history-thought p{font-size:16px}.history-foot{padding:10px 20px 14px;gap:5px}.history-toggle{right:19px;top:auto;bottom:74px;padding:11px 15px}.history-close{width:38px;height:38px}.history-filters button{padding:9px 14px}.history-new{top:146px}.history-scroll{padding-left:20px;padding-right:20px}}
+@media(prefers-reduced-motion:reduce){.history-entry.is-new{animation:none}}
