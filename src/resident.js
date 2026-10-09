@@ -31,6 +31,8 @@ export function createResident({head,headDestination,state,controls,camera,refre
     }
     seenCommit=data.release?.commit||seenCommit;
     const speech=data.speech;if(speech&&speech.time>seenSpeech&&speech.until>now()){seenSpeech=speech.time;if(!sandbox)say(speech.text);}
+    window.__beznogimState=data;
+    window.dispatchEvent(new CustomEvent('beznogim:state',{detail:data}));
     updateLabel();
   }
   function bodyPosition(){
