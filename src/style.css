@@ -7,3 +7,8 @@
 .focus-object{display:block;background:none;color:#5a776a;font:11px monospace;padding:0 0 13px;text-align:left}.focus-object[hidden]{display:none}.focus-object:hover{color:#294b48}.hotspot.waiting{border:2px solid #ffd286;background:#efc57e;color:#263e3e;box-shadow:0 0 0 5px #efc57e22}.hotspot.waiting::after{content:"вернулся"}
 
 .close-look header h1,.close-look header p{opacity:0;pointer-events:none}.close-look .weather small{display:none}
+
+[hidden]{display:none!important}#greenhouse-controls{margin:0 0 14px}#thermal-readout{display:block;font:11px monospace;margin-bottom:9px;color:#8b6443}.thermal-buttons{display:flex;gap:6px;margin-bottom:12px}.thermal-buttons button{flex:1;border:1px solid #849b8a;border-radius:3px;padding:10px 2px;background:#dce2ca;font-size:11px}#enter-dream{font:11px monospace;background:none;color:#667c67;padding:5px 0;border-bottom:1px dashed #a2af96}#dream-panel{position:absolute;left:40px;bottom:88px;z-index:7;padding:23px 25px;width:305px;background:#eee9d7;color:#294b48;border-radius:3px 3px 24px 3px}#dream-panel p{font-size:13px;line-height:1.5;color:#5f6d60}#exit-dream{background:none;color:#294b48;padding:14px 0 0;font:11px monospace}.dreaming #inspector,.dreaming #hotspots,.dreaming header h1,.dreaming header p,.dreaming .weather{display:none}.dreaming .toolbar{top:38px}
+@media(max-width:700px){#dream-panel{left:20px;bottom:72px;width:calc(100% - 40px);padding:17px 20px}#dream-panel h2{font-size:22px;margin:10px 0 6px}#dream-panel p{font-size:12px}.dreaming .toolbar{top:80px}#inspector:has(#greenhouse-controls:not([hidden])){max-height:47vh;overflow-y:auto}}
+/* Projected markers may leave the frustum in close looks; never enlarge the page. */
+#hotspots{overflow:hidden}
