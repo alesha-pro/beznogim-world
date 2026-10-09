@@ -3,3 +3,7 @@
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 
 @media(max-width:700px){.hotspot::before{content:"";position:absolute;inset:-7px;border-radius:50%}}
+
+.focus-object{display:block;background:none;color:#5a776a;font:11px monospace;padding:0 0 13px;text-align:left}.focus-object[hidden]{display:none}.focus-object:hover{color:#294b48}.hotspot.waiting{border:2px solid #ffd286;background:#efc57e;color:#263e3e;box-shadow:0 0 0 5px #efc57e22}.hotspot.waiting::after{content:"вернулся"}
+
+.close-look header h1,.close-look header p{opacity:0;pointer-events:none}.close-look .weather small{display:none}
