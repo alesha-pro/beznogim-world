@@ -1,0 +1,154 @@
+{
+  "version": 1,
+  "size": 120,
+  "objects": [
+    {
+      "id": "tea",
+      "name": "чайник",
+      "position": [
+        -2.65,
+        1.9,
+        0.65
+      ],
+      "actions": {
+        "brew": {
+          "effect": "brew",
+          "seconds": 45,
+          "label": "заваривает чай"
+        },
+        "sit": {
+          "effect": "rest",
+          "seconds": 75,
+          "label": "сидит с чаем"
+        }
+      }
+    },
+    {
+      "id": "radio",
+      "name": "радио",
+      "position": [
+        -5,
+        1.9,
+        1.1
+      ],
+      "actions": {
+        "tune": {
+          "effect": "radio",
+          "seconds": 35,
+          "label": "слушает радио"
+        }
+      }
+    },
+    {
+      "id": "engine",
+      "name": "маятники",
+      "position": [
+        2.2,
+        1.9,
+        -1.3
+      ],
+      "actions": {
+        "switch": {
+          "effect": "engine",
+          "seconds": 25,
+          "label": "возится с маятниками"
+        },
+        "listen": {
+          "effect": "study",
+          "seconds": 45,
+          "label": "смотрит на маятники"
+        }
+      }
+    },
+    {
+      "id": "workshop",
+      "name": "мастерская",
+      "position": [
+        -2,
+        1.9,
+        -1.3
+      ],
+      "actions": {
+        "roof": {
+          "effect": "roof",
+          "seconds": 25,
+          "label": "двигает крышу мастерской"
+        },
+        "study": {
+          "effect": "study",
+          "seconds": 60,
+          "label": "размышляет в мастерской"
+        }
+      }
+    },
+    {
+      "id": "garden",
+      "name": "огород",
+      "position": [
+        -3.4,
+        1.9,
+        2.5
+      ],
+      "actions": {
+        "harvest": {
+          "effect": "harvest",
+          "seconds": 35,
+          "label": "собирает урожай"
+        },
+        "study": {
+          "effect": "study",
+          "seconds": 45,
+          "label": "осматривает огород"
+        }
+      }
+    },
+    {
+      "id": "greenhouse",
+      "name": "парник",
+      "position": [
+        -0.1,
+        1.9,
+        4.3
+      ],
+      "actions": {
+        "study": {
+          "effect": "study",
+          "seconds": 60,
+          "label": "изучает парник"
+        }
+      }
+    },
+    {
+      "id": "dock",
+      "name": "причал",
+      "position": [
+        6.4,
+        1.9,
+        1.3
+      ],
+      "actions": {
+        "watch": {
+          "effect": "study",
+          "seconds": 75,
+          "label": "смотрит на воду"
+        }
+      }
+    },
+    {
+      "id": "stair",
+      "name": "лестница",
+      "position": [
+        -5.8,
+        1.9,
+        -2.2
+      ],
+      "actions": {
+        "study": {
+          "effect": "study",
+          "seconds": 45,
+          "label": "разглядывает лестницу"
+        }
+      }
+    }
+  ]
+}

@@ -25,3 +25,6 @@ body::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:2;b
 
 /* CSS owns the display size so an old fixed canvas cannot widen a mobile viewport on resize. */
 #world canvas{width:100%;height:100%}
+
+.resident-strip{display:flex;gap:6px;flex-wrap:wrap;align-items:center;width:100%;max-width:350px;margin-top:5px}.territory-nav .resident-status{display:block;width:100%;color:#e3e8cb;font:11px/1.4 monospace;padding:6px 0}.resident-status::before{content:"● ";color:#c7dc8d}.resident-strip button{font-size:10px;padding:8px 10px}.resident-strip[hidden]{display:none}
+@media(max-width:700px){.resident-strip{max-width:245px}.territory-nav .resident-status{font-size:9px}.resident-strip button{padding:7px 9px;font-size:9px}}
