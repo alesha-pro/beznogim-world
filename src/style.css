@@ -18,3 +18,10 @@
 
 /* Keep captions readable over both open ground and the distant horizon. */
 body::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:2;background:linear-gradient(180deg,#102c3280 0,transparent 29%,transparent 85%,#102c3260 100%)}header p,.territory-nav span,.hint{color:#d4dfc9}.weather small{color:#c0d1b8}header,.weather,.territory-nav span{text-shadow:0 1px 8px #16362f80}
+
+/* Nine small composited markers, not a moving fullscreen paint surface. */
+.hotspot{left:0;top:0;will-change:transform}.hotspot.hidden{visibility:hidden}
+#speech{left:0;top:0}
+
+/* CSS owns the display size so an old fixed canvas cannot widen a mobile viewport on resize. */
+#world canvas{width:100%;height:100%}
