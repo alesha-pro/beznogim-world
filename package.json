@@ -9,7 +9,8 @@
     "test:mechanics": "node scripts/sync-mechanics.mjs && node tests/cellar.test.cjs",
     "world:prepare": "node scripts/sync-mechanics.mjs",
     "test:dream": "node tests/dream02.test.cjs",
-    "test:sleep-view": "node tests/sleep-body.test.cjs"
+    "test:sleep-view": "node tests/sleep-body.test.cjs",
+    "test:resident": "node tests/public-read.test.mjs && node tests/resident-reconnect.test.cjs"
   },
   "dependencies": {
     "three": "0.186.1"

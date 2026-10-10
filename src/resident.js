@@ -1,4 +1,5 @@
 import {createResidentHistory} from './resident-history.js';
+import {readPublicJson} from './public-read.js';
 // One shared body, driven by server timestamps. Visitors never receive a write key.
 export function createResident({head,headDestination,state,controls,camera,refresh,setAudioTone,say,onHarvest}) {
   let latest=null,received=0,offset=0,connected=false,sandbox=false,follow=false,seenSpeech=0,seenCommit=null,lastRadio=null,lastHarvest=null,lastStatus='',showThoughts=true;
@@ -25,7 +26,9 @@ export function createResident({head,headDestination,state,controls,camera,refre
     mode.textContent=sandbox?'вернуться к голове':'поиграть самому';focus.setAttribute('aria-pressed',String(follow));
   }
   function accept(data){
-    if(!data||data.version!==1||!Array.isArray(data.position)||!data.objects)return;
+    if(!data||data.version!==1||!Array.isArray(data.position)||data.position.length!==3||!data.position.every(Number.isFinite)||!data.objects||!Number.isFinite(data.server_time)||!Number.isFinite(data.heartbeat))return;
+    // SSE can arrive before a slow GET. Never rewind to that older snapshot.
+    if(latest&&(data.server_time<latest.server_time||data.server_time===latest.server_time&&Number.isFinite(data.revision)&&Number.isFinite(latest.revision)&&data.revision<latest.revision))return;
     offset=data.server_time-Date.now()/1000;latest=data;received=performance.now();connected=true;strip.hidden=false;
     if(seenCommit&&data.release?.commit&&seenCommit!==data.release.commit&&location.hostname==='head.alesha.pro'){
       // A new complete static release is already installed on this same server.
@@ -79,17 +82,36 @@ export function createResident({head,headDestination,state,controls,camera,refre
     }else bubble.hidden=true;
   }
   function localPlay(){if(watching()){sandbox=true;follow=false;updateLabel();}}
-  async function start(){
+  function start(){
     if(!enabled)return;
     strip.hidden=false;
+    let fetching=false;
+    async function refreshState(){
+      if(fetching)return;fetching=true;
+      try{
+        const data=await readPublicJson(api+'/api/state');accept(data);
+        if(latest)document.querySelector('#inspector').classList.add('collapsed');
+      }catch{
+        // A failed polling request must not disconnect a healthy SSE snapshot.
+        if(!latest||performance.now()-received>35000)connected=false;
+        updateLabel();
+      }finally{fetching=false;}
+    }
+    // Start SSE independently: a stalled initial GET must never block it.
     try{
-      const response=await fetch(api+'/api/state',{cache:'no-store'});if(!response.ok)throw Error('offline');
-      accept(await response.json());document.querySelector('#inspector').classList.add('collapsed');
+      const events=new EventSource(api+'/api/events');
+      events.addEventListener('state',e=>{try{accept(JSON.parse(e.data));}catch{}});
+      events.onerror=()=>{connected=false;updateLabel();};
     }catch{connected=false;updateLabel();}
-    const events=new EventSource(api+'/api/events');
-    events.addEventListener('state',e=>{try{accept(JSON.parse(e.data));}catch{}});
-    events.onerror=()=>{connected=false;updateLabel();};
-    setInterval(()=>{if(latest&&performance.now()-received>35000)connected=false;updateLabel();},5000);
+    refreshState();
+    function retry(){if(!connected||!latest||performance.now()-received>30000)refreshState();}
+    window.addEventListener('online',retry);
+    window.addEventListener('beznogim:retry',refreshState);
+    document.addEventListener('visibilitychange',()=>{if(!document.hidden)retry();});
+    setInterval(()=>{
+      if(latest&&performance.now()-received>35000)connected=false;
+      updateLabel();retry();
+    },15000);
   }
   controls.addEventListener('start',()=>{follow=false;updateLabel();});
   start();
