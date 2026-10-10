@@ -45,3 +45,12 @@ body::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:2;b
 #cellar-controls small{display:block;font-size:11px;line-height:1.45;margin:8px 0;color:#53675b}
 @media(max-width:700px){#inspector:has(#cellar-controls:not([hidden])){max-height:35vh;overflow-y:auto;overscroll-behavior:contain}}
 @media(min-width:701px){#inspector:has(#cellar-controls:not([hidden])){max-height:calc(100vh - 175px);overflow-y:auto;overscroll-behavior:contain}}
+
+/* The two dreams share one reversible camera, not the resident's sleep. */
+#close-dream-archive{position:absolute;right:15px;top:12px;background:none;color:#7b8676;font-size:24px}
+#dream-archive-dialog .action{margin:7px 0;min-height:44px}
+#dream-archive-dialog{max-height:90vh;overflow:auto}
+#cellar-controls #enter-dream02{display:block;width:100%;background:#294b48;color:#f0ebd8;margin-top:10px}
+.dreaming .resident-history,.dreaming .history-toggle{display:none}
+#dream-panel{max-height:38vh;overflow:auto;overscroll-behavior:contain}
+@media(max-width:700px){#dream-panel{max-height:34vh}}

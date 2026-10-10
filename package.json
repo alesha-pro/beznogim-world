@@ -7,12 +7,15 @@
     "dev": "node scripts/sync-mechanics.mjs && vite --host 0.0.0.0",
     "build": "node scripts/sync-mechanics.mjs && vite build --base=./",
     "test:mechanics": "node scripts/sync-mechanics.mjs && node tests/cellar.test.cjs",
-    "world:prepare": "node scripts/sync-mechanics.mjs"
+    "world:prepare": "node scripts/sync-mechanics.mjs",
+    "test:dream": "node tests/dream02.test.cjs",
+    "test:sleep-view": "node tests/sleep-body.test.cjs"
   },
   "dependencies": {
     "three": "0.186.1"
   },
   "devDependencies": {
-    "vite": "6.4.4"
+    "vite": "6.4.4",
+    "playwright": "1.64.0"
   }
 }
