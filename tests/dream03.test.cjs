@@ -1,0 +1,39 @@
+const {chromium}=require('playwright');const http=require('http'),fs=require('fs'),path=require('path'),assert=require('assert');
+const port=process.argv[2]==='mobile'?4199:4198,server=http.createServer((req,res)=>{try{let p=path.join(path.resolve(__dirname,'../dist'),decodeURIComponent(req.url.split('?')[0]));if(req.url==='/')p+='/index.html';res.setHeader('Content-Type',{'.js':'text/javascript','.css':'text/css','.html':'text/html'}[path.extname(p)]||'application/octet-stream');res.end(fs.readFileSync(p))}catch{res.writeHead(404);res.end()}});
+const captureDir=process.env.CAPTURE_DIR||'/tmp/beznogim-world-tests';fs.mkdirSync(captureDir,{recursive:true});
+(async()=>{await new Promise(r=>server.listen(port,'127.0.0.1',r));const mobile=process.argv[2]==='mobile',name=mobile?'mobile':'desktop';const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||'/usr/bin/chromium',args:['--no-sandbox','--use-angle=swiftshader','--enable-webgl','--enable-unsafe-swiftshader','--single-process','--no-zygote']});const page=await browser.newPage({viewport:mobile?{width:390,height:844}:{width:1200,height:900},isMobile:mobile,hasTouch:mobile});page.setDefaultTimeout(20000);const errors=[],requests=[];page.on('pageerror',e=>errors.push(String(e)));page.on('request',r=>requests.push(r.url()));const snap=()=>page.evaluate(()=>__yard.inspect());
+const click=async sel=>{const l=page.locator(sel);await l.scrollIntoViewIfNeeded();const b=await l.boundingBox();assert(b,sel);const x=b.x+b.width/2,y=b.y+b.height/2;assert(await page.evaluate(({sel,x,y})=>document.querySelector(sel).contains(document.elementFromPoint(x,y)),{sel,x,y}),sel+' overlapped');mobile?await page.touchscreen.tap(x,y):await page.mouse.click(x,y);};
+await page.addInitScript(()=>{if(!localStorage.getItem('beznogim-yard-v1'))localStorage.setItem('beznogim-yard-v1',JSON.stringify({running:true,harvest:5,dockTrips:2,dockPending:true}));});
+await page.goto(`http://127.0.0.1:${port}/`,{waitUntil:'networkidle'});await page.waitForFunction(()=>window.__yard);await page.waitForTimeout(500);
+// Open the real dock marker and its own portal, without force or programmatic entry.
+await click('#close-card');await click('.hotspot[data-label="причал"]');await click('#focus-object');await page.waitForTimeout(500);
+const before=await snap(),storedBefore=await page.evaluate(()=>localStorage.getItem('beznogim-yard-v1'));
+await click('#enter-dream03');await page.waitForFunction(()=>__yard.inspect().dreamId===3);assert.equal((await snap()).quietDream.rootVisible,false);
+assert.equal(await page.locator('#dream-force').isVisible(),true);
+await page.screenshot({path:`${captureDir}/dream03-start-${name}.png`});
+for(let i=1;i<=3;i++){
+ await click(`[data-dream-force="${i}"]`);await click('#dream-breathe');
+ await page.waitForFunction(i=>__yard.inspect().quietDream.lift[i-1]>.98,i);
+ let d=(await snap()).quietDream;assert.equal(d.step,i);assert.equal(d.forces[i-1],i);assert(d.ringY[i-1]>.7+i*.4);assert(d.ringRotation[i-1][1]>1.5);
+ await page.screenshot({path:`${captureDir}/dream03-step${i}-${name}.png`});
+}
+const completed=await snap();assert.equal(completed.quietDream.trace,true);assert(completed.quietDream.stone[1]>2.2);
+const boat=completed.quietDream.boat;await page.waitForTimeout(1800);assert.notDeepEqual((await snap()).quietDream.boat,boat,'boat actually follows transformed route');
+await click('#dream-breathe');await page.waitForFunction(()=>__yard.inspect().quietDream.step===0);await page.waitForFunction(()=>__yard.inspect().quietDream.lift.every(x=>x<.01));
+await click('[data-dream-force="1"]');for(let i=0;i<3;i++)await click('#dream-breathe');await page.waitForFunction(()=>__yard.inspect().quietDream.lift.every(x=>x>.98));
+const quiet=(await snap()).quietDream.ringY;await click('#dream-breathe');await click('[data-dream-force="3"]');for(let i=0;i<3;i++)await click('#dream-breathe');await page.waitForFunction(()=>__yard.inspect().quietDream.lift.every(x=>x>.98));
+const strong=(await snap()).quietDream.ringY;assert(strong.every((y,i)=>y>quiet[i]+.8),'strength changes actual geometry');
+await page.screenshot({path:`${captureDir}/dream03-strong-${name}.png`});
+let geos=(await snap()).gpuGeometries;
+await click('#exit-dream');await page.waitForFunction(()=>__yard.inspect().dreamId===null);await page.evaluate(()=>new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))));let back=await snap();geos=back.gpuGeometries;assert(back.target.every((v,i)=>Math.abs(v-before.target[i])<1e-9));assert.equal(back.zoom,before.zoom);for(const k of ['trips','pending','stone','plant','letter','cargo'])assert.deepEqual(back.dock[k],before.dock[k]);for(const k of ['cutCount','source','shelf'])assert.deepEqual(back.cellar[k],before.cellar[k]);assert.equal(await page.evaluate(()=>localStorage.getItem('beznogim-yard-v1')),storedBefore);assert.equal(back.quietDream.rootVisible,true);
+// Re-entry and complete replays do not allocate geometries or overwrite yard saves.
+for(let j=0;j<4;j++){await click('#dream-archive');await click('[data-dream-id="3"]');for(let i=0;i<3;i++)await click('#dream-breathe');await page.waitForFunction(()=>__yard.inspect().quietDream.lift.every(x=>x>.98));assert.equal((await snap()).gpuGeometries,geos);await click('#exit-dream');}
+await click('#dream-archive');await click('[data-dream-id="3"]');await click('#rotate');await click('#zoom-in');await page.keyboard.press('Escape');await page.waitForFunction(()=>__yard.inspect().dreamId===null);assert.equal((await snap()).zoom,before.zoom);
+await click('#dream-archive');await click('[data-dream-id="3"]');await click('#home');await page.waitForFunction(()=>__yard.inspect().dreamId===null);assert.equal((await snap()).quietDream.rootVisible,true);
+// Old dreams remain fully playable from the same archive.
+await click('#dream-archive');await click('[data-dream-id="1"]');assert.equal(await page.locator('#dream-force').isVisible(),false);for(let i=0;i<3;i++)await click('#dream-breathe');await page.waitForFunction(()=>__yard.inspect().greenhouse.phase>2.9);await click('#exit-dream');
+await click('#dream-archive');await click('[data-dream-id="2"]');assert.equal(await page.locator('#dream-force').isVisible(),false);for(let i=0;i<3;i++)await click('#dream-breathe');await page.waitForFunction(()=>__yard.inspect().sleepDream.phase>2.9);await page.screenshot({path:`${captureDir}/dream02-regression-${name}.png`});await click('#exit-dream');
+await page.reload({waitUntil:'networkidle'});await page.waitForFunction(()=>__yard.inspect().quietDream.trace);assert.equal((await snap()).dreamId,null);
+if(mobile){await page.setViewportSize({width:390,height:650});await click('#dream-archive');await click('[data-dream-id="3"]');for(let i=0;i<3;i++)await click('#dream-breathe');await page.waitForFunction(()=>__yard.inspect().quietDream.lift.every(x=>x>.98));await page.screenshot({path:`${captureDir}/dream03-short-mobile.png`});await click('#exit-dream');}
+assert.equal(errors.length,0,errors.join('\n'));assert.equal(requests.filter(u=>!u.startsWith(`http://127.0.0.1:${port}`)).length,0);assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth||document.documentElement.scrollHeight>innerHeight),false);
+fs.writeFileSync(`${captureDir}/dream03-results-${name}.json`,JSON.stringify({passed:true,checks:['real dock portal','three lifted gates','force changes geometry','boat follows route','replay','button/Escape/Home','camera restore','unchanged dock/cellar','4 stable GPU cycles','both old dreams','trace persists','existing nonempty yard save unchanged','no errors/external/overflow'],shortMobileChecked:mobile,geos,before,completed,quiet,strong,errors},null,2));console.log('PASS dream03',name);await browser.close();server.close();})().catch(e=>{console.error(e);server.close();process.exit(1)});

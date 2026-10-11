@@ -46,7 +46,7 @@ body::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:2;b
 @media(max-width:700px){#inspector:has(#cellar-controls:not([hidden])){max-height:35vh;overflow-y:auto;overscroll-behavior:contain}}
 @media(min-width:701px){#inspector:has(#cellar-controls:not([hidden])){max-height:calc(100vh - 175px);overflow-y:auto;overscroll-behavior:contain}}
 
-/* The two dreams share one reversible camera, not the resident's sleep. */
+/* The dreams share one reversible camera, not the resident's sleep. */
 #close-dream-archive{position:absolute;right:15px;top:12px;background:none;color:#7b8676;font-size:24px}
 #dream-archive-dialog .action{margin:7px 0;min-height:44px}
 #dream-archive-dialog{max-height:90vh;overflow:auto}
@@ -54,3 +54,6 @@ body::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:2;b
 .dreaming .resident-history,.dreaming .history-toggle{display:none}
 #dream-panel{max-height:38vh;overflow:auto;overscroll-behavior:contain}
 @media(max-width:700px){#dream-panel{max-height:34vh}}
+/* Silent dock: strength changes the actual airborne route, not a score. */
+#enter-dream03{display:block;width:100%;font:11px monospace;background:none;color:#667c67;padding:5px 0 12px;text-align:left}
+#dream-force{display:flex;gap:6px;margin:0 0 12px}#dream-force button{min-height:40px;flex:1;padding:8px 4px;border:1px solid #8b9f90;border-radius:3px;background:#dde1cd;color:#44665d;font:11px monospace}#dream-force button[aria-pressed=true]{background:#546d6c;color:#fff0cf;border-color:#546d6c}
