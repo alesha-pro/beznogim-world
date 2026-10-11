@@ -57,3 +57,6 @@ body::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:2;b
 /* Silent dock: strength changes the actual airborne route, not a score. */
 #enter-dream03{display:block;width:100%;font:11px monospace;background:none;color:#667c67;padding:5px 0 12px;text-align:left}
 #dream-force{display:flex;gap:6px;margin:0 0 12px}#dream-force button{min-height:40px;flex:1;padding:8px 4px;border:1px solid #8b9f90;border-radius:3px;background:#dde1cd;color:#44665d;font:11px monospace}#dream-force button[aria-pressed=true]{background:#546d6c;color:#fff0cf;border-color:#546d6c}
+
+/* Shared needs stay legible but do not turn the yard into a dashboard. */
+.territory-nav .resident-vitals{display:block;width:100%;font:10px/1.6 monospace;color:#e3e8cb;padding:6px 8px;white-space:normal;background:#183936eb;border:1px solid #adc4ad35;border-radius:3px 3px 10px 3px}.resident-vitals[hidden]{display:none}

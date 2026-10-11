@@ -11,7 +11,11 @@ call('action',n,'set_batch',{culture:'moon'});call('tick',n+720);assert.equal(ca
 n+=800;call('action',n,'set_batch',{culture:'moon'});call('action',n,'tend',{air:'dry',turn:false});call('action',n+180,'tend',{air:'dry',turn:true});call('action',n+360,'tend',{air:'damp',turn:true});assert.equal(state.batch.turns,1);assert.equal(call('action',n+360,'cut').result.cheese.kind,'holes');
 // Exactly partitioned and delayed ticks give the same result. Older timestamps never run time backwards.
 n+=500;call('action',n,'set_batch',{culture:'stone'});let r=call('tick',n+90);let age=state.batch.age;call('tick',n+30);assert.equal(state.batch.age,age);call('tick',n+360);assert.equal(state.batch.age,360);
-console.log('PASS: time integration, every outcome, turn, air, early cut, late tick, backwards clock, bounded shelf, stable ids, migrate preservation');
+// Food leaves the cellar through its own tool; the receipt is durable for other mechanics.
+const mealId=state.shelf[0].id;const shelfBeforeMeal=state.shelf.length;
+const meal=call('action',n+360,'eat',{id:mealId});assert.equal(meal.result.ok,true);assert.equal(meal.result.meal.id,mealId);assert.equal(state.shelf.length,shelfBeforeMeal-1);assert.equal(state.lastMeal.id,mealId);
+const duplicateMeal=call('action',n+361,'eat',{id:mealId});assert.equal(duplicateMeal.result.ok,false);assert.equal(duplicateMeal.result.reason,'no_cheese');
+console.log('PASS: time integration, every outcome, turn, air, early cut, late tick, backwards clock, bounded shelf, stable ids, migrate preservation, one-time meals');
 
 const path=require('path'),base=path.join(__dirname,'..');
 const serverSource=fs.readFileSync(path.join(base,'public/mechanics/cellar.js'),'utf8');

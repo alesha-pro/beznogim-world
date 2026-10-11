@@ -13,13 +13,20 @@ export function createResident({head,headDestination,state,controls,camera,refre
   const nav=document.querySelector('.territory-nav');
   const strip=document.createElement('div');strip.className='resident-strip';strip.hidden=true;
   const status=document.createElement('span');status.className='resident-status';status.textContent='подключаюсь к голове';
+  const vitals=document.createElement('output');vitals.className='resident-vitals';vitals.hidden=true;
   const focus=document.createElement('button');focus.type='button';focus.textContent='к голове';focus.onclick=()=>{sandbox=false;follow=true;camera.zoom=innerWidth<700?1.5:1.1;camera.updateProjectionMatrix();updateLabel();};
   const mode=document.createElement('button');mode.type='button';mode.textContent='поиграть самому';mode.onclick=()=>{sandbox=!sandbox;follow=false;updateLabel();};
   const thoughts=document.createElement('button');thoughts.type='button';thoughts.textContent='мысли';thoughts.setAttribute('aria-pressed','true');thoughts.onclick=()=>{showThoughts=!showThoughts;thoughts.setAttribute('aria-pressed',String(showThoughts));};
-  strip.append(status,focus,mode,thoughts);nav.append(strip);
+  strip.append(status,vitals,focus,mode,thoughts);nav.append(strip);
   function now(){return Date.now()/1000+offset;}
   function alive(){return latest&&now()-latest.heartbeat<60&&latest.resident_status!=='stopped';}
   function watching(){return connected&&latest&&!sandbox;}
+  function updateVitals(){
+    const v=latest?.mechanics?.vitals?.public;
+    if(!v){vitals.hidden=true;return;}
+    const n=(x)=>Math.max(0,Math.min(100,Math.round(Number(x)||0)));
+    vitals.hidden=false;vitals.textContent=`еда ${n(v.hunger)} · вода ${n(v.thirst)} · силы ${n(v.energy)} · настроение ${n(v.mood)}`;
+  }
   function updateLabel(){
     const message=sandbox?'ты в песочнице':!connected?'связь с головой прервалась':!alive()?'голова отдыхает · сессия на паузе':latest?.action&&latest.action.ends>now()?latest.action.label:latest?.resident_status==='thinking'?'голова задумалась':'голова здесь';
     if(message!==lastStatus){lastStatus=message;status.textContent=message;}
@@ -38,7 +45,7 @@ export function createResident({head,headDestination,state,controls,camera,refre
     const speech=data.speech;if(speech&&speech.time>seenSpeech&&speech.until>now()){seenSpeech=speech.time;if(!sandbox)say(speech.text);}
     window.__beznogimState=data;
     window.dispatchEvent(new CustomEvent('beznogim:state',{detail:data}));
-    updateLabel();
+    updateVitals();updateLabel();
   }
   function bodyPosition(){
     const a=latest.action;

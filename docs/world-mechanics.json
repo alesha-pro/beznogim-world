@@ -4,7 +4,7 @@
     {
       "id": "cellar",
       "title": "Сырный погреб",
-      "version": 1,
+      "version": 2,
       "file": "mechanics/cellar.js",
       "tick_seconds": 30,
       "tools": [
@@ -68,6 +68,25 @@
             "properties": {},
             "additionalProperties": false
           }
+        },
+        {
+          "name": "eat",
+          "description": "Съесть кусок с полки. Выбери id зрелого сыра из полки: кусок исчезнет и попадёт в учёт еды.",
+          "object": "cheese_cellar",
+          "seconds": 45,
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "minimum": 1
+              }
+            },
+            "required": [
+              "id"
+            ],
+            "additionalProperties": false
+          }
         }
       ],
       "tests": [
@@ -111,6 +130,99 @@
             "result.ok": false,
             "result.reason": "not_ready",
             "state.cutCount": 0
+          }
+        },
+        {
+          "tool": "eat",
+          "args": {
+            "id": 1
+          },
+          "expect": {
+            "result.kind": "cheese"
+          }
+        }
+      ]
+    },
+    {
+      "id": "vitals",
+      "title": "Жизненные показатели",
+      "version": 1,
+      "file": "mechanics/vitals.js",
+      "tick_seconds": 60,
+      "tools": [
+        {
+          "name": "eat_harvest",
+          "description": "Съесть один собранный овощ с грядки. Урожай учитывается конечным запасом, а не бесконечным кликом.",
+          "object": "garden",
+          "seconds": 30,
+          "parameters": {
+            "type": "object",
+            "properties": {},
+            "additionalProperties": false
+          }
+        },
+        {
+          "name": "drink_water",
+          "description": "Наполнить чашку водой у причала и выпить. После этого спокойно подожди, не надо пить без конца.",
+          "object": "dock",
+          "seconds": 20,
+          "parameters": {
+            "type": "object",
+            "properties": {},
+            "additionalProperties": false
+          }
+        },
+        {
+          "name": "rest_quietly",
+          "description": "Посидеть спокойно и немного восстановить силы. Долгий сон остаётся отдельным действием resident_sleep.",
+          "object": "tea",
+          "seconds": 180,
+          "parameters": {
+            "type": "object",
+            "properties": {},
+            "additionalProperties": false
+          }
+        },
+        {
+          "name": "drink_tea",
+          "description": "Выпить одну уже заваренную чашку. Сначала завари чай через resident_interact у чайника; пустую чашку выпить повторно нельзя.",
+          "object": "tea",
+          "seconds": 45,
+          "parameters": {
+            "type": "object",
+            "properties": {},
+            "additionalProperties": false
+          }
+        }
+      ],
+      "tests": [
+        {
+          "tool": "eat_harvest",
+          "args": {},
+          "expect": {
+            "result.kind": "harvest"
+          }
+        },
+        {
+          "tool": "drink_water",
+          "args": {},
+          "expect": {
+            "result.ok": true,
+            "state.vitals.thirst": 100
+          }
+        },
+        {
+          "tool": "rest_quietly",
+          "args": {},
+          "expect": {
+            "result.ok": true
+          }
+        },
+        {
+          "tool": "drink_tea",
+          "args": {},
+          "expect": {
+            "result.kind": "tea"
           }
         }
       ]

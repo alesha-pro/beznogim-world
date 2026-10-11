@@ -6,6 +6,9 @@ function world(input) {
   if (!Array.isArray(s.shelf)) s.shelf = [];
   if (!Number.isInteger(s.nextId)) s.nextId = 1;
   if (!Number.isInteger(s.cutCount)) s.cutCount = 0;
+  if (!s.lastMeal || !Number.isInteger(s.lastMeal.id) || !Number.isFinite(s.lastMeal.at)) s.lastMeal = null;
+  if (!Array.isArray(s.mealReceipts)) s.mealReceipts=[];
+  if (!Number.isInteger(s.mealSequence)) s.mealSequence=Math.max(0,...s.mealReceipts.map(m=>Number(m.sequence)||0));
   if (!['damp','dry'].includes(s.air)) s.air = 'damp';
   if (!('batch' in s)) s.batch = null;
   if (!Number.isFinite(s.updated)) s.updated = input.now;
@@ -34,6 +37,10 @@ function world(input) {
       if (s.batch && s.batch.age < 360 && a.turn) {s.batch.face = 1-s.batch.face; s.batch.turns++;}
       result = {ok:true, air:s.air, face:s.batch ? s.batch.face : null, turns:s.batch ? s.batch.turns : 0};
       label = 'проветривает погреб и смотрит корку'; seconds = 20;
+    } else if (input.tool === 'eat') {
+      const id=Number(a.id); const index=s.shelf.findIndex((cheese)=>cheese.id===id);
+      if (index<0) result={ok:false,kind:'cheese',reason:'no_cheese'};
+      else {const meal=s.shelf.splice(index,1)[0];s.lastMeal={id:meal.id,at:input.now,kind:meal.kind,sequence:++s.mealSequence};s.mealReceipts.push(s.lastMeal);s.mealReceipts=s.mealReceipts.slice(-64);result={ok:true,kind:'cheese',meal:s.lastMeal,stored:s.shelf.length};label='съедает кусок зрелого сыра';seconds=45;}
     } else if (input.tool === 'cut') {
       const b = s.batch;
       if (!b || b.age < 360) result = {ok:false, reason:b?'not_ready':'no_wheel', remaining:b?360-b.age:0};
@@ -47,7 +54,7 @@ function world(input) {
     }
   }
   const b = s.batch;
-  const pub = {air:s.air, batch:b ? {...b,ready:b.age >= 360,remaining:Math.max(0,360-b.age)} : null, shelf:s.shelf, cutCount:s.cutCount};
+  const pub = {air:s.air, batch:b ? {...b,ready:b.age >= 360,remaining:Math.max(0,360-b.age)} : null, shelf:s.shelf, cutCount:s.cutCount, lastMeal:s.lastMeal, mealSequence:s.mealSequence, mealReceipts:s.mealReceipts};
   return {state:s, public:pub, result, seconds, label};
 }
 

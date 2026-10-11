@@ -37,7 +37,8 @@ parameters — JSON Schema: type, properties, required, additionalProperties:fal
 - version и previous_version: новая и прежняя версия модуля.
 - tool и args: имя и параметры вызываемого действия.
 - now: UNIX seconds; elapsed: секунды с последнего изменения состояния.
-- world: time, реальная position, objects, manifest и публичные состояния остальных механик.
+- world: time, реальная position, action, last_sleep, resident_status, objects, manifest, field_notes и публичные состояния остальных механик. action/last_sleep — сохранённые факты доверенного контроллера, read-only. Для сна: action.kind=sleep, started/ends и last_sleep.started/ended/seconds; учитывай только пересечение с ещё не учтённым интервалом.
+- Внутри input.world.mechanics.<id> уже находится публичная проекция, БЕЗ дополнительного .public. В браузерном /api/state путь другой: mechanics.<id>.public. Для обмена между механиками нужны сохраняемые квитанции с sequence и списком последних событий, если между тиками возможны несколько действий; один lastEvent потеряет события.
 
 Каждый вызов возвращает `{state: {...}, public: {...}, result?: JSON, seconds?: 5..600, label?: "занятие до 100 символов"}`. state сохраняется сервером, public отправляется всем браузерам. Каждая часть до 120 KB; result до 12 KB. Никаких функций, Promises, бесконечных чисел. Код синхронный; чистый JS/JSON/Math. Нет require, fetch, файлов, оболочки, сети и API-ключей. 750ms вычислений, контейнер 192MB, внешний timeout 8s. Не используй Math.random для обязательных тестов: детерминированные находки можно считать из now/sector/сохранённого seed.
 
