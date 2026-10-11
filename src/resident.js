@@ -13,7 +13,18 @@ export function createResident({head,headDestination,state,controls,camera,refre
   const nav=document.querySelector('.territory-nav');
   const strip=document.createElement('div');strip.className='resident-strip';strip.hidden=true;
   const status=document.createElement('span');status.className='resident-status';status.textContent='подключаюсь к голове';
-  const vitals=document.createElement('output');vitals.className='resident-vitals';vitals.hidden=true;
+  const vitals=document.createElement('div');vitals.className='resident-vitals';vitals.hidden=true;vitals.setAttribute('aria-label','Самочувствие Головы');
+  const needs=[
+    {key:'hunger',label:'сытость',color:'#e4b877',icon:'<path d="M12 7c-2.5-2.5-7-1.5-7 3.5S8 20 10.5 19c1-.4 2-.4 3 0C16 20 19 15.5 19 10.5S14.5 4.5 12 7Z"/><path d="M12 7c0-3 2-4 4-4-0 2-1 4-4 4Z"/>'},
+    {key:'thirst',label:'вода',color:'#8fced9',icon:'<path d="M12 3C9 7 5.5 10.5 5.5 14a6.5 6.5 0 0 0 13 0C18.5 10.5 15 7 12 3Z"/><path d="M9 14a3 3 0 0 0 3 3"/>'},
+    {key:'energy',label:'силы',color:'#d5dc8e',icon:'<path d="m13.5 2-9 12H11l-.5 8 9-12H13l.5-8Z"/>'},
+    {key:'mood',label:'настроение',color:'#cbb2d7',icon:'<circle cx="12" cy="12" r="8"/><path d="M8.5 13.5s1 2.5 3.5 2.5 3.5-2.5 3.5-2.5M9 9h.01M15 9h.01"/>'},
+  ];
+  const meters=needs.map(need=>{
+    const card=document.createElement('div');card.className='need-meter';card.dataset.need=need.key;card.style.setProperty('--need-color',need.color);
+    card.innerHTML=`<svg class="need-icon" viewBox="0 0 24 24" aria-hidden="true">${need.icon}</svg><div class="need-detail"><div class="need-heading"><b>${need.label}</b><output class="need-value">—</output></div><div class="need-track" role="progressbar" aria-label="${need.label}" aria-valuemin="0" aria-valuemax="100"><i></i></div></div>`;
+    vitals.append(card);return {key:need.key,card,value:card.querySelector('.need-value'),bar:card.querySelector('.need-track')};
+  });
   const focus=document.createElement('button');focus.type='button';focus.textContent='к голове';focus.onclick=()=>{sandbox=false;follow=true;camera.zoom=innerWidth<700?1.5:1.1;camera.updateProjectionMatrix();updateLabel();};
   const mode=document.createElement('button');mode.type='button';mode.textContent='поиграть самому';mode.onclick=()=>{sandbox=!sandbox;follow=false;updateLabel();};
   const thoughts=document.createElement('button');thoughts.type='button';thoughts.textContent='мысли';thoughts.setAttribute('aria-pressed','true');thoughts.onclick=()=>{showThoughts=!showThoughts;thoughts.setAttribute('aria-pressed',String(showThoughts));};
@@ -25,7 +36,8 @@ export function createResident({head,headDestination,state,controls,camera,refre
     const v=latest?.mechanics?.vitals?.public;
     if(!v){vitals.hidden=true;return;}
     const n=(x)=>Math.max(0,Math.min(100,Math.round(Number(x)||0)));
-    vitals.hidden=false;vitals.textContent=`еда ${n(v.hunger)} · вода ${n(v.thirst)} · силы ${n(v.energy)} · настроение ${n(v.mood)}`;
+    vitals.hidden=false;
+    for(const meter of meters){const value=n(v[meter.key]);meter.value.textContent=String(value);meter.bar.setAttribute('aria-valuenow',String(value));meter.card.style.setProperty('--need-fill',String(value/100));meter.card.dataset.low=String(value<=20);}
   }
   function updateLabel(){
     const message=sandbox?'ты в песочнице':!connected?'связь с головой прервалась':!alive()?'голова отдыхает · сессия на паузе':latest?.action&&latest.action.ends>now()?latest.action.label:latest?.resident_status==='thinking'?'голова задумалась':'голова здесь';
