@@ -66,3 +66,14 @@ body::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:2;b
 .need-track{height:6px;position:relative;overflow:hidden;border-radius:2px;background:#051d2680;box-shadow:inset 0 1px 2px #06191e75;isolation:isolate}.need-track i{display:block;width:100%;height:100%;background:linear-gradient(90deg,color-mix(in srgb,var(--need-color),#254b42 20%),var(--need-color));transform:scaleX(var(--need-fill));transform-origin:left;transition:transform 1s ease;box-shadow:0 0 7px color-mix(in srgb,var(--need-color),transparent 35%)}
 .need-track::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0,transparent calc(25% - 1px),#112e2c80 calc(25% - 1px),#112e2c80 25%);pointer-events:none}.need-meter[data-low=true] .need-value{color:#f2a18b}.need-meter[data-low=true] .need-track i{background:linear-gradient(90deg,#c27465,#edb08b)}
 @media(max-width:700px){.territory-nav .resident-vitals{gap:9px 12px;padding:9px 10px;border-radius:4px 4px 14px 4px}.need-meter{gap:6px}.need-icon{width:19px;height:19px}.need-heading{font-size:9px;margin-bottom:4px}.need-value{font-size:10px}.need-track{height:5px}}
+/* The cargo puzzle belongs to the southern district, not another HUD. */
+#amnesty-controls{border-top:1px solid #738b7255;padding-top:8px;margin:8px 0}
+#amnesty-readout{display:block;font:11px/1.6 monospace;color:#47665e;margin-bottom:6px}
+.amnesty-cargo{display:flex;gap:5px;margin-bottom:7px}
+#amnesty-controls button{border:1px solid #788c7170;background:#d6ddbd;color:#263b3c;border-radius:5px;padding:8px 4px;font:11px monospace;min-height:36px}
+.amnesty-cargo button{flex:1}#amnesty-controls button[aria-pressed=true]{background:#31554c;color:#fff0c5}
+#amnesty-controls button:disabled{opacity:.55;cursor:default}#amnesty-pardon{width:68%}#amnesty-restart{width:30%;margin-left:2%}
+#amnesty-controls small{display:block;font-size:11px;line-height:1.4;color:#53675b;margin-top:7px}
+@media(max-width:700px){#inspector:has(#amnesty-controls:not([hidden])){max-height:35vh;overflow-y:auto;overscroll-behavior:contain}}
+@media(min-width:701px){#inspector:has(#amnesty-controls:not([hidden])){max-height:calc(100vh - 190px);overflow-y:auto}}
+@media(max-width:700px){body:has(.history-toggle:not([hidden])) #inspector:has(#amnesty-controls:not([hidden])){bottom:126px;max-height:31vh}}

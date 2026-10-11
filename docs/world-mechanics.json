@@ -226,6 +226,146 @@
           }
         }
       ]
+    },
+    {
+      "id": "amnesty",
+      "title": "Кабачковая амнистия",
+      "version": 1,
+      "file": "mechanics/amnesty.js",
+      "tick_seconds": 0,
+      "tools": [
+        {
+          "name": "load",
+          "description": "Положить или снять кабачок 0..2 с тележки. Масса груза должна точно совпасть с противовесом. Бумажный налог увеличивает массу, отменяется amnesty.",
+          "object": "amnesty_bureau",
+          "seconds": 15,
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "index": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 2
+              }
+            },
+            "required": [
+              "index"
+            ],
+            "additionalProperties": false
+          }
+        },
+        {
+          "name": "amnesty",
+          "description": "Отменить придуманные надбавки на текущем рейсе. Бумаги уходят вверх, остаётся настоящая масса кабачков. Не тратит урожай или еду.",
+          "object": "amnesty_bureau",
+          "seconds": 15,
+          "parameters": {
+            "type": "object",
+            "properties": {},
+            "required": [],
+            "additionalProperties": false
+          }
+        },
+        {
+          "name": "dispatch",
+          "description": "Отправить тележку: недовес или перевес наклоняет мост, точная масса пропускает груз. Можно поправить выбор и попробовать снова. Три рейса завершают головоломку.",
+          "object": "amnesty_bureau",
+          "seconds": 35,
+          "parameters": {
+            "type": "object",
+            "properties": {},
+            "required": [],
+            "additionalProperties": false
+          }
+        },
+        {
+          "name": "next",
+          "description": "После успешного рейса приготовить следующий набор. Доставленные кабачки остаются на полке. После третьего рейса можно restart.",
+          "object": "amnesty_bureau",
+          "seconds": 15,
+          "parameters": {
+            "type": "object",
+            "properties": {},
+            "required": [],
+            "additionalProperties": false
+          }
+        },
+        {
+          "name": "restart",
+          "description": "Начать головоломку снова. Сбрасывает только кабачковый мост и его игровую полку, не настоящий урожай, сыр, потребности или предыдущие места.",
+          "object": "amnesty_bureau",
+          "seconds": 15,
+          "parameters": {
+            "type": "object",
+            "properties": {},
+            "required": [],
+            "additionalProperties": false
+          }
+        }
+      ],
+      "tests": [
+        {
+          "tool": "load",
+          "args": {
+            "index": 0
+          },
+          "expect": {
+            "public.total": 3,
+            "state.loaded.0": true
+          }
+        },
+        {
+          "tool": "dispatch",
+          "args": {},
+          "expect": {
+            "state.status": "under",
+            "result.ok": false
+          }
+        },
+        {
+          "tool": "amnesty",
+          "args": {},
+          "expect": {
+            "public.total": 1,
+            "state.pardoned": true
+          }
+        },
+        {
+          "tool": "load",
+          "args": {
+            "index": 2
+          },
+          "expect": {
+            "public.total": 4
+          }
+        },
+        {
+          "tool": "dispatch",
+          "args": {},
+          "expect": {
+            "state.status": "delivered",
+            "state.delivered.0.weight": 1
+          }
+        },
+        {
+          "tool": "next",
+          "args": {},
+          "expect": {
+            "state.round": 1,
+            "public.target": 5,
+            "state.pardoned": false
+          }
+        },
+        {
+          "tool": "restart",
+          "args": {},
+          "expect": {
+            "state.round": 0,
+            "state.run": 2,
+            "state.delivered": []
+          }
+        }
+      ]
     }
   ]
 }
