@@ -1,0 +1,77 @@
+/* A single measured boundary applies to every inspector, not just long games. */
+#inspector{bottom:var(--ui-card-bottom,88px)!important;max-height:calc(100dvh - var(--ui-card-top,240px) - var(--ui-card-bottom,88px))!important;overflow:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#7d95876b transparent;overflow-wrap:anywhere}
+#inspector.collapsed{visibility:hidden}
+#close-card{position:sticky;float:right;top:0;margin-top:-13px;margin-right:-7px;right:auto;z-index:1;background:#f1ebd9;border-radius:50%;width:32px;height:32px}
+#inspector .action{min-height:44px}
+dialog{max-height:calc(100dvh - 24px);overflow:auto;overscroll-behavior:contain}
+/* The diary button joins the bottom navigation on small screens. An open diary
+   replaces the inspector area; closing it restores the selected card and scroll. */
+@media(max-width:900px){
+ header{top:max(12px,env(safe-area-inset-top));left:14px;right:68px}
+ header .edition{font-size:8px}
+ header h1{font-size:24px;letter-spacing:-1px;line-height:1.1;margin:8px 0}
+ header h1 br{display:none}header h1 br::after{content:' '}
+ header h1{max-width:100%;white-space:normal}
+ header p,.weather{display:none}
+ .close-look header h1{opacity:1}
+ .territory-nav,.close-look .territory-nav{top:88px;left:14px;width:calc(100% - 80px);max-width:350px;gap:5px}
+ .territory-nav button{min-height:34px;padding:8px 10px;font-size:10px}
+ .territory-nav span{font-size:9px;padding:2px 0}
+ .resident-strip{max-width:none;gap:5px;margin-top:0}
+ .territory-nav .resident-status{font-size:9px;padding:3px 0;overflow-wrap:anywhere}
+ .territory-nav .resident-vitals{gap:8px 10px;padding:9px 8px}
+ .need-meter{gap:5px}.need-icon{width:19px;height:19px}.need-heading{font-size:9px}
+ .resident-strip button{padding:7px 8px;font-size:9px;min-height:34px}
+ .toolbar,.dreaming .toolbar{top:88px;right:12px;padding:3px}
+ .toolbar button{width:32px;height:32px}
+ #inspector{left:14px;width:calc(100% - 28px);padding:16px 18px}
+ #inspector h2{font-size:22px}#inspector p{font-size:12px;line-height:1.5}
+ footer{left:14px;right:14px;bottom:max(10px,env(safe-area-inset-bottom));gap:6px}
+ .hint{display:none}.footer-actions{width:100%;justify-content:space-between;gap:5px;align-items:center}
+ .footer-actions button{font-size:10px;min-height:36px}
+ .footer-actions .history-toggle{position:static;transform:none;display:flex;gap:4px;padding:7px 0;background:none;border:0;border-bottom:1px solid #aac4b535;border-radius:0;box-shadow:none;backdrop-filter:none;font:10px Arial,sans-serif}
+ .history-toggle-icon{font-size:15px}.history-badge{font-size:8px;min-width:14px;height:14px;padding:1px 3px}
+ .resident-history{top:var(--ui-card-top,280px);bottom:var(--ui-card-bottom,64px);left:14px;right:14px;width:auto;height:auto;max-height:none}
+ body:has(.resident-history:not([hidden])) #inspector{visibility:hidden;pointer-events:none}
+ .history-heading{padding:10px 14px 7px}.history-heading h3{font-size:22px;margin:4px 0}
+ .history-subtitle{display:none}.history-filters{margin:0 12px 7px;padding-bottom:6px}
+ .history-filters button{padding:7px 12px}.history-foot{padding:7px 14px;gap:3px}
+ .history-new{top:99px}.history-scroll{padding:0 14px 18px}
+ #dream-panel{left:14px;width:calc(100% - 28px);bottom:var(--ui-card-bottom,64px)}
+ .dreaming header h1{display:none}
+}
+/* Landscape phones have two columns, so the tall HUD never covers the card. */
+@media(max-width:900px) and (orientation:landscape) and (max-height:600px){
+ header{right:auto;width:42vw}
+ .territory-nav,.close-look .territory-nav{top:70px;width:calc(42vw - 28px);max-height:calc(100dvh - 134px);overflow:auto;overscroll-behavior:contain;align-content:flex-start}
+ .toolbar,.dreaming .toolbar{top:12px;flex-direction:row}
+ .toolbar span{width:1px;height:16px;margin:0 3px}
+ #inspector,.resident-history,#dream-panel{left:auto;right:14px;width:calc(58vw - 28px)}
+ #inspector{max-height:calc(100dvh - var(--ui-card-top,64px) - var(--ui-card-bottom,64px))!important}
+ .resident-history{top:var(--ui-card-top,64px)}
+ #dream-panel{max-height:calc(100dvh - 130px)}
+}
+@media(min-width:901px) and (max-height:750px){
+ header h1{font-size:28px;margin:10px 0}header h1 br{display:none}header p{display:none}
+ .territory-nav{top:132px}.close-look .territory-nav{top:75px}
+}
+@media(min-width:901px){
+ .footer-actions .history-toggle{position:fixed;top:106px;bottom:auto;right:104px;padding:13px 17px;font:italic 17px Georgia,serif;border:1px solid #d3d5ac38}
+}
+#world-places{font:11px monospace;background:#1a3938e6;color:#eee8d7;border:1px solid #adc4ad55;border-radius:18px;padding:8px 5px;width:76px;min-height:34px;cursor:pointer}
+#world-places:focus-visible{outline:2px solid #ffd286;outline-offset:2px}
+@media(max-width:900px){#world-places{font-size:10px;width:70px;padding:7px 4px}}
+@media(max-width:900px) and (orientation:landscape) and (max-height:600px){header h1{font-size:20px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}}
+/* A very short portrait still needs actual diary lines and its connection state,
+   not only a heading and three filter buttons. */
+@media(max-width:900px) and (orientation:portrait) and (max-height:520px){
+ .history-heading{padding:5px 10px;align-items:center}
+ .history-eyebrow{display:none}.history-heading h3{font-size:18px;margin:2px 0}
+ .history-close{width:28px;height:28px;margin:0;font-size:20px}
+ .history-filters{margin:0 8px 4px;padding-bottom:4px;gap:4px}
+ .history-filters button{padding:4px 10px;font-size:9px}
+ .history-foot{padding:4px 10px;gap:1px}
+ .history-live{font-size:9px;line-height:1.2}.history-count{margin-left:0;font-size:8px}
+ .history-new{top:68px}.history-scroll{padding:0 10px 8px;mask-image:none;-webkit-mask-image:none}
+ .history-retry{padding:3px 8px;min-height:24px;font-size:9px}
+}

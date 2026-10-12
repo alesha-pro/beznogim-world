@@ -12,6 +12,8 @@ import { createSleepDream, createSleepBody } from './sleep-dream.js';
 import { createQuietDream } from './quiet-dream.js';
 import { createCellar } from './cellar.js';
 import { createProjectedMarkers } from './projected-markers.js';
+import { installUILayout } from './ui-layout.js';
+import './ui-layout.css';
 
 // Everything in the yard is made here. No remote assets, no telemetry.
 const $ = s => document.querySelector(s);
@@ -233,6 +235,13 @@ function overview(){
  camera.zoom=Math.min(h*aspect/(territory.half*1.57),h/(territory.half*1.3));camera.updateProjectionMatrix();
 }
 const territory=createTerritory({root,camera,controls,mobile,go:travel,overview,home});
+// A compact, accessible route when a projected marker is behind the phone HUD.
+const places=document.createElement('select');places.id='world-places';places.setAttribute('aria-label','Открыть место');
+places.append(new Option('места',''));
+for(const [id,e] of Object.entries(entries))places.append(new Option(`${e.n} / ${e.label}`,id));
+document.querySelector('.territory-nav').insertBefore(places,document.querySelector('#territory-location'));
+places.onchange=()=>{const id=places.value;if(!entries[id])return;home();controls.target.copy(entries[id].position);select(id);places.value='';};
+
 // Arrive near home with enough surrounding land visible to invite travel.
 camera.zoom=.72;camera.updateProjectionMatrix();
 // Ray picking catches nearby points on the actual object silhouettes. No clicks while dragging.
@@ -300,3 +309,5 @@ function loop(){resident.sync();const now=performance.now(),dt=(now-previousFram
 if(state.running)$('#object-action').innerHTML='остановить двор <span>↗</span>';refresh();renderer.setAnimationLoop(loop);requestAnimationFrame(()=>$('#loading').classList.add('done'));
 // Inspection surface for repeatable browser smoke tests.
 window.__yard={state,select,inspect:()=>({resident:resident.inspect(),territory:territory.inspect(),sleepBody:sleepBody.inspect(),sleepDream:sleepDream.inspect(),quietDream:quietDream.inspect(),dreamId:dreamCamera?dreamId:null,amnesty:amnesty.inspect(),amnestyScreen:project(new THREE.Vector3(0,-.3,24)),cellar:cellar.inspect(),cellarScreen:project(new THREE.Vector3(24,-.3,.25)),objects:Object.keys(entries),greenhouse:greenhouse.inspect(),dock:dockLife.inspect(),boatScreen:project(new THREE.Vector3(...dockLife.inspect().boat).add(new THREE.Vector3(0,.20,0))),drawCalls:renderer.info.render.calls,triangles:renderer.info.render.triangles,gpuGeometries:renderer.info.memory.geometries,zoom:camera.zoom,target:controls.target.toArray(),angle:view.angle,head:head.position.toArray(),roof:roof.position.toArray(),roofOpen:roofIsOpen(),roofMode:state.roof===null?'auto':'manual',pendulums:pendulums.map(p=>p.group.rotation.x),growth,meshes:(()=>{let n=0;scene.traverse(o=>{if(o.isMesh)n++});return n;})(),canvas:[renderer.domElement.width,renderer.domElement.height]})};
+
+installUILayout();

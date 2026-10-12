@@ -109,7 +109,8 @@ export function createResident({head,headDestination,state,controls,camera,refre
       if(fetching)return;fetching=true;
       try{
         const data=await readPublicJson(api+'/api/state');accept(data);
-        if(latest)document.querySelector('#inspector').classList.add('collapsed');
+        // Polling/retry must not close a card the visitor already opened.
+        if(latest&&!state.selected)document.querySelector('#inspector').classList.add('collapsed');
       }catch{
         // A failed polling request must not disconnect a healthy SSE snapshot.
         if(!latest||performance.now()-received>35000)connected=false;

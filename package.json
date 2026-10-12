@@ -12,7 +12,8 @@
     "test:sleep-view": "node tests/sleep-body.test.cjs",
     "test:resident": "node tests/public-read.test.mjs && node tests/resident-reconnect.test.cjs",
     "test:dream03": "node tests/dream03.test.cjs",
-    "test:amnesty": "node tests/amnesty-browser.test.cjs"
+    "test:amnesty": "node tests/amnesty-browser.test.cjs",
+    "test:ui": "node tests/ui-layout.test.cjs"
   },
   "dependencies": {
     "three": "0.186.1"

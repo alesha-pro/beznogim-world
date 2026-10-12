@@ -31,7 +31,7 @@ export function createResidentHistory({api,enabled}) {
   panel.append(header,tabs,newButton,scroller,foot);
   const toggle=el('button','history-toggle');toggle.type='button';toggle.setAttribute('aria-controls',panel.id);
   const toggleLabel=el('span','','на полях'),badge=el('span','history-badge');badge.hidden=true;toggle.append(el('span','history-toggle-icon','◌'),toggleLabel,badge);
-  document.body.append(panel,toggle);
+  document.body.append(panel);document.querySelector('.footer-actions').append(toggle);
   function setOpen(value,save=true){
     open=value;panel.hidden=!open;toggle.hidden=open;toggle.setAttribute('aria-expanded',String(open));
     if(save)try{localStorage.setItem(mobile.matches?'head-notes-mobile':'head-notes-desktop',open?'open':'closed');}catch{}
