@@ -366,6 +366,229 @@
           }
         }
       ]
+    },
+    {
+      "id": "bench",
+      "title": "Ядро в ведро",
+      "version": 1,
+      "file": "mechanics/bench.js",
+      "tick_seconds": 0,
+      "tools": [
+        {
+          "name": "fit",
+          "description": "Установить ядро 2/3/4 или ремень 1/2/3. Скорость = ядро × ремень. Монитор требует 6, 8, затем 9. Детали меняются только при ready.",
+          "object": "mechanical_bench",
+          "seconds": 20,
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "part": {
+                "type": "string",
+                "enum": [
+                  "core",
+                  "belt"
+                ],
+                "maxLength": 4
+              },
+              "value": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 4
+              }
+            },
+            "required": [
+              "part",
+              "value"
+            ],
+            "additionalProperties": false
+          }
+        },
+        {
+          "name": "crank",
+          "description": "Крутить рукоятку минуту. При совпадении скорости появляется картинка, иначе белый экран и ядро в ведре. Запасов и потребностей не расходует.",
+          "object": "mechanical_bench",
+          "seconds": 60,
+          "parameters": {
+            "type": "object",
+            "properties": {},
+            "additionalProperties": false
+          }
+        },
+        {
+          "name": "salvage",
+          "description": "Достать выброшенное ядро из ведра и вернуть в механизм. После ошибки это нужно до следующего запуска.",
+          "object": "mechanical_bench",
+          "seconds": 20,
+          "parameters": {
+            "type": "object",
+            "properties": {},
+            "additionalProperties": false
+          }
+        },
+        {
+          "name": "next",
+          "description": "После ремонта открыть следующий экран; после третьего закончить работу.",
+          "object": "mechanical_bench",
+          "seconds": 20,
+          "parameters": {
+            "type": "object",
+            "properties": {},
+            "additionalProperties": false
+          }
+        },
+        {
+          "name": "restart",
+          "description": "Начать отдельную игру верстака заново. Другие механики и предметы не меняются.",
+          "object": "mechanical_bench",
+          "seconds": 20,
+          "parameters": {
+            "type": "object",
+            "properties": {},
+            "additionalProperties": false
+          }
+        }
+      ],
+      "tests": [
+        {
+          "tool": "crank",
+          "args": {},
+          "expect": {
+            "public.phase": "ejected",
+            "public.bucket": true
+          }
+        },
+        {
+          "tool": "fit",
+          "args": {
+            "part": "belt",
+            "value": 3
+          },
+          "expect": {
+            "result.ok": false
+          }
+        },
+        {
+          "tool": "salvage",
+          "args": {},
+          "expect": {
+            "public.phase": "ready",
+            "public.bucket": false
+          }
+        },
+        {
+          "tool": "fit",
+          "args": {
+            "part": "belt",
+            "value": 3
+          },
+          "expect": {
+            "public.speed": 6
+          }
+        },
+        {
+          "tool": "crank",
+          "args": {},
+          "expect": {
+            "public.phase": "repaired",
+            "public.picture": 1,
+            "state.repairs": 1
+          }
+        },
+        {
+          "tool": "crank",
+          "args": {},
+          "expect": {
+            "result.ok": false,
+            "state.repairs": 1
+          }
+        },
+        {
+          "tool": "next",
+          "args": {},
+          "expect": {
+            "public.round": 1,
+            "public.target": 8
+          }
+        },
+        {
+          "tool": "fit",
+          "args": {
+            "part": "core",
+            "value": 4
+          },
+          "expect": {
+            "public.core": 4
+          }
+        },
+        {
+          "tool": "fit",
+          "args": {
+            "part": "belt",
+            "value": 2
+          },
+          "expect": {
+            "public.speed": 8
+          }
+        },
+        {
+          "tool": "crank",
+          "args": {},
+          "expect": {
+            "public.picture": 2
+          }
+        },
+        {
+          "tool": "next",
+          "args": {},
+          "expect": {
+            "public.target": 9
+          }
+        },
+        {
+          "tool": "fit",
+          "args": {
+            "part": "core",
+            "value": 3
+          },
+          "expect": {
+            "public.core": 3
+          }
+        },
+        {
+          "tool": "fit",
+          "args": {
+            "part": "belt",
+            "value": 3
+          },
+          "expect": {
+            "public.speed": 9
+          }
+        },
+        {
+          "tool": "crank",
+          "args": {},
+          "expect": {
+            "public.picture": 3
+          }
+        },
+        {
+          "tool": "next",
+          "args": {},
+          "expect": {
+            "public.completed": true,
+            "state.repairs": 3
+          }
+        },
+        {
+          "tool": "restart",
+          "args": {},
+          "expect": {
+            "public.phase": "ready",
+            "state.run": 2,
+            "state.repairs": 0
+          }
+        }
+      ]
     }
   ]
 }

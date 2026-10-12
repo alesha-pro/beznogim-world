@@ -75,3 +75,11 @@ dialog{max-height:calc(100dvh - 24px);overflow:auto;overscroll-behavior:contain}
  .history-new{top:68px}.history-scroll{padding:0 10px 8px;mask-image:none;-webkit-mask-image:none}
  .history-retry{padding:3px 8px;min-height:24px;font-size:9px}
 }
+/* On a short phone the workbench gets a real viewing band. All needs and diary
+   controls remain available; the inspector still scrolls instead of growing. */
+@media(max-width:900px) and (orientation:portrait) and (max-height:700px){
+ .bench-look header h1{display:none}
+ .bench-look .territory-nav{top:44px}
+ .bench-look .toolbar{top:44px}
+ .bench-look #inspector:has(#bench-controls:not([hidden])){max-height:min(28dvh,calc(100dvh - var(--ui-card-top) - var(--ui-card-bottom)))!important}
+}

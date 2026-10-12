@@ -169,6 +169,16 @@
         24
       ],
       "actions": {}
+    },
+    {
+      "id": "mechanical_bench",
+      "name": "механический верстак",
+      "position": [
+        -3.2,
+        1.15,
+        -2.2
+      ],
+      "actions": {}
     }
   ]
 }
