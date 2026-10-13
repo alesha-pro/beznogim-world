@@ -589,6 +589,219 @@
           }
         }
       ]
+    },
+    {
+      "id": "drydock",
+      "title": "Корабль в песочнице",
+      "version": 1,
+      "file": "mechanics/drydock.js",
+      "tick_seconds": 0,
+      "tools": [
+        {
+          "name": "dig",
+          "description": "Выкопать одну отметку канала (0 корма, 1 середина, 2 нос). Максимум 2; только без воды.",
+          "object": "sandbox_dock",
+          "seconds": 40,
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "channel": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 2
+              }
+            },
+            "required": [
+              "channel"
+            ],
+            "additionalProperties": false
+          }
+        },
+        {
+          "name": "pump",
+          "description": "fill добавляет отметку воды. Третий качок переливает борта, сливает воду и намывает по отметке песка в каждый канал. drain сливает без намыва.",
+          "object": "sandbox_dock",
+          "seconds": 20,
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "direction": {
+                "type": "string",
+                "enum": [
+                  "fill",
+                  "drain"
+                ],
+                "maxLength": 5
+              }
+            },
+            "required": [
+              "direction"
+            ],
+            "additionalProperties": false
+          }
+        },
+        {
+          "name": "launch",
+          "description": "Спустить корабль: нужны все три канала 2 и вода 2. После спуска он остаётся в выходном доке.",
+          "object": "sandbox_dock",
+          "seconds": 60,
+          "parameters": {
+            "type": "object",
+            "properties": {},
+            "additionalProperties": false
+          }
+        },
+        {
+          "name": "reset",
+          "description": "Новая песочница: сбрасывает только этот корабль, каналы и воду.",
+          "object": "sandbox_dock",
+          "seconds": 20,
+          "parameters": {
+            "type": "object",
+            "properties": {},
+            "additionalProperties": false
+          }
+        }
+      ],
+      "tests": [
+        {
+          "tool": "launch",
+          "args": {},
+          "expect": {
+            "result.ok": false
+          }
+        },
+        {
+          "tool": "pump",
+          "args": {
+            "direction": "fill"
+          },
+          "expect": {
+            "public.water": 1
+          }
+        },
+        {
+          "tool": "dig",
+          "args": {
+            "channel": 0
+          },
+          "expect": {
+            "result.ok": false,
+            "public.depths": [
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "tool": "pump",
+          "args": {
+            "direction": "drain"
+          },
+          "expect": {
+            "public.water": 0
+          }
+        },
+        {
+          "tool": "dig",
+          "args": {
+            "channel": 0
+          },
+          "expect": {
+            "result.depth": 1
+          }
+        },
+        {
+          "tool": "dig",
+          "args": {
+            "channel": 0
+          },
+          "expect": {
+            "result.depth": 2
+          }
+        },
+        {
+          "tool": "dig",
+          "args": {
+            "channel": 1
+          },
+          "expect": {
+            "result.depth": 1
+          }
+        },
+        {
+          "tool": "dig",
+          "args": {
+            "channel": 1
+          },
+          "expect": {
+            "result.depth": 2
+          }
+        },
+        {
+          "tool": "dig",
+          "args": {
+            "channel": 2
+          },
+          "expect": {
+            "result.depth": 1
+          }
+        },
+        {
+          "tool": "dig",
+          "args": {
+            "channel": 2
+          },
+          "expect": {
+            "result.depth": 2
+          }
+        },
+        {
+          "tool": "pump",
+          "args": {
+            "direction": "fill"
+          },
+          "expect": {
+            "public.water": 1
+          }
+        },
+        {
+          "tool": "pump",
+          "args": {
+            "direction": "fill"
+          },
+          "expect": {
+            "public.ready": true
+          }
+        },
+        {
+          "tool": "launch",
+          "args": {},
+          "expect": {
+            "public.launched": true
+          }
+        },
+        {
+          "tool": "launch",
+          "args": {},
+          "expect": {
+            "result.ok": false
+          }
+        },
+        {
+          "tool": "reset",
+          "args": {},
+          "expect": {
+            "public.depths": [
+              0,
+              0,
+              0
+            ],
+            "public.run": 2
+          }
+        }
+      ]
     }
   ]
 }

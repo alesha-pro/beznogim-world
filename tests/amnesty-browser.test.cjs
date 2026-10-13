@@ -7,7 +7,7 @@ await page.addInitScript(()=>{if(!localStorage.getItem('beznogim-yard-v1'))local
 await page.goto(`http://127.0.0.1:${port}/`,{waitUntil:'networkidle'});await page.waitForFunction(()=>window.__yard);await page.waitForTimeout(500);
 const visit=async()=>{await click('#territory-map');await click('[data-sector="0:1"]');await page.waitForTimeout(350);await click('.hotspot[data-label="амнистия"]');await click('#focus-object');await page.waitForTimeout(500);};
 await visit();const old=await snap(),yardSave=await page.evaluate(()=>localStorage.getItem('beznogim-yard-v1'));
-assert.equal(old.territory.settled,3);assert.equal(old.amnesty.target,4);assert.equal(old.amnesty.source,'sandbox');
+assert.equal(old.territory.settled,4);assert.equal(old.amnesty.target,4);assert.equal(old.amnesty.source,'sandbox');
 await page.screenshot({path:`${captureDir}/amnesty-start-${name}.png`});
 await click('#object-action');await page.waitForFunction(()=>__yard.inspect().amnesty.bridgeTilt>.21);assert.equal((await snap()).amnesty.status,'under');await page.screenshot({path:`${captureDir}/amnesty-under-${name}.png`});
 await click('[data-load="0"]');await click('[data-load="2"]');await page.waitForFunction(()=>__yard.inspect().amnesty.cargoPositions[2][0]>-2.2);assert.equal((await snap()).amnesty.total,8);

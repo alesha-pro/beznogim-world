@@ -85,3 +85,9 @@ body::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:2;b
 #bench-salvage{width:66%}#bench-restart{width:32%;margin-left:2%}#bench-controls small{display:block;font:11px/1.4 Arial,sans-serif;margin:7px 0;color:#53675b}
 #enter-bench{background:none;color:#294b48;padding:10px 0;font:11px monospace;border-bottom:1px dashed #a2af96;margin:8px 0}
 @media(max-width:900px){#inspector:has(#bench-controls:not([hidden])){max-height:min(35dvh,calc(100dvh - var(--ui-card-top) - var(--ui-card-bottom)))!important}}
+/* The western sandbox is a working dry dock, not a replacement for the pier. */
+#drydock-controls{border-top:1px solid #738b7255;padding-top:8px;margin:8px 0}
+#drydock-readout{display:block;font:11px/1.4 monospace;color:#47665e;margin-bottom:7px}
+.drydock-row{display:flex;gap:5px;margin:6px 0}#drydock-controls button{flex:1;min-height:38px;border:1px solid #788c7170;background:#d6ddbd;color:#263b3c;border-radius:5px;padding:7px 3px;font:11px monospace}
+#drydock-controls button:disabled{opacity:.5}#drydock-controls small{display:block;font:11px/1.4 Arial,sans-serif;color:#53675b;margin-top:7px}
+@media(max-width:900px){#inspector:has(#drydock-controls:not([hidden])){max-height:min(33dvh,calc(100dvh - var(--ui-card-top) - var(--ui-card-bottom)))!important}}
