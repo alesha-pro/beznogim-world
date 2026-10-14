@@ -91,3 +91,12 @@ body::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:2;b
 .drydock-row{display:flex;gap:5px;margin:6px 0}#drydock-controls button{flex:1;min-height:38px;border:1px solid #788c7170;background:#d6ddbd;color:#263b3c;border-radius:5px;padding:7px 3px;font:11px monospace}
 #drydock-controls button:disabled{opacity:.5}#drydock-controls small{display:block;font:11px/1.4 Arial,sans-serif;color:#53675b;margin-top:7px}
 @media(max-width:900px){#inspector:has(#drydock-controls:not([hidden])){max-height:min(33dvh,calc(100dvh - var(--ui-card-top) - var(--ui-card-bottom)))!important}}
+
+#enter-dream04{display:block;width:100%;font:11px monospace;background:none;color:#667c67;padding:5px 0 12px;text-align:left}
+#dream-roofs{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}#dream-roofs button{flex:1;min-height:40px;padding:8px 5px;border:1px solid #8b9f90;border-radius:3px;background:#dde1cd;color:#44665d;font:11px monospace;white-space:nowrap}#dream-roofs button:disabled{opacity:.55}
+
+.roof-dreaming #dream-panel{width:360px;height:314px;max-height:calc(100dvh - 170px)}
+#dream-roofs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
+@media(max-width:900px){.roof-dreaming #dream-panel{width:calc(100% - 28px);height:274px;max-height:42dvh}.roof-dreaming #dream-panel h2{font-size:22px}.roof-dreaming #dream-panel p{font-size:12px}}
+@media(max-width:900px) and (orientation:portrait) and (max-height:650px){.roof-dreaming #dream-panel{height:240px;padding:12px 14px;max-height:43dvh}.roof-dreaming #dream-panel h2{font-size:18px;margin:7px 0 5px}.roof-dreaming #dream-panel p{font-size:11px;line-height:1.4;margin:8px 0}.roof-dreaming #dream-roofs button{font-size:9px;padding:5px 2px}}
+@media(max-width:900px) and (orientation:landscape) and (max-height:600px){.roof-dreaming #dream-panel{width:calc(58vw - 28px);height:260px;max-height:calc(100dvh - 130px)}}

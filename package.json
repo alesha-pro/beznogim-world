@@ -15,7 +15,8 @@
     "test:amnesty": "node tests/amnesty-browser.test.cjs",
     "test:ui": "node tests/ui-layout.test.cjs",
     "test:bench": "node tests/bench-browser.test.cjs",
-    "test:drydock": "node tests/drydock-browser.test.cjs"
+    "test:drydock": "node tests/drydock-browser.test.cjs",
+    "test:dream04": "node tests/roof-dream.test.mjs && node tests/dream04-browser.test.cjs"
   },
   "dependencies": {
     "three": "0.186.1"
