@@ -107,3 +107,13 @@ dialog{max-height:calc(100dvh - 24px);overflow:auto;overscroll-behavior:contain}
  .drydock-look .territory-nav,.drydock-look .toolbar{top:44px}
  .drydock-look #inspector:has(#drydock-controls:not([hidden])){max-height:min(28dvh,calc(100dvh - var(--ui-card-top) - var(--ui-card-bottom)))!important}
 }
+@media(max-width:900px) and (orientation:portrait){.drydock-look #inspector:has(#dash-controls:not([hidden])){max-height:min(28dvh,calc(100dvh - var(--ui-card-top) - var(--ui-card-bottom)))!important}}
+/* The punctuation bridge keeps a viewing band below a compact landscape HUD.
+   This is scoped to its inspection view, never the resident's body or state. */
+@media(max-width:900px) and (orientation:landscape) and (max-height:600px){
+ .dash-look header h1{display:none}.dash-look .territory-nav{top:42px}
+ .dash-look .territory-nav .resident-vitals{padding:5px 6px;gap:4px 8px}
+ .dash-look .need-icon{width:14px;height:14px}.dash-look .need-heading{font-size:8px}
+ .dash-look .resident-strip button{min-height:26px;padding:4px 5px;font-size:8px}
+ .dash-look #inspector:has(#dash-controls:not([hidden])){max-height:calc(100dvh - var(--ui-card-top) - var(--ui-card-bottom))!important}
+}

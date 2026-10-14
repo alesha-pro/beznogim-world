@@ -802,6 +802,215 @@
           }
         }
       ]
+    },
+    {
+      "id": "dash",
+      "title": "Длинное тире / почтовый мост",
+      "version": 1,
+      "file": "mechanics/dash.js",
+      "tools": [
+        {
+          "name": "tune",
+          "description": "Выправить тире: длина равна пролёту, сдвиг равен центру. Исправляет неудачный мост.",
+          "object": "dash_bridge",
+          "seconds": 20,
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "span": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 8
+              },
+              "shift": {
+                "type": "integer",
+                "minimum": -2,
+                "maximum": 2
+              }
+            },
+            "required": [
+              "span",
+              "shift"
+            ],
+            "additionalProperties": false
+          }
+        },
+        {
+          "name": "cross",
+          "description": "Отправить улитку. Короткое не достаёт, длинное гнётся, неверный сдвиг оставляет конец без опоры. Успех доставляет один знак; повтор не дублирует.",
+          "object": "dash_bridge",
+          "seconds": 45,
+          "parameters": {
+            "type": "object",
+            "properties": {},
+            "required": [],
+            "additionalProperties": false
+          }
+        },
+        {
+          "name": "next",
+          "description": "После доставки раздвинуть берега для следующего из трёх знаков.",
+          "object": "dash_bridge",
+          "seconds": 20,
+          "parameters": {
+            "type": "object",
+            "properties": {},
+            "required": [],
+            "additionalProperties": false
+          }
+        },
+        {
+          "name": "reset",
+          "description": "Начать новую почту: сбрасывает только мост, полку знаков и попытки этой игры.",
+          "object": "dash_bridge",
+          "seconds": 20,
+          "parameters": {
+            "type": "object",
+            "properties": {},
+            "required": [],
+            "additionalProperties": false
+          }
+        }
+      ],
+      "tests": [
+        {
+          "tool": "cross",
+          "args": {},
+          "expect": {
+            "public.phase": "short",
+            "state.delivered": 0
+          }
+        },
+        {
+          "tool": "tune",
+          "args": {
+            "span": 8,
+            "shift": 0
+          },
+          "expect": {
+            "public.span": 8
+          }
+        },
+        {
+          "tool": "cross",
+          "args": {},
+          "expect": {
+            "public.phase": "bent",
+            "result.ok": false
+          }
+        },
+        {
+          "tool": "tune",
+          "args": {
+            "span": 3,
+            "shift": 1
+          },
+          "expect": {
+            "public.phase": "ready"
+          }
+        },
+        {
+          "tool": "cross",
+          "args": {},
+          "expect": {
+            "public.phase": "shifted"
+          }
+        },
+        {
+          "tool": "tune",
+          "args": {
+            "span": 3,
+            "shift": 0
+          },
+          "expect": {
+            "state.span": 3
+          }
+        },
+        {
+          "tool": "cross",
+          "args": {},
+          "expect": {
+            "public.phase": "delivered",
+            "state.delivered": 1
+          }
+        },
+        {
+          "tool": "cross",
+          "args": {},
+          "expect": {
+            "result.ok": false,
+            "state.delivered": 1
+          }
+        },
+        {
+          "tool": "next",
+          "args": {},
+          "expect": {
+            "public.gap": 5,
+            "public.center": 1
+          }
+        },
+        {
+          "tool": "tune",
+          "args": {
+            "span": 5,
+            "shift": 1
+          },
+          "expect": {
+            "public.shift": 1
+          }
+        },
+        {
+          "tool": "cross",
+          "args": {},
+          "expect": {
+            "state.delivered": 2
+          }
+        },
+        {
+          "tool": "next",
+          "args": {},
+          "expect": {
+            "public.gap": 7,
+            "public.center": -1
+          }
+        },
+        {
+          "tool": "tune",
+          "args": {
+            "span": 7,
+            "shift": -1
+          },
+          "expect": {
+            "state.shift": -1
+          }
+        },
+        {
+          "tool": "cross",
+          "args": {},
+          "expect": {
+            "public.phase": "complete",
+            "state.delivered": 3
+          }
+        },
+        {
+          "tool": "next",
+          "args": {},
+          "expect": {
+            "result.ok": false,
+            "state.delivered": 3
+          }
+        },
+        {
+          "tool": "reset",
+          "args": {},
+          "expect": {
+            "state.run": 2,
+            "state.delivered": 0,
+            "public.phase": "ready"
+          }
+        }
+      ]
     }
   ]
 }

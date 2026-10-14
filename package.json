@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "node scripts/sync-mechanics.mjs && vite --host 0.0.0.0",
     "build": "node scripts/sync-mechanics.mjs && vite build --base=./",
-    "test:mechanics": "node scripts/sync-mechanics.mjs && node tests/cellar.test.cjs && node tests/vitals.test.cjs && node tests/amnesty.test.cjs && node tests/bench.test.cjs && node tests/drydock.test.cjs",
+    "test:mechanics": "node scripts/sync-mechanics.mjs && node tests/cellar.test.cjs && node tests/vitals.test.cjs && node tests/amnesty.test.cjs && node tests/bench.test.cjs && node tests/drydock.test.cjs && node tests/dash.test.cjs",
     "world:prepare": "node scripts/sync-mechanics.mjs",
     "test:dream": "node tests/dream02.test.cjs",
     "test:sleep-view": "node tests/sleep-body.test.cjs",
@@ -16,7 +16,8 @@
     "test:ui": "node tests/ui-layout.test.cjs",
     "test:bench": "node tests/bench-browser.test.cjs",
     "test:drydock": "node tests/drydock-browser.test.cjs",
-    "test:dream04": "node tests/roof-dream.test.mjs && node tests/dream04-browser.test.cjs"
+    "test:dream04": "node tests/roof-dream.test.mjs && node tests/dream04-browser.test.cjs",
+    "test:dash": "node tests/dash-browser.test.cjs"
   },
   "dependencies": {
     "three": "0.186.1"

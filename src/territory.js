@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import land from './territory.json';
 
 // Shared coordinates stay stable as the workshop settles new districts.
-export function createTerritory({root, camera, controls, mobile, go, overview, home}) {
+export function createTerritory({root, camera, controls, mobile, go, overview, home, locationTarget=()=>null}) {
   const terrain=new THREE.Group();terrain.name='unsettled-territory';root.add(terrain);
   const half=land.size/2;
   const outline=[[-half+4,-half],[half-4,-half],[half,-half+4],[half,half-4],[half-4,half],[-half+4,half],[-half,half-4],[-half,-half+4]];
@@ -31,7 +31,7 @@ export function createTerritory({root, camera, controls, mobile, go, overview, h
   nav.innerHTML='<button id="territory-map" type="button">карта ↗</button><button id="world-overview" type="button">весь мир ⊙</button><span id="territory-location">двор · 0:0</span>';
   document.body.append(nav);
   const dialog=document.createElement('dialog');dialog.id='territory-dialog';dialog.setAttribute('aria-labelledby','territory-title');
-  dialog.innerHTML='<button id="territory-close" aria-label="Закрыть карту">×</button><div class="edition">ЗЕМЛЯ ВПЕРЕДИ</div><h2 id="territory-title">здесь ещё поживём</h2><p>Двор, сырный погреб, кабачковый мост и песочный порт. На западе корабль застрял в песочнице; дальше свободная земля.</p><div id="territory-grid"></div><p class="map-legend">● обжито &nbsp; · свободная земля<br>Нажми на участок, чтобы перелететь.</p><button id="territory-home" class="action">домой, во двор ⌂</button>';
+  dialog.innerHTML='<button id="territory-close" aria-label="Закрыть карту">×</button><div class="edition">ЗЕМЛЯ ВПЕРЕДИ</div><h2 id="territory-title">здесь ещё поживём</h2><p>Двор, сырный погреб, кабачковый мост и песочный порт. На севере улитка переправляет почту по мосту из тире. Дальше свободная земля.</p><div id="territory-grid"></div><p class="map-legend">● обжито &nbsp; · свободная земля<br>Нажми на участок, чтобы перелететь.</p><button id="territory-home" class="action">домой, во двор ⌂</button>';
   document.body.append(dialog);
   const grid=dialog.querySelector('#territory-grid');
   for(const sector of land.sectors){
@@ -46,7 +46,7 @@ export function createTerritory({root, camera, controls, mobile, go, overview, h
   dialog.querySelector('#territory-home').onclick=()=>{dialog.close();home();};
   const location=nav.querySelector('#territory-location');let last='';
   function update(){
-    const x=Math.round(controls.target.x/land.sectorSize),z=Math.round(controls.target.z/land.sectorSize),id=`${x}:${z}`;
+    const at=locationTarget()||controls.target,x=Math.round(at.x/land.sectorSize),z=Math.round(at.z/land.sectorSize),id=`${x}:${z}`;
     if(id!==last){last=id;const sector=land.sectors.find(s=>s.id===id);location.textContent=`${sector?.status==='settled'?sector.name:'свободная земля'} · ${id}`;for(const b of grid.children)b.classList.toggle('current',b.dataset.sector===id);}
   }
   return {half,update,inspect:()=>({size:land.size,sectorSize:land.sectorSize,sectors:land.sectors.length,settled:land.sectors.filter(s=>s.status==='settled').length,visible:root.visible,sector:last})};

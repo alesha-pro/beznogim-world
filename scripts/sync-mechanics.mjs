@@ -7,3 +7,6 @@ const bench=readFileSync(new URL('../public/mechanics/bench.js',import.meta.url)
 writeFileSync(new URL('../src/bench-core.js',import.meta.url),'// Generated from public/mechanics/bench.js by scripts/sync-mechanics.mjs.\n'+bench+'\nexport default world;\n');
 const drydock=readFileSync(new URL('../public/mechanics/drydock.js',import.meta.url),'utf8');
 writeFileSync(new URL('../src/drydock-core.js',import.meta.url),'// Generated from public/mechanics/drydock.js by scripts/sync-mechanics.mjs.\n'+drydock+'\nexport default world;\n');
+
+const dash=readFileSync(new URL('../public/mechanics/dash.js',import.meta.url),'utf8');
+writeFileSync(new URL('../src/dash-core.js',import.meta.url),'// Generated from public/mechanics/dash.js by scripts/sync-mechanics.mjs.\n'+dash+'\nexport default world;\n');
