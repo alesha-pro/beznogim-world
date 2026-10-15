@@ -9,7 +9,7 @@ const visit=async()=>{await page.selectOption('#world-places','drydock');await c
 await page.addInitScript(()=>localStorage.setItem('beznogim-yard-v1',JSON.stringify({running:true,harvest:5,dockTrips:2,dockPending:true})));
 await page.goto(`http://127.0.0.1:${port}/`,{waitUntil:'networkidle'});await page.waitForFunction(()=>window.__yard);
 await click('#territory-map');await click('[data-sector="-1:0"]');await page.waitForFunction(()=>__yard.inspect().territory.sector==='-1:0');assert.equal((await snap()).territory.sector,'-1:0');
-await visit();const old=await snap(),save=await page.evaluate(()=>localStorage.getItem('beznogim-yard-v1'));assert.equal(old.territory.settled,5);assert.equal(old.drydock.source,'sandbox');
+await visit();const old=await snap(),save=await page.evaluate(()=>localStorage.getItem('beznogim-yard-v1'));assert.equal(old.territory.settled,6);assert.equal(old.drydock.source,'sandbox');
 await page.screenshot({path:`${cap}/drydock-start-${name}.png`});
 await click('#object-action');assert.equal((await dock()).launched,false);assert((await dock()).message.includes('нужны'));
 await dig(2);await dig(2);await page.waitForFunction(()=>__yard.inspect().drydock.pitch>.14);await page.screenshot({path:`${cap}/drydock-tilt-${name}.png`});assert.deepEqual((await dock()).sandHeights,[1,1,.19999999999999996]);

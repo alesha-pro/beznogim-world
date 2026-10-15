@@ -106,3 +106,11 @@ body::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:2;b
 /* The measuring dream shares the measured camera/card band, not resident state. */
 #enter-dream05{display:block;width:100%;font:11px monospace;background:none;color:#667c67;padding:5px 0 12px;text-align:left}
 #dream-meter{display:flex;gap:6px;margin:0 0 12px}#dream-meter button{flex:1;min-height:40px;padding:7px 5px;border:1px solid #8b9f90;border-radius:3px;background:#dde1cd;color:#44665d;font:11px monospace}#dream-meter button[aria-pressed=true]{background:#31554f;color:#fff0c5}#dream-meter button:disabled{opacity:.55}
+/* The nursery owns these controls; other games retain their measured layout. */
+#quotes-controls output{display:block;font:11px/1.5 monospace;margin:4px 0 8px;color:var(--ink,#33463d)}
+.quotes-pieces,.quotes-directions,.quotes-tools{display:flex;gap:5px;margin:6px 0;flex-wrap:wrap}
+#quotes-controls button{border:1px solid #b9bca6;background:#e9e5d3;color:#304b42;border-radius:5px;padding:8px 10px;font:12px monospace;min-height:35px;cursor:pointer}
+#quotes-controls button[aria-pressed="true"]{background:#d4ad65;color:#253c35;border-color:#97773b}
+#quotes-controls button:disabled{opacity:.5;cursor:default}#quotes-controls small{font-size:11px;line-height:1.4;display:block;max-width:35em}
+.quotes-look #quotes-controls{margin-top:8px}.quotes-look #object-description{font-size:12px}
+@media(max-width:900px){.quotes-look #inspector{max-height:37dvh}.quotes-look #quotes-controls button{padding:6px 9px;min-height:32px}.quotes-look .quotes-pieces,.quotes-look .quotes-directions,.quotes-look .quotes-tools{margin:4px 0}.quotes-look #quotes-controls output{margin:2px 0 4px}}

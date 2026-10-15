@@ -1011,6 +1011,210 @@
           }
         }
       ]
+    },
+    {
+      "id": "quotes",
+      "title": "кавычковый питомник",
+      "version": 1,
+      "file": "mechanics/quotes.js",
+      "tick_seconds": 0,
+      "tools": [
+        {
+          "name": "slide",
+          "description": "Сдвинуть кавычку по льду до края, камня или другой кавычки. piece 0 = «, 1 = ». Клетки 0..24 построчно, север уменьшает строку. public содержит позиции, камни и цели; требуется совместить обе кавычки с goals.",
+          "object": "quote_nursery",
+          "seconds": 15,
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "piece": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "direction": {
+                "type": "string",
+                "enum": [
+                  "north",
+                  "east",
+                  "south",
+                  "west"
+                ],
+                "maxLength": 5
+              }
+            },
+            "required": [
+              "piece",
+              "direction"
+            ],
+            "additionalProperties": false
+          }
+        },
+        {
+          "name": "plant",
+          "description": "Выпустить обе кавычки, если они в своих goals. Пара превращается в две ели; три расстановки, шесть елей. Неверный выпуск не меняет позиции. Это игра, не еда и не инвентарь.",
+          "object": "quote_nursery",
+          "seconds": 40,
+          "parameters": {
+            "type": "object",
+            "properties": {},
+            "required": [],
+            "additionalProperties": false
+          }
+        },
+        {
+          "name": "restart",
+          "description": "Вернуть текущую пару на старт (scope=pair), сохранив посаженные ели. scope=all или без аргументов начинает весь питомник заново; не меняет другие механики.",
+          "object": "quote_nursery",
+          "seconds": 15,
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "scope": {
+                "type": "string",
+                "enum": [
+                  "pair",
+                  "all"
+                ],
+                "maxLength": 4
+              }
+            },
+            "required": [],
+            "additionalProperties": false
+          }
+        }
+      ],
+      "tests": [
+        {
+          "tool": "plant",
+          "args": {},
+          "expect": {
+            "result.ok": false,
+            "state.planted": 0
+          }
+        },
+        {
+          "tool": "slide",
+          "args": {
+            "piece": 0,
+            "direction": "east"
+          },
+          "expect": {
+            "result.ok": true
+          }
+        },
+        {
+          "tool": "slide",
+          "args": {
+            "piece": 0,
+            "direction": "north"
+          },
+          "expect": {
+            "result.ok": true
+          }
+        },
+        {
+          "tool": "slide",
+          "args": {
+            "piece": 0,
+            "direction": "west"
+          },
+          "expect": {
+            "result.ok": true
+          }
+        },
+        {
+          "tool": "slide",
+          "args": {
+            "piece": 0,
+            "direction": "north"
+          },
+          "expect": {
+            "result.ok": true
+          }
+        },
+        {
+          "tool": "slide",
+          "args": {
+            "piece": 0,
+            "direction": "west"
+          },
+          "expect": {
+            "result.ok": true
+          }
+        },
+        {
+          "tool": "slide",
+          "args": {
+            "piece": 0,
+            "direction": "north"
+          },
+          "expect": {
+            "result.ok": true
+          }
+        },
+        {
+          "tool": "slide",
+          "args": {
+            "piece": 0,
+            "direction": "east"
+          },
+          "expect": {
+            "result.ok": true
+          }
+        },
+        {
+          "tool": "slide",
+          "args": {
+            "piece": 1,
+            "direction": "north"
+          },
+          "expect": {
+            "result.ok": true
+          }
+        },
+        {
+          "tool": "slide",
+          "args": {
+            "piece": 1,
+            "direction": "west"
+          },
+          "expect": {
+            "result.ok": true
+          }
+        },
+        {
+          "tool": "plant",
+          "args": {},
+          "expect": {
+            "state.planted": 1,
+            "public.trees": 2
+          }
+        },
+        {
+          "tool": "restart",
+          "args": {
+            "scope": "pair"
+          },
+          "expect": {
+            "state.planted": 1,
+            "state.positions": [
+              20,
+              24
+            ]
+          }
+        },
+        {
+          "tool": "restart",
+          "args": {
+            "scope": "all"
+          },
+          "expect": {
+            "state.run": 2,
+            "state.planted": 0
+          }
+        }
+      ]
     }
   ]
 }
