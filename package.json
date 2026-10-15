@@ -17,7 +17,8 @@
     "test:bench": "node tests/bench-browser.test.cjs",
     "test:drydock": "node tests/drydock-browser.test.cjs",
     "test:dream04": "node tests/roof-dream.test.mjs && node tests/dream04-browser.test.cjs",
-    "test:dash": "node tests/dash-browser.test.cjs"
+    "test:dash": "node tests/dash-browser.test.cjs",
+    "test:dream05": "node tests/meter-dream.test.mjs && node tests/dream05-browser.test.cjs"
   },
   "dependencies": {
     "three": "0.186.1"
