@@ -19,7 +19,8 @@
     "test:dream04": "node tests/roof-dream.test.mjs && node tests/dream04-browser.test.cjs",
     "test:dash": "node tests/dash-browser.test.cjs",
     "test:dream05": "node tests/meter-dream.test.mjs && node tests/dream05-browser.test.cjs",
-    "test:quotes": "node tests/quotes-browser.test.cjs"
+    "test:quotes": "node tests/quotes-browser.test.cjs",
+    "test:dream06": "node tests/cloud-dream.test.mjs && node tests/dream06-browser.test.cjs"
   },
   "dependencies": {
     "three": "0.186.1"

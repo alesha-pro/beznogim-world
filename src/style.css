@@ -114,3 +114,5 @@ body::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:2;b
 #quotes-controls button:disabled{opacity:.5;cursor:default}#quotes-controls small{font-size:11px;line-height:1.4;display:block;max-width:35em}
 .quotes-look #quotes-controls{margin-top:8px}.quotes-look #object-description{font-size:12px}
 @media(max-width:900px){.quotes-look #inspector{max-height:37dvh}.quotes-look #quotes-controls button{padding:6px 9px;min-height:32px}.quotes-look .quotes-pieces,.quotes-look .quotes-directions,.quotes-look .quotes-tools{margin:4px 0}.quotes-look #quotes-controls output{margin:2px 0 4px}}
+
+#dream-cloud{display:flex;gap:6px;margin:0 0 12px}#dream-cloud button{flex:1;min-height:40px;padding:7px 5px;border:1px solid #8b9f90;border-radius:3px;background:#dde1cd;color:#44665d;font:11px monospace}#dream-cloud button[aria-pressed=true]{background:#31554f;color:#fff0c5}#dream-cloud button:disabled{opacity:.55}

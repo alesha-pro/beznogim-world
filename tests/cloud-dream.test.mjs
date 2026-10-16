@@ -1,0 +1,4 @@
+import assert from 'node:assert/strict';
+import {freshCloudDream,chooseCloud,actCloud,advanceCloud} from '../src/cloud-dream-core.js';
+const finish=s=>{for(let i=0;i<50;i++)s=advanceCloud(s,.1);return s;};
+let s=freshCloudDream();s=chooseCloud(s,'planet');s=actCloud(s);assert.equal(chooseCloud(s,'sky'),s);assert.equal(actCloud(s),s);assert.equal(advanceCloud(s,NaN).progress,0);assert.equal(advanceCloud(s,-2).progress,0);assert.equal(advanceCloud(s,999).progress,advanceCloud(s,.1).progress);s=finish(s);assert.equal(s.phase,'ready');assert(!s.trace);s=chooseCloud(s,'sky');s=finish(actCloud(s));assert.equal(s.phase,'cloud');s=finish(actCloud(s));assert.equal(s.phase,'settled');assert(s.trace);s=actCloud(s);assert.deepEqual(s,freshCloudDream());console.log('PASS cloud dream routes/locks/safe dt/heat/rain/repeat');

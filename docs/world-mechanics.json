@@ -1015,7 +1015,7 @@
     {
       "id": "quotes",
       "title": "кавычковый питомник",
-      "version": 1,
+      "version": 2,
       "file": "mechanics/quotes.js",
       "tick_seconds": 0,
       "tools": [
@@ -1080,6 +1080,17 @@
               }
             },
             "required": [],
+            "additionalProperties": false
+          }
+        },
+        {
+          "name": "hint",
+          "description": "Read-only shortest-route hint from the CURRENT pair positions. Returns next {piece:0|1,direction:north|east|south|west}, remaining moves, or aligned/complete/stuck. The other quote is a movable bumper. Does not slide, plant or reset; if stuck, restart scope=pair keeps all planted trees.",
+          "object": "quote_nursery",
+          "seconds": 5,
+          "parameters": {
+            "type": "object",
+            "properties": {},
             "additionalProperties": false
           }
         }
@@ -1212,6 +1223,13 @@
           "expect": {
             "state.run": 2,
             "state.planted": 0
+          }
+        },
+        {
+          "tool": "hint",
+          "args": {},
+          "expect": {
+            "result.ok": true
           }
         }
       ]

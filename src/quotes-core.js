@@ -17,6 +17,7 @@ function world(input){
   if(input.tool==='restart'&&a.scope==='pair'){s.positions=board.start.slice();s.message='Эта пара вернулась на старт. Посаженные ели остались.';result={ok:true};}
   else if(input.tool==='restart'&&a.scope!==undefined&&a.scope!=='all')result={ok:false,reason:'invalid_arguments'};
   else if(input.tool==='restart'){Object.assign(s,{run:Math.min(999999,s.run+1),planted:0,positions:QUOTE_LEVELS[0].start.slice(),moves:0,message:'Снова две кавычки. Лёд скользкий, камни остаются на месте.'});result={ok:true};}
+  else if(input.tool==='hint'){result=quoteHint(s);}
   else if(!['slide','plant'].includes(input.tool))result={ok:false,reason:'unknown_tool'};
   else if(s.planted===3)result={ok:false,reason:'complete'};
   else if(input.tool==='slide'){
@@ -34,7 +35,24 @@ function world(input){
   }
  }
  const b=QUOTE_LEVELS[Math.min(2,s.planted)];
- return {state:s,public:{...s,level:Math.min(3,s.planted+1),phase:s.planted===3?'complete':'sliding',trees:s.planted*2,rocks:b.rocks,goals:b.goals,size:5},result,seconds:input.tool==='plant'?40:15,label:input.tool==='plant'?'выпускает кавычки в питомник':'двигает ёлочки по льду'};
+ return {state:s,public:{...s,level:Math.min(3,s.planted+1),phase:s.planted===3?'complete':'sliding',trees:s.planted*2,rocks:b.rocks,goals:b.goals,size:5},result,seconds:input.tool==='hint'?5:input.tool==='plant'?40:15,label:input.tool==='hint'?'ищет путь для кавычек':input.tool==='plant'?'выпускает кавычки в питомник':'двигает ёлочки по льду'};
+}
+
+// Breadth-first search of this exact board. Read-only: no moves, planting or reset.
+function quoteHint(s){
+ if(s.planted===3)return {ok:true,status:'complete',remaining:0,next:null};
+ const b=QUOTE_LEVELS[s.planted],q=[[s.positions,[]]],seen=new Set([s.positions.join(',')]);
+ const dirs={north:[0,-1],east:[1,0],south:[0,1],west:[-1,0]};
+ for(let at=0;at<q.length;at++){
+  const [p,path]=q[at];
+  if(p.every((v,i)=>v===b.goals[i]))return {ok:true,status:path.length?'route':'aligned',remaining:path.length,next:path[0]||null};
+  for(let piece=0;piece<2;piece++)for(const [direction,[dx,dz]]of Object.entries(dirs)){
+   let x=p[piece]%5,z=Math.floor(p[piece]/5);
+   while(x+dx>=0&&x+dx<5&&z+dz>=0&&z+dz<5&&!b.rocks.includes((z+dz)*5+x+dx)&&(z+dz)*5+x+dx!==p[1-piece]){x+=dx;z+=dz;}
+   const np=p.slice();np[piece]=z*5+x;const key=np.join(',');if(!seen.has(key)){seen.add(key);q.push([np,[...path,{piece,direction}]]);}
+  }
+ }
+ return {ok:false,status:'stuck',remaining:null,next:null,advice:'restart scope=pair preserves planted trees'};
 }
 
 export default world;
