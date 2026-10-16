@@ -9,7 +9,7 @@ const visit=async()=>{await page.selectOption('#world-places','workshop');await 
 await page.addInitScript(()=>localStorage.setItem('beznogim-yard-v1',JSON.stringify({running:true,harvest:5,dockTrips:2,dockPending:true})));
 await page.goto(`http://127.0.0.1:${port}/`,{waitUntil:'networkidle'});await page.waitForFunction(()=>window.__yard);await visit();
 const old=await snap(),save=await page.evaluate(()=>localStorage.getItem('beznogim-yard-v1'));
-assert.equal(old.bench.source,'sandbox');assert.equal(old.bench.phase,'ready');assert.equal(old.territory.settled,5);assert.equal(old.roofVisible,false);
+assert.equal(old.bench.source,'sandbox');assert.equal(old.bench.phase,'ready');assert.equal(old.territory.settled,7);assert.equal(old.roofVisible,false);
 await page.screenshot({path:`${cap}/bench-start-${name}.png`});
 await click('#object-action');await page.waitForFunction(()=>__yard.inspect().bench.corePosition[0]<-1.53);assert.equal((await bench()).phase,'ejected');assert.equal((await bench()).litPixels,0);assert.equal(await page.locator('[data-part="core"][data-value="3"]').isDisabled(),true);
 await page.screenshot({path:`${cap}/bench-bucket-${name}.png`});await page.reload({waitUntil:'networkidle'});await visit();assert.equal((await bench()).phase,'ejected');assert.equal((await bench()).attempts,1);

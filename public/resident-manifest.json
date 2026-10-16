@@ -209,6 +209,16 @@
         24
       ],
       "actions": {}
+    },
+    {
+      "id": "pneumatic_garage",
+      "name": "прыгающий гараж",
+      "position": [
+        -32,
+        0.6,
+        -20.6
+      ],
+      "actions": {}
     }
   ]
 }

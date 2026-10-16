@@ -12,3 +12,6 @@ const dash=readFileSync(new URL('../public/mechanics/dash.js',import.meta.url),'
 writeFileSync(new URL('../src/dash-core.js',import.meta.url),'// Generated from public/mechanics/dash.js by scripts/sync-mechanics.mjs.\n'+dash+'\nexport default world;\n');
 const quotes=readFileSync(new URL('../public/mechanics/quotes.js',import.meta.url),'utf8');
 writeFileSync(new URL('../src/quotes-core.js',import.meta.url),'// Generated from public/mechanics/quotes.js by scripts/sync-mechanics.mjs.\n'+quotes+'\nexport default world;\n');
+
+const garage=readFileSync(new URL('../public/mechanics/garage.js',import.meta.url),'utf8');
+writeFileSync(new URL('../src/garage-core.js',import.meta.url),'// Generated from public/mechanics/garage.js by scripts/sync-mechanics.mjs.\n'+garage+'\nexport default world;\n');
