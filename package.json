@@ -22,7 +22,8 @@
     "test:quotes": "node tests/quotes-browser.test.cjs",
     "test:dream06": "node tests/cloud-dream.test.mjs && node tests/dream06-browser.test.cjs",
     "test:garage": "node tests/garage.test.cjs && node tests/garage-flight.test.mjs && node tests/garage-browser.test.cjs",
-    "test:dream07": "node tests/pocket-dream.test.mjs && node tests/dream07-browser.test.cjs"
+    "test:dream07": "node tests/pocket-dream.test.mjs && node tests/dream07-browser.test.cjs",
+    "test:fork": "node tests/fork.test.mjs && node tests/fork-browser.test.cjs"
   },
   "dependencies": {
     "three": "0.186.1"
