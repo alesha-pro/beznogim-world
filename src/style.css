@@ -121,3 +121,5 @@ body::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:2;b
 @media(max-width:900px) and (orientation:portrait){.garage-look #inspector:has(#garage-controls:not([hidden])){max-height:min(28dvh,calc(100dvh - var(--ui-card-top) - var(--ui-card-bottom)))!important}}
 
 @media(max-width:900px) and (orientation:portrait) and (max-height:700px){.garage-look .territory-nav .resident-vitals{padding:5px 6px;gap:4px 8px}.garage-look .need-icon{width:14px;height:14px}.garage-look .need-heading{font-size:8px}.garage-look .resident-strip button{min-height:26px;padding:4px 5px;font-size:8px}}
+
+#enter-dream07{display:block;width:100%;font:11px monospace;background:none;color:#667c67;padding:5px 0 12px;text-align:left}
