@@ -130,3 +130,27 @@ body::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:2;b
 
 #enter-dream08{display:block;width:100%;font:11px monospace;background:none;color:#667c67;padding:5px 0 12px;text-align:left}
 #dream-torches{display:flex;gap:6px;margin:0 0 10px}#dream-torches button{flex:1;min-height:40px;padding:7px 3px;border:1px solid #8b9f90;border-radius:3px;background:#dde1cd;color:#44665d;font:11px monospace;white-space:nowrap}#dream-torches button[aria-pressed=true]{background:#31554f;color:#fff0c5}#dream-torches button:disabled{opacity:.55}
+
+#still-controls{margin:8px 0;border-top:1px solid #8b9a7855;padding-top:7px}#still-controls output{display:block;white-space:pre-line;font:11px/1.45 monospace;margin:5px 0;color:#3f6557}#still-controls small{display:block;font:11px/1.4 Arial,sans-serif;margin-top:7px;color:#53675b}.still-row{display:flex;gap:5px;margin:7px 0}.still-row label{flex:1;font:10px monospace}.still-row select{display:block;width:100%;min-height:36px;background:#edf0d9;color:#263b3c;border:1px solid #788c7170;border-radius:4px}.still-row button{flex:1;min-height:36px;padding:5px;border:1px solid #788c7170;background:#d6ddbd;color:#263b3c;border-radius:5px;font:11px monospace}#still-controls :disabled{opacity:.5}
+@media(max-width:900px) and (orientation:portrait){.still-look #inspector:has(#still-controls:not([hidden])){max-height:min(28dvh,calc(100dvh - var(--ui-card-top) - var(--ui-card-bottom)))!important}}
+@media(max-width:900px) and (orientation:portrait) and (max-height:700px){.still-look .territory-nav .resident-vitals{padding:5px 6px;gap:4px 8px}.still-look .need-icon{width:14px;height:14px}.still-look .need-heading{font-size:8px}.still-look .resident-strip button{min-height:26px;padding:4px 5px;font-size:8px}}
+/* Keep the actual jug controls together; long rules can be opened on demand. */
+#still-help{font:11px/1.4 Arial,sans-serif;margin:5px 0 8px;color:#53675b}#still-help summary{cursor:pointer;text-decoration:underline;text-underline-offset:3px}#still-notice:empty{display:none}
+@media(max-width:900px) and (orientation:portrait){
+ .still-look #inspector:has(#still-controls:not([hidden])){max-height:min(36dvh,calc(100dvh - var(--ui-card-top) - var(--ui-card-bottom)))!important;padding:12px 15px}
+ .still-look #object-description,.still-look #object-kicker,.still-look #focus-object{display:none}
+ .still-look #inspector h2{font-size:18px;line-height:1.1;margin:2px 0 6px}
+ .still-look #still-controls{margin:3px 0;padding-top:3px}
+ .still-look #still-controls output{font-size:10px;line-height:1.3;margin:3px 0}
+ .still-look .still-row{margin:4px 0}
+ .still-look .still-row button{min-height:30px;font-size:10px}
+ .still-look .still-row select{min-height:32px;font-size:12px}
+ .still-look #still-help{margin:4px 0 7px;font-size:10px}
+}
+/* Keep an actual viewing band when the live resident HUD is present on short phones. */
+@media(max-width:900px) and (orientation:portrait) and (max-height:700px){
+ .still-look #inspector:has(#still-controls:not([hidden])){max-height:min(26dvh,calc(100dvh - var(--ui-card-top) - var(--ui-card-bottom)))!important}
+ .still-look .territory-nav .resident-vitals{padding:5px 6px;gap:4px 8px}
+ .still-look .need-icon{width:14px;height:14px}.still-look .need-heading{font-size:8px}
+ .still-look .resident-strip button{min-height:26px;padding:4px 5px;font-size:8px}
+}

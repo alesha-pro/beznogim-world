@@ -24,7 +24,8 @@
     "test:garage": "node tests/garage.test.cjs && node tests/garage-flight.test.mjs && node tests/garage-browser.test.cjs",
     "test:dream07": "node tests/pocket-dream.test.mjs && node tests/dream07-browser.test.cjs",
     "test:fork": "node tests/fork.test.mjs && node tests/fork-browser.test.cjs",
-    "test:dream08": "node tests/torch-dream.test.mjs && node tests/dream08-browser.test.cjs"
+    "test:dream08": "node tests/torch-dream.test.mjs && node tests/dream08-browser.test.cjs",
+    "test:still": "node tests/still.test.mjs && node tests/still-browser.test.cjs"
   },
   "dependencies": {
     "three": "0.186.1"
