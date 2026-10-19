@@ -154,3 +154,8 @@ body::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:2;b
  .still-look .need-icon{width:14px;height:14px}.still-look .need-heading{font-size:8px}
  .still-look .resident-strip button{min-height:26px;padding:4px 5px;font-size:8px}
 }
+
+#enter-dream09{display:block;width:100%;font:11px monospace;background:none;color:#667c67;padding:5px 0 12px;text-align:left}
+#dream-ears{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;margin:0 0 10px}#dream-ears button{min-height:36px;padding:7px 2px;border:1px solid #9b9188;border-radius:3px;background:#e3d8bf;color:#415d58;font:11px monospace}#dream-ears button:disabled{opacity:.55}
+
+#exit-ear-dream{float:right;background:none;color:#44665d;font:10px monospace;padding:0 0 8px 8px;min-height:28px}

@@ -1,0 +1,8 @@
+import assert from 'node:assert/strict';import {EAR_WEIGHTS,freshEarDream,earLoads,earReady,moveEarStone,actEar,advanceEar,earPose,earStonePose} from '../src/ear-dream-core.js';
+let s=freshEarDream();assert.deepEqual(earLoads(s),[0,0]);assert(!earReady(s));assert.equal(actEar(s),s);for(const i of [-1,6,1.5,NaN])assert.equal(moveEarStone(s,i),s);
+let solutions=0;for(let code=0;code<729;code++){let c=code;const places=EAR_WEIGHTS.map(()=>{const p=c%3;c=Math.floor(c/3);return p;}),v={...s,places},before=structuredClone(v),[l,r]=earLoads(v);assert.equal(earReady(v),places.every(p=>p>0)&&l===r);assert(l+r<=22);assert.equal(actEar(v).phase==='unfolding',earReady(v));if(earReady(v))solutions++;for(let i=0;i<6;i++){let n=v;for(let j=0;j<3;j++)n=moveEarStone(n,i);assert.deepEqual(n,v);}assert.deepEqual(v,before);}
+assert.equal(solutions,4);
+for(let i=0;i<6;i++)for(let j=0;j<([3,5].includes(i)?1:2);j++)s=moveEarStone(s,i);
+assert.deepEqual(earLoads(s),[11,11]);s=actEar(s);assert.equal(moveEarStone(s,0),s);for(const dt of [-1,0,NaN,Infinity])assert.equal(advanceEar(s,dt),s);assert(advanceEar(s,100).progress<=.025);
+for(let k=0;k<1001;k++){const v={...s,progress:k/1000},p=earPose(v);assert(Object.values(p).every(Number.isFinite));assert(p.headY>=.85&&p.headY<=3.11);assert(p.waterTilt>=0&&p.waterTilt<=Math.PI/2);for(let i=0;i<6;i++)assert(earStonePose(v,i).every(Number.isFinite));}
+for(let j=0;j<42;j++)s=advanceEar(s,.1);assert.equal(s.phase,'flying');assert.equal(advanceEar(s,10),s);assert.equal(earPose(s).waterTilt,Math.PI/2);assert.deepEqual(actEar(s),freshEarDream());console.log('PASS ear dream 729 states / 4 balanced solutions / 6006 stone poses / immutable / guards / completion');
