@@ -186,3 +186,6 @@ body::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:2;b
 }
 
 #seams-controls button.hinted{outline:2px solid #c88c43;outline-offset:1px}
+/* Paper rain is a visitor's dream, not a sleep command. */
+#enter-dream10{display:block;width:100%;font:11px monospace;background:none;color:#667c67;padding:5px 0 12px;text-align:left}
+#dream-rain{display:flex;gap:5px;margin:0 0 10px}#dream-rain button{flex:1;min-height:40px;padding:6px 2px;border:1px solid #849b8a;border-radius:3px;background:#e4dac2;color:#31554f;font:11px monospace}#dream-rain button[aria-pressed=true]{background:#31554f;color:#fff0c5}#dream-rain button:disabled{opacity:.55}
