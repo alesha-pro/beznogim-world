@@ -189,3 +189,30 @@ body::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:2;b
 /* Paper rain is a visitor's dream, not a sleep command. */
 #enter-dream10{display:block;width:100%;font:11px monospace;background:none;color:#667c67;padding:5px 0 12px;text-align:left}
 #dream-rain{display:flex;gap:5px;margin:0 0 10px}#dream-rain button{flex:1;min-height:40px;padding:6px 2px;border:1px solid #849b8a;border-radius:3px;background:#e4dac2;color:#31554f;font:11px monospace}#dream-rain button[aria-pressed=true]{background:#31554f;color:#fff0c5}#dream-rain button:disabled{opacity:.55}
+
+#ego-controls{margin:8px 0;border-top:1px solid #8b9a7855;padding-top:7px}#ego-controls output{display:block;white-space:pre-line;font:11px/1.45 monospace;margin:5px 0;color:#3f6557}#ego-controls small{display:block;font:11px/1.4 Arial,sans-serif;margin-top:7px;color:#53675b}.ego-row{display:flex;gap:5px;margin:7px 0}.ego-row label{flex:1;font:10px monospace}.ego-row select{display:block;width:100%;min-height:36px;background:#edf0d9;color:#263b3c;border:1px solid #788c7170;border-radius:4px}.ego-row button{flex:1;min-height:36px;padding:5px;border:1px solid #788c7170;background:#d6ddbd;color:#263b3c;border-radius:5px;font:11px monospace}#ego-controls :disabled{opacity:.5}
+@media(max-width:900px) and (orientation:portrait){.ego-look #inspector:has(#ego-controls:not([hidden])){max-height:min(28dvh,calc(100dvh - var(--ui-card-top) - var(--ui-card-bottom)))!important}}
+@media(max-width:900px) and (orientation:portrait) and (max-height:700px){.ego-look .territory-nav .resident-vitals{padding:5px 6px;gap:4px 8px}.ego-look .need-icon{width:14px;height:14px}.ego-look .need-heading{font-size:8px}.ego-look .resident-strip button{min-height:26px;padding:4px 5px;font-size:8px}}
+/* Keep the actual jug controls together; long rules can be opened on demand. */
+#ego-help{font:11px/1.4 Arial,sans-serif;margin:5px 0 8px;color:#53675b}#ego-help summary{cursor:pointer;text-decoration:underline;text-underline-offset:3px}#ego-notice:empty{display:none}
+@media(max-width:900px) and (orientation:portrait){
+ .ego-look #inspector:has(#ego-controls:not([hidden])){max-height:min(36dvh,calc(100dvh - var(--ui-card-top) - var(--ui-card-bottom)))!important;padding:12px 15px}
+ .ego-look #object-description,.ego-look #object-kicker,.ego-look #focus-object{display:none}
+ .ego-look #inspector h2{font-size:18px;line-height:1.1;margin:2px 0 6px}
+ .ego-look #ego-controls{margin:3px 0;padding-top:3px}
+ .ego-look #ego-controls output{font-size:10px;line-height:1.3;margin:3px 0}
+ .ego-look .ego-row{margin:4px 0}
+ .ego-look .ego-row button{min-height:30px;font-size:10px}
+ .ego-look .ego-row select{min-height:32px;font-size:12px}
+ .ego-look #ego-help{margin:4px 0 7px;font-size:10px}
+}
+/* Keep an actual viewing band when the live resident HUD is present on short phones. */
+@media(max-width:900px) and (orientation:portrait) and (max-height:700px){
+ .ego-look #inspector:has(#ego-controls:not([hidden])){max-height:min(26dvh,calc(100dvh - var(--ui-card-top) - var(--ui-card-bottom)))!important}
+ .ego-look .territory-nav .resident-vitals{padding:5px 6px;gap:4px 8px}
+ .ego-look .need-icon{width:14px;height:14px}.ego-look .need-heading{font-size:8px}
+ .ego-look .resident-strip button{min-height:26px;padding:4px 5px;font-size:8px}
+}
+
+#ego-controls button.hinted{outline:2px solid #c88c43;outline-offset:1px}
+.ego-pieces{display:flex;gap:5px}.ego-pieces button{flex:1;background:#d9dfc8;border:1px solid #7d9481;border-radius:4px;min-height:44px;color:#263b3c}.ego-pieces button.active{outline:2px solid #c88c43}.ego-pieces span{font:11px monospace}.ego-pieces b{display:grid;grid-template-columns:repeat(4,7px);grid-template-rows:repeat(4,7px);gap:1px;width:31px;margin:3px auto}.ego-pieces i{background:#638c7a}.ego-pieces button:nth-child(1) i{background:#cf9847}.ego-pieces button:nth-child(3) i{background:#a483b1}#ego-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;max-width:208px;margin:8px auto}#ego-grid button{height:32px;background:#e6e5c6;border:1px solid #708675;border-radius:3px;color:#203b40;font:12px monospace}#ego-grid button.void{background:#294742;opacity:.4}#ego-grid button[data-owner="0"]{background:#efb65e}#ego-grid button[data-owner="1"]{background:#79c8b4}#ego-grid button[data-owner="2"]{background:#c59ed0}#ego-controls summary{font:11px Arial;cursor:pointer}#ego-controls button:disabled{opacity:.55}
