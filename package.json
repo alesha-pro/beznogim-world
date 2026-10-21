@@ -30,7 +30,8 @@
     "test:seams": "node tests/seams.test.mjs && node tests/seams-browser.test.cjs",
     "test:dream10": "node tests/rain-dream.test.mjs && node tests/dream10-browser.test.cjs",
     "test:ego": "node tests/ego.test.mjs && node tests/ego-browser.test.cjs",
-    "test:dream11": "node tests/room-dream.test.mjs && node tests/dream11-browser.test.cjs"
+    "test:dream11": "node tests/room-dream.test.mjs && node tests/dream11-browser.test.cjs",
+    "test:scale": "node tests/scale.test.mjs && node tests/scale-browser.test.cjs"
   },
   "dependencies": {
     "three": "0.186.1"
