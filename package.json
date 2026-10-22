@@ -32,7 +32,8 @@
     "test:ego": "node tests/ego.test.mjs && node tests/ego-browser.test.cjs",
     "test:dream11": "node tests/room-dream.test.mjs && node tests/dream11-browser.test.cjs",
     "test:scale": "node tests/scale.test.mjs && node tests/scale-browser.test.cjs",
-    "test:dream12": "node tests/absence-dream.test.mjs && node tests/absence-browser.test.cjs"
+    "test:dream12": "node tests/absence-dream.test.mjs && node tests/absence-browser.test.cjs",
+    "test:beacon": "node tests/beacon.test.mjs && node tests/beacon-browser.test.cjs"
   },
   "dependencies": {
     "three": "0.186.1"
