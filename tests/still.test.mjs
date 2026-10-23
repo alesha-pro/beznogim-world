@@ -18,5 +18,5 @@ console.log('PASS still core',q.length,'reachable distributions',total,'winning 
 
 import fs from 'node:fs';
 const land=JSON.parse(fs.readFileSync('src/territory.json')),manifest=JSON.parse(fs.readFileSync('public/resident-manifest.json')),modules=JSON.parse(fs.readFileSync('public/world-mechanics.json'));
-assert.deepEqual(manifest.objects.find(o=>o.id==='cloud_still').position,[24,.6,-24]);assert.equal(manifest.objects.find(o=>o.id==='cloud_still').actions.study.effect,'study');assert.equal(land.sectors.find(o=>o.id==='1:-1').name,'облачная перегонная');assert.equal(land.sectors.filter(o=>o.status==='settled').length,12);assert.equal(modules.modules.length,8);assert.equal(modules.modules.reduce((n,m)=>n+m.tools.length,0),32);
-console.log('PASS still stable registry/study only/11 settled13free/eightmodules32tools preserved');
+assert.deepEqual(manifest.objects.find(o=>o.id==='cloud_still').position,[24,.6,-24]);assert.equal(manifest.objects.find(o=>o.id==='cloud_still').actions.study.effect,'study');assert.equal(land.sectors.find(o=>o.id==='1:-1').name,'облачная перегонная');assert.equal(land.sectors.filter(o=>o.status==='settled').length,13);assert.equal(modules.modules.length,8);assert.equal(modules.modules.reduce((n,m)=>n+m.tools.length,0),32);
+console.log('PASS still stable registry/study only/current settled registry/eightmodules32tools preserved');

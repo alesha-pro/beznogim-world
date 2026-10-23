@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import {TYPES,LEVELS,FULL,LIMIT,affected,moves,solve,fresh,step,phase,light,normalize} from '../src/spores-core.js';
+assert.deepEqual(affected('DPO',2),[2]);assert.deepEqual(affected('RLHF',0),[0,1,3]);assert.deepEqual(affected('PPO',4),[1,4,7]);
+assert.deepEqual(LEVELS.map(l=>l.solution.length),[2,3,4]);
+for(let mask=0;mask<512;mask++){const p=solve(mask);assert(p.length<=4);assert.equal(p.reduce((m,a)=>m^moves.find(b=>b.type===a.type&&b.cell===a.cell).mask,mask),FULL);}
+for(let l=0;l<3;l++){let s=fresh(l);for(const a of LEVELS[l].solution){s=step(s,'stamp',a.type).state;const before=structuredClone(s);s=step(s,'press',a.cell).state;assert.deepEqual(s.history.slice(0,-1),before.history);assert.deepEqual(normalize(s),s);}assert.equal(phase(s),'ready');assert.deepEqual(step(s,'press',0).state,s);s=step(s,'harvest').state;assert.equal(phase(s),'collected');assert(s.flags[l]);assert.deepEqual(step(s,'harvest').state,s);assert.deepEqual(step(s,'undo').state,s);assert.equal(phase(step(s,'next').state),'playing');}
+let s=fresh();for(let n=0;n<LIMIT;n++)s=step(s,'press',0).state;assert.equal(phase(s),'buried');assert.equal(s.history.length,6);assert.deepEqual(step(s,'press',0).state,s);s=step(s,'undo').state;assert.equal(s.history.length,5);assert.equal(phase(s),'playing');s=step(s,'reset').state;assert.equal(s.history.length,0);
+for(const raw of [null,{},[],{v:1,level:90},{v:1,level:0,history:[null]}, {v:1,level:0,history:Array(99).fill({type:'DPO',cell:99})}])assert.deepEqual(normalize(raw),fresh());
+for(let l=0;l<3;l++)for(const m of moves){let s=fresh(l),orig=JSON.stringify(s);const t=step(step(s,'stamp',m.type).state,'press',m.cell).state;assert.equal(JSON.stringify(s),orig);assert.equal(light(t),LEVELS[l].mask^m.mask);assert.equal(light(step(t,'undo').state),LEVELS[l].mask);}
+let sixth=fresh();for(let i=0;i<4;i++)sixth=step(sixth,'press',0).state;for(const a of LEVELS[0].solution){sixth=step(sixth,'stamp',a.type).state;sixth=step(sixth,'press',a.cell).state;}assert.equal(sixth.history.length,6);assert.equal(phase(sixth),'ready');assert.equal(phase(step(sixth,'harvest').state),'collected');assert.equal(phase(step(sixth,'undo').state),'playing');
+for(const arg of [null,undefined,NaN,Infinity,-1,9,1.5,'0',{},[]])assert.deepEqual(step(fresh(),'press',arg).state,fresh());
+console.log('PASS spores: 512 solvable patterns / 27 stencils / 3 shortest routes / guards / undo / immutable / normalization');
