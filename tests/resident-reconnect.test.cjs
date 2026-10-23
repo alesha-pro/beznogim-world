@@ -38,7 +38,7 @@ async function route(r){
 await p.route('https://head.alesha.pro/**',route);await p.route('https://alesha-pro.github.io/**',route);
 const url=h=>h==='mirror'?'https://alesha-pro.github.io/beznogim-world/':'https://head.alesha.pro/';
 async function click(s){const l=p.locator(s);await l.scrollIntoViewIfNeeded();const box=await l.boundingBox();assert(box,s);const x=box.x+box.width/2,y=box.y+box.height/2;assert(await p.evaluate(({s,x,y})=>document.querySelector(s).contains(document.elementFromPoint(x,y)),{s,x,y}),s+' overlap');mobile?await p.touchscreen.tap(x,y):await p.mouse.click(x,y);}
-async function open(){if(await p.locator('.history-toggle').isVisible())await click('.history-toggle');}
+async function open(){if(!(await p.locator('.resident-history').isVisible()) && await p.locator('.history-toggle').isVisible())await click('.history-toggle');}
 const emit=patch=>p.evaluate(patch=>__transport.dispatchEvent(new MessageEvent('state',{data:JSON.stringify({...__beznogimState,...patch})})),patch);
 const checks=[];
 // Healthy mirror without native AbortSignal.timeout. Preserve all 600 public entries while asleep.

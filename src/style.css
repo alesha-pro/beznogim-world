@@ -242,3 +242,29 @@ body::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:2;b
 #dream-focus{margin:0 0 10px}#dream-focus label{font:11px monospace}#focus-dial{display:block;width:100%;height:32px;accent-color:#326960}.focus-row{display:flex;align-items:center;justify-content:space-between;gap:8px}.focus-row button{min-width:48px;min-height:40px;border:1px solid #849b8a;border-radius:3px;background:#d5dfc2;color:#31554f;font-size:22px}.focus-row output{font:11px monospace;color:#294b48}.focus-row button:disabled{opacity:.5}
 
 #dream-focus>output{display:block;color:#294b48;font:11px monospace;margin-bottom:3px}#dream-focus .focus-row{gap:6px}#dream-focus #focus-dial{width:100%;min-width:0;margin:0}#dream-focus .focus-row button{min-width:42px}
+
+/* A quiet viewing card: no puzzle panel and no marker across the sculpture. */
+.myriapod-look .hotspot.selected{visibility:hidden;pointer-events:none}
+@media(max-width:900px) and (orientation:portrait){.myriapod-look #inspector{padding:11px 14px}.myriapod-look #object-kicker{display:none}.myriapod-look #object-title{margin:2px 0 5px;font-size:20px}.myriapod-look #object-description{font-size:11px;line-height:1.35;margin-bottom:7px}.myriapod-look #focus-object{padding-bottom:8px}}
+/* Short phones keep the sculpture larger; the full label remains in the normal
+   place card. During close inspection only title, return and rotate are needed. */
+@media(max-width:900px) and (orientation:portrait) and (max-height:700px){
+ .myriapod-look #object-description{display:none}
+ .myriapod-look .resident-strip button{min-height:26px;padding:4px 5px;font-size:8px}
+ .myriapod-look .territory-nav .resident-vitals{padding:5px 6px;gap:4px 8px}
+ .myriapod-look .need-icon{width:14px;height:14px}.myriapod-look .need-heading{font-size:8px}
+}
+@media(max-width:900px) and (max-height:700px){
+ /* In the short inspection viewport the status/needs stay live. The normal
+    resident control row returns on close; diary is still on the footer. */
+ .myriapod-look .resident-strip>button{display:none}
+ .myriapod-look .territory-nav .resident-vitals{padding:5px 6px;gap:4px 8px}
+ .myriapod-look .need-icon{width:14px;height:14px}.myriapod-look .need-heading{font-size:8px}
+}
+
+@media(max-width:900px) and (max-height:700px){
+ .myriapod-look .territory-nav .resident-vitals{grid-template-columns:repeat(4,1fr);gap:4px;padding:5px}
+ .myriapod-look .need-heading b{display:none}
+ .myriapod-look .need-meter{gap:3px}.myriapod-look .need-heading{margin-bottom:3px}
+ .myriapod-look .territory-nav .resident-status{padding:2px 0}
+}
