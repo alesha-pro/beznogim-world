@@ -238,3 +238,7 @@ body::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:2;b
 #dream-absence{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;margin:0 0 10px}#dream-absence button{min-height:42px;padding:5px 1px;border:1px solid #8a9fa0;border-radius:3px;background:#dedbc3;color:#31554f;font:10px monospace}#dream-absence button[aria-pressed=true]{background:#294b58;color:#ffe0a3}#dream-absence button:disabled{opacity:.55}
 
 #beacon-controls .beacon-row button{min-height:40px}#beacon-controls b{font-size:20px;padding-left:3px}#beacon-all{margin-top:6px;font:11px monospace;color:#31594f;background:transparent;border:1px solid #788c7170;border-radius:4px;padding:5px}#beacon-repeat[aria-pressed=true]{background:#ab6041;color:#fff3cb}
+
+#dream-focus{margin:0 0 10px}#dream-focus label{font:11px monospace}#focus-dial{display:block;width:100%;height:32px;accent-color:#326960}.focus-row{display:flex;align-items:center;justify-content:space-between;gap:8px}.focus-row button{min-width:48px;min-height:40px;border:1px solid #849b8a;border-radius:3px;background:#d5dfc2;color:#31554f;font-size:22px}.focus-row output{font:11px monospace;color:#294b48}.focus-row button:disabled{opacity:.5}
+
+#dream-focus>output{display:block;color:#294b48;font:11px monospace;margin-bottom:3px}#dream-focus .focus-row{gap:6px}#dream-focus #focus-dial{width:100%;min-width:0;margin:0}#dream-focus .focus-row button{min-width:42px}
