@@ -268,3 +268,13 @@ body::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:2;b
  .myriapod-look .need-meter{gap:3px}.myriapod-look .need-heading{margin-bottom:3px}
  .myriapod-look .territory-nav .resident-status{padding:2px 0}
 }
+
+/* Two small removable trial trays share the existing workbench, not the HUD. */
+.bench-tabs{display:flex;gap:6px;margin-bottom:8px}.bench-tabs button{flex:1}
+#trial-readout,#trial-comparison{display:block;font:11px/1.5 monospace;margin:5px 0;color:#365b50}
+#trial-start,#trial-collect{width:49%;vertical-align:top}
+#trial-records{white-space:pre-line;font:10px/1.55 monospace;color:#53675b;max-height:90px;overflow:auto}
+#bench-trial-panel summary{font:11px monospace;cursor:pointer;margin:7px 0}
+
+#inspector:has(#bench-controls:not([hidden]) #bench-trial-panel:not([hidden])) #object-description{display:none}
+#inspector:has(#bench-controls:not([hidden]) #bench-trial-panel:not([hidden])) h2{font-size:23px;margin-bottom:5px}

@@ -369,14 +369,14 @@
     },
     {
       "id": "bench",
-      "title": "Ядро в ведро",
-      "version": 1,
+      "title": "Верстак и парные опыты",
+      "version": 2,
       "file": "mechanics/bench.js",
-      "tick_seconds": 0,
+      "tick_seconds": 30,
       "tools": [
         {
           "name": "fit",
-          "description": "Установить ядро 2/3/4 или ремень 1/2/3. Скорость = ядро × ремень. Монитор требует 6, 8, затем 9. Детали меняются только при ready.",
+          "description": "Установить ядро 2/3/4 или ремень 1/2/3. Скорость = ядро × ремень. Монитор требует 6, 8, затем 9. Детали меняются только при ready. Либо part=seed, value=1 кресс/2 камнецвет/3 бобы: посадить пару лотков почва/слюда. Не заменяет растущий или неснятый опыт.",
           "object": "mechanical_bench",
           "seconds": 20,
           "parameters": {
@@ -386,7 +386,8 @@
                 "type": "string",
                 "enum": [
                   "core",
-                  "belt"
+                  "belt",
+                  "seed"
                 ],
                 "maxLength": 4
               },
@@ -405,23 +406,39 @@
         },
         {
           "name": "crank",
-          "description": "Крутить рукоятку минуту. При совпадении скорости появляется картинка, иначе белый экран и ядро в ведре. Запасов и потребностей не расходует.",
+          "description": "Крутить рукоятку минуту. При совпадении скорости появляется картинка, иначе белый экран и ядро в ведре. Запасов и потребностей не расходует. С trial=true запустить посаженный парный опыт на 6 минут; water=1..3 равных доз на каждый лоток (по умолчанию2). Фоновые тики выращивают ростки. Игровая ускоренная модель, не ботанический прогноз. Повторный запуск не сбрасывает время.",
           "object": "mechanical_bench",
           "seconds": 60,
           "parameters": {
             "type": "object",
-            "properties": {},
+            "properties": {
+              "trial": {
+                "type": "boolean",
+                "description": "true: парный опыт; без параметра: прежний монитор."
+              },
+              "water": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 3,
+                "description": "Только trial=true: одинаковый полив лотков, 1..3 дозы. По умолчанию 2."
+              }
+            },
             "additionalProperties": false
           }
         },
         {
           "name": "salvage",
-          "description": "Достать выброшенное ядро из ведра и вернуть в механизм. После ошибки это нужно до следующего запуска.",
+          "description": "Достать выброшенное ядро из ведра и вернуть в механизм. После ошибки это нужно до следующего запуска. С trial=true снять готовый парный опыт и сохранить сравнение роста почва/слюда; повторный сбор отклоняется. Следующий опыт можно посадить через fit part=seed.",
           "object": "mechanical_bench",
           "seconds": 20,
           "parameters": {
             "type": "object",
-            "properties": {},
+            "properties": {
+              "trial": {
+                "type": "boolean",
+                "description": "true: парный опыт; без параметра: прежний монитор."
+              }
+            },
             "additionalProperties": false
           }
         },
@@ -458,16 +475,6 @@
           }
         },
         {
-          "tool": "fit",
-          "args": {
-            "part": "belt",
-            "value": 3
-          },
-          "expect": {
-            "result.ok": false
-          }
-        },
-        {
           "tool": "salvage",
           "args": {},
           "expect": {
@@ -491,14 +498,6 @@
           "expect": {
             "public.phase": "repaired",
             "public.picture": 1,
-            "state.repairs": 1
-          }
-        },
-        {
-          "tool": "crank",
-          "args": {},
-          "expect": {
-            "result.ok": false,
             "state.repairs": 1
           }
         },
@@ -586,6 +585,28 @@
             "public.phase": "ready",
             "state.run": 2,
             "state.repairs": 0
+          }
+        },
+        {
+          "tool": "fit",
+          "args": {
+            "part": "seed",
+            "value": 2
+          },
+          "expect": {
+            "public.trial.phase": "planted",
+            "public.trial.seed": 2
+          }
+        },
+        {
+          "tool": "crank",
+          "args": {
+            "trial": true,
+            "water": 1
+          },
+          "expect": {
+            "public.trial.phase": "growing",
+            "result.water_each": 40
           }
         }
       ]
