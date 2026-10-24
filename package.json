@@ -37,7 +37,8 @@
     "test:dream13": "node tests/focus-dream.test.mjs && node tests/focus-browser.test.cjs",
     "test:spores": "node tests/spores.test.mjs && node tests/spores-browser.test.cjs mobile && node tests/spores-browser.test.cjs desktop",
     "test:myriapod": "node tests/myriapod.test.mjs && node tests/myriapod-browser.test.cjs desktop && node tests/myriapod-browser.test.cjs mobile && node tests/myriapod-live.test.cjs desktop && node tests/myriapod-live.test.cjs mobile",
-    "test:trials": "node scripts/sync-mechanics.mjs && node tests/bench-trial.test.cjs && node tests/bench-trial-browser.test.cjs mobile && node tests/bench-trial-browser.test.cjs desktop && node tests/bench-trial-live.test.cjs mobile && node tests/bench-trial-live.test.cjs desktop"
+    "test:trials": "node scripts/sync-mechanics.mjs && node tests/bench-trial.test.cjs && node tests/bench-trial-browser.test.cjs mobile && node tests/bench-trial-browser.test.cjs desktop && node tests/bench-trial-live.test.cjs mobile && node tests/bench-trial-live.test.cjs desktop",
+    "test:cafe": "node scripts/sync-mechanics.mjs && node tests/cafe.test.mjs && node tests/cafe-browser.test.cjs mobile && node tests/cafe-browser.test.cjs desktop && node tests/cafe-live.test.cjs mobile && node tests/cafe-live.test.cjs desktop"
   },
   "dependencies": {
     "three": "0.186.1"

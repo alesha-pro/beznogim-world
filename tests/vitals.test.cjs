@@ -3,13 +3,13 @@ const source=fs.readFileSync(path.join(__dirname,'../public/mechanics/vitals.js'
 const ctx=vm.createContext({});vm.runInContext(source,ctx);
 let state=null;
 function call(mode,now,{tool,args={},action=null,last_sleep=null,objects={garden:{harvest:2}},mechanics={cellar:{shelf:[{id:7,kind:'stone'}]}}}={}){
-  const out=ctx.world({mode,now,tool,args,state,version:1,previous_version:1,world:{objects,mechanics,action,last_sleep}});
+  const out=ctx.world({mode,now,tool,args,state,version:1,previous_version:1,world:{objects,mechanics,action,last_sleep,position:[-2.65,1.9,.65]}});
   state=JSON.parse(JSON.stringify(out.state));return JSON.parse(JSON.stringify(out));
 }
 function close(actual,expected,epsilon=.001){assert(Math.abs(actual-expected)<=epsilon,`${actual} != ${expected}`);}
 
 // Initial state is bounded, persists, and loses needs slowly over real time.
-call('migrate',0);assert.deepEqual(Object.keys(state).sort(),['cooldowns','food','lastSleepEnd','updated','vitals']);
+call('migrate',0);assert.deepEqual(Object.keys(state).sort(),['cafe','cooldowns','food','lastSleepEnd','updated','vitals']);
 assert.deepEqual(state.vitals,{hunger:72,thirst:72,energy:72,mood:72});
 call('tick',3600);close(state.vitals.hunger,67);close(state.vitals.thirst,64);close(state.vitals.energy,69);
 
@@ -57,6 +57,6 @@ const registry=JSON.parse(fs.readFileSync(path.join(__dirname,'../public/world-m
 const manifest=JSON.parse(fs.readFileSync(path.join(__dirname,'../public/resident-manifest.json'),'utf8'));
 const vitals=registry.modules.find(m=>m.id==='vitals');assert(vitals);assert.equal(vitals.tick_seconds,60);
 assert.deepEqual(vitals.tools.map(t=>t.name),['eat_harvest','drink_water','rest_quietly','drink_tea']);
-for(const tool of vitals.tools)assert(manifest.objects.some(o=>o.id===tool.object),`missing object ${tool.object}`);
+for(const tool of vitals.tools.filter(t=>t.object))assert(manifest.objects.some(o=>o.id===tool.object),`missing object ${tool.object}`);
 const cellar=registry.modules.find(m=>m.id==='cellar');assert(cellar.tools.some(t=>t.name==='eat'));
 console.log('PASS vitals: sleep overlap/restart, bounded offline decay, finite food/tea, water cooldown, multiple cheese receipts and registered tools');

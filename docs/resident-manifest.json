@@ -348,6 +348,23 @@
           "label": "рассматривает перламутровую многоножку"
         }
       }
+    },
+    {
+      "id": "quote_cafe",
+      "name": "Кавычка в кляре / миникафе",
+      "position": [
+        48,
+        0.6,
+        24
+      ],
+      "actions": {
+        "study": {
+          "effect": "study",
+          "seconds": 40,
+          "label": "заглядывает в миникафе"
+        }
+      },
+      "description": "Заказ и еда: resident_ext_vitals_rest_quietly cafe=order/eat/tea.90сек готовка,2часа между заказами,4часа срок подноса. Подлететь к48,24."
     }
   ]
 }

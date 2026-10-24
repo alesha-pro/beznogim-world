@@ -278,3 +278,14 @@ body::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:2;b
 
 #inspector:has(#bench-controls:not([hidden]) #bench-trial-panel:not([hidden])) #object-description{display:none}
 #inspector:has(#bench-controls:not([hidden]) #bench-trial-panel:not([hidden])) h2{font-size:23px;margin-bottom:5px}
+
+#cafe-controls{display:grid;gap:8px}#cafe-controls[hidden]{display:none}#cafe-readout{font-size:13px;color:#365b50}.cafe-buttons{display:flex;flex-wrap:wrap;gap:6px}#cafe-controls button{min-height:36px}#cafe-controls small{font-size:11px;line-height:1.45}#cafe-message{min-height:16px}
+body.cafe-look .hotspot.selected{visibility:hidden}
+@media(max-width:900px) and (max-height:700px){body.cafe-look #object-description{display:none}body.cafe-look #inspector{max-height:53dvh}body.cafe-look .resident-strip>button{display:none}body.cafe-look #cafe-controls{gap:4px}body.cafe-look #cafe-controls details{display:none}}
+@media(max-width:900px) and (orientation:landscape){body.cafe-look #inspector{max-height:calc(100dvh - 75px)}}
+
+#cafe-controls button{background:#dce2ca;color:#365b50;border:1px solid #a9b397;border-radius:4px;padding:7px 9px;font-size:12px}#cafe-controls button:disabled{opacity:.45;cursor:default}
+@media(max-width:900px) and (orientation:portrait){body.cafe-look #inspector{max-height:min(34dvh,calc(100dvh - var(--ui-card-top) - var(--ui-card-bottom)))!important;padding:11px 14px}body.cafe-look #object-description,body.cafe-look #object-kicker{display:none}body.cafe-look #object-title{font-size:20px;margin:2px 0 7px}}
+@media(max-width:900px) and (max-height:700px){body.cafe-look .territory-nav .resident-vitals{grid-template-columns:repeat(4,1fr);gap:4px;padding:5px}body.cafe-look .need-icon{width:14px;height:14px}body.cafe-look .need-heading{font-size:8px;margin-bottom:3px}body.cafe-look .need-heading b{display:none}body.cafe-look .need-meter{gap:3px}body.cafe-look .territory-nav .resident-status{padding:2px 0}}
+@media(max-width:900px) and (orientation:portrait) and (max-height:700px){body.cafe-look header h1{display:none}body.cafe-look .territory-nav,body.cafe-look .toolbar{top:44px}}
+@media(max-width:900px) and (orientation:landscape) and (max-height:600px){body.cafe-look header h1{display:none}body.cafe-look .territory-nav{top:42px}}

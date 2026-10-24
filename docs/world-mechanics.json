@@ -146,7 +146,7 @@
     {
       "id": "vitals",
       "title": "Жизненные показатели",
-      "version": 1,
+      "version": 2,
       "file": "mechanics/vitals.js",
       "tick_seconds": 60,
       "tools": [
@@ -174,12 +174,21 @@
         },
         {
           "name": "rest_quietly",
-          "description": "Посидеть спокойно и немного восстановить силы. Долгий сон остаётся отдельным действием resident_sleep.",
-          "object": "tea",
+          "description": "Без аргументов: тихий отдых у чайника (-2.65,.65). В миникафе «Кавычка в кляре» [48,.6,24], в пределах2.4м: cafe=order заказать порцию+чай (готово через90сек); cafe=eat съесть (+26сытость); cafe=tea выпить (+24вода). Каждое один раз, следующий заказ через2часа, поднос хранится4часа. Сон не заменяет.",
           "seconds": 180,
           "parameters": {
             "type": "object",
-            "properties": {},
+            "properties": {
+              "cafe": {
+                "type": "string",
+                "enum": [
+                  "order",
+                  "eat",
+                  "tea"
+                ],
+                "maxLength": 8
+              }
+            },
             "additionalProperties": false
           }
         },
@@ -223,6 +232,33 @@
           "args": {},
           "expect": {
             "result.kind": "tea"
+          }
+        },
+        {
+          "tool": "rest_quietly",
+          "args": {
+            "cafe": "order"
+          },
+          "expect": {
+            "result.reason": "visit_cafe"
+          }
+        },
+        {
+          "tool": "rest_quietly",
+          "args": {
+            "cafe": "eat"
+          },
+          "expect": {
+            "result.reason": "visit_cafe"
+          }
+        },
+        {
+          "tool": "rest_quietly",
+          "args": {
+            "cafe": "tea"
+          },
+          "expect": {
+            "result.reason": "visit_cafe"
           }
         }
       ]
