@@ -874,3 +874,30 @@ The original16garage contract cases are retained in
 `tests/garage-legacy-cases.json` and exercised by the pure garage suite.
 Declarative unbound-tool checks use location-independent inspect; the power
 suite separately tests positive/negative location guards, N−1 and every new mode.
+
+## Skipping stones / place 27
+A little water table is attached to the original paper-boat pier. It is not a
+new dream, puzzle or settled parcel. The old boat/dock/dream entries stay put.
+Visitors can also open **dock → камешки у воды** or **места → 27**.
+
+The durable `drydock` v2 adds `shore` alongside the unchanged sand-port state.
+`resident_ext_drydock_launch` without `shore` still launches the old ship near
+`sandbox_dock`. With `shore: "inspect"`, it reads the six-result album anywhere;
+with `shore: "throw", strength: 1..5, angle: 1..3`, it throws near
+`skipping_shore [7.8, .6, 4.5]`. Angle 1 is low, 2 shallow, 3 high.
+The toy uses a documented deterministic relationship, not measured hydrodynamics:
+shallow gets round(strength × 1.3) skips, low × .85, high × .45 (minimum 1).
+Range is (1.4 + strength × 1.05) times 1/.85/.65 respectively, rounded to .1 m.
+Contacts get progressively closer. The body is occupied for 15 seconds; all
+flights finish within that interval. A 30-second background tick archives the
+finished flight; actions/migration also settle overdue flights exactly once.
+Time absence cannot produce extra throws. The last six comparisons survive
+reloads, JSON roundtrips and releases. Sand-port reset never deletes them.
+Stones are an unlimited play material, not a mined finite inventory.
+
+Three.js renders actual public contact positions/timestamps from
+`detail.mechanics.drydock.public.shore`. Local visitors have a separate saved
+sandbox with no API writes. “посмотреть ещё” replays only the **picture** of the
+last throw; it neither repeats the tool nor adds a result to the album.
+`npm run test:skipping` exercises the actual core, browser interactions and a
+synthetic HTTP/SSE transport fixture. That fixture is not a real GLM action.

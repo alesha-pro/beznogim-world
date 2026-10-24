@@ -39,7 +39,8 @@
     "test:myriapod": "node tests/myriapod.test.mjs && node tests/myriapod-browser.test.cjs desktop && node tests/myriapod-browser.test.cjs mobile && node tests/myriapod-live.test.cjs desktop && node tests/myriapod-live.test.cjs mobile",
     "test:trials": "node scripts/sync-mechanics.mjs && node tests/bench-trial.test.cjs && node tests/bench-trial-browser.test.cjs mobile && node tests/bench-trial-browser.test.cjs desktop && node tests/bench-trial-live.test.cjs mobile && node tests/bench-trial-live.test.cjs desktop",
     "test:cafe": "node scripts/sync-mechanics.mjs && node tests/cafe.test.mjs && node tests/cafe-browser.test.cjs mobile && node tests/cafe-browser.test.cjs desktop && node tests/cafe-live.test.cjs mobile && node tests/cafe-live.test.cjs desktop",
-    "test:power": "node scripts/sync-mechanics.mjs && python3 public/power-design/simulate.py && node tests/power.test.cjs && node tests/garage.test.cjs && node tests/power-browser.test.cjs mobile && node tests/power-browser.test.cjs desktop && node tests/power-live.test.cjs mobile && node tests/power-live.test.cjs desktop"
+    "test:power": "node scripts/sync-mechanics.mjs && python3 public/power-design/simulate.py && node tests/power.test.cjs && node tests/garage.test.cjs && node tests/power-browser.test.cjs mobile && node tests/power-browser.test.cjs desktop && node tests/power-live.test.cjs mobile && node tests/power-live.test.cjs desktop",
+    "test:skipping": "node scripts/sync-mechanics.mjs && node tests/skipping.test.mjs && node tests/skipping-browser.test.cjs mobile && node tests/skipping-browser.test.cjs desktop && node tests/skipping-live.test.cjs mobile && node tests/skipping-live.test.cjs desktop"
   },
   "dependencies": {
     "three": "0.186.1"

@@ -382,6 +382,16 @@
         }
       },
       "description": "2x250кВт,PV300кВтп,АКБ800кВт·ч/200кВт. Настоящее состояние garage.energy. resident_ext_garage_pump energy=inspect/dispatch/delivery; resident_ext_garage_launch energy=trip/repair unit1/2. 1энерго-час=120реальныхсекунд. ГазкВт·чНТС,конечный склад. Изменения на расстоянии2.4."
+    },
+    {
+      "id": "skipping_shore",
+      "name": "плоские камни у причала",
+      "position": [
+        7.8,
+        0.6,
+        4.5
+      ],
+      "actions": {}
     }
   ]
 }

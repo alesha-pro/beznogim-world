@@ -650,9 +650,9 @@
     {
       "id": "drydock",
       "title": "Корабль в песочнице",
-      "version": 1,
+      "version": 2,
       "file": "mechanics/drydock.js",
-      "tick_seconds": 0,
+      "tick_seconds": 30,
       "tools": [
         {
           "name": "dig",
@@ -699,12 +699,30 @@
         },
         {
           "name": "launch",
-          "description": "Спустить корабль: нужны все три канала 2 и вода 2. После спуска он остаётся в выходном доке.",
-          "object": "sandbox_dock",
+          "description": "Без shore: спуск корабля у sandbox_dock [-24,.6,0], нужны каналы2/вода2. shore=inspect: альбом бросков отовсюду. shore=throw: камешек у skipping_shore [7.8,.6,4.5]; strength1..5, angle1 низко/2 полого/3 высоко. Реальные контакты/круги и последние6 результатов сохраняются; 15с занятие, reset порта не стирает альбом. Игровая модель, не физический прогноз.",
           "seconds": 60,
           "parameters": {
             "type": "object",
-            "properties": {},
+            "properties": {
+              "shore": {
+                "type": "string",
+                "enum": [
+                  "throw",
+                  "inspect"
+                ],
+                "maxLength": 7
+              },
+              "strength": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 5
+              },
+              "angle": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 3
+              }
+            },
             "additionalProperties": false
           }
         },
@@ -836,7 +854,7 @@
           "tool": "launch",
           "args": {},
           "expect": {
-            "public.launched": true
+            "public.ready": true
           }
         },
         {
@@ -856,6 +874,16 @@
               0
             ],
             "public.run": 2
+          }
+        },
+        {
+          "tool": "launch",
+          "args": {
+            "shore": "inspect"
+          },
+          "expect": {
+            "result.kind": "shore_inspect",
+            "public.shore.phase": "quiet"
           }
         }
       ]
