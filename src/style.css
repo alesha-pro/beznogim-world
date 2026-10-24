@@ -289,3 +289,15 @@ body.cafe-look .hotspot.selected{visibility:hidden}
 @media(max-width:900px) and (max-height:700px){body.cafe-look .territory-nav .resident-vitals{grid-template-columns:repeat(4,1fr);gap:4px;padding:5px}body.cafe-look .need-icon{width:14px;height:14px}body.cafe-look .need-heading{font-size:8px;margin-bottom:3px}body.cafe-look .need-heading b{display:none}body.cafe-look .need-meter{gap:3px}body.cafe-look .territory-nav .resident-status{padding:2px 0}}
 @media(max-width:900px) and (orientation:portrait) and (max-height:700px){body.cafe-look header h1{display:none}body.cafe-look .territory-nav,body.cafe-look .toolbar{top:44px}}
 @media(max-width:900px) and (orientation:landscape) and (max-height:600px){body.cafe-look header h1{display:none}body.cafe-look .territory-nav{top:42px}}
+
+#power-controls{display:grid;gap:8px}#power-controls[hidden]{display:none}#power-readout{font-size:13px;color:#365b50}.power-buttons{display:flex;flex-wrap:wrap;gap:6px}#power-controls button{min-height:36px}#power-controls small{font-size:11px;line-height:1.45}#power-message{min-height:16px}
+body.power-look .hotspot.selected{visibility:hidden}
+@media(max-width:900px) and (max-height:700px){body.power-look #object-description{display:none}body.power-look #inspector{max-height:53dvh}body.power-look .resident-strip>button{display:none}body.power-look #power-controls{gap:4px}body.power-look #power-controls details{display:none}}
+@media(max-width:900px) and (orientation:landscape){body.power-look #inspector{max-height:calc(100dvh - 75px)}}
+#power-controls button{background:#dce2ca;color:#365b50;border:1px solid #a9b397;border-radius:4px;padding:7px 9px;font-size:12px}#power-controls button:disabled{opacity:.45;cursor:default}
+@media(max-width:900px) and (orientation:portrait){body.power-look #inspector{max-height:min(34dvh,calc(100dvh - var(--ui-card-top) - var(--ui-card-bottom)))!important;padding:11px 14px}body.power-look #object-description,body.power-look #object-kicker{display:none}body.power-look #object-title{font-size:20px;margin:2px 0 7px}}
+@media(max-width:900px) and (max-height:700px){body.power-look .territory-nav .resident-vitals{grid-template-columns:repeat(4,1fr);gap:4px;padding:5px}body.power-look .need-icon{width:14px;height:14px}body.power-look .need-heading{font-size:8px;margin-bottom:3px}body.power-look .need-heading b{display:none}body.power-look .need-meter{gap:3px}body.power-look .territory-nav .resident-status{padding:2px 0}}
+@media(max-width:900px) and (orientation:portrait) and (max-height:700px){body.power-look header h1{display:none}body.power-look .territory-nav,body.power-look .toolbar{top:44px}}
+@media(max-width:900px) and (orientation:landscape) and (max-height:600px){body.power-look header h1{display:none}body.power-look .territory-nav{top:42px}}
+#power-readout,#power-stores{white-space:pre-line;line-height:1.5;font-variant-numeric:tabular-nums}#power-controls{font-size:12px}#power-controls details p{font-size:11px}/* The assumptions must remain reachable by scrolling even on a short phone. */
+#power-controls details{display:block!important}

@@ -1,0 +1,87 @@
+{
+  "provenance": "Independent reconstruction; earlier original files unavailable in isolated workshop. No official power sizing inference.",
+  "load_mean_kw": 154.28374076999975,
+  "load_peak_kw": 221.77981479472382,
+  "configurations": {
+    "2x100": {
+      "normal": {
+        "gas_kwh_lhv": 3357964.352,
+        "unserved_kwh": 8339.828,
+        "pv_kwh": 0.0,
+        "spill_kwh": 0,
+        "battery_end_kwh": 0.0,
+        "loss_kwh": 0.0
+      },
+      "winter_n1": {
+        "gas_kwh_lhv": 3328154.32,
+        "unserved_kwh": 20263.841,
+        "pv_kwh": 0.0,
+        "spill_kwh": 0,
+        "battery_end_kwh": 0.0,
+        "loss_kwh": 0.0
+      }
+    },
+    "1x250": {
+      "normal": {
+        "gas_kwh_lhv": 3378813.923,
+        "unserved_kwh": 0,
+        "pv_kwh": 0.0,
+        "spill_kwh": 0,
+        "battery_end_kwh": 0.0,
+        "loss_kwh": 0.0
+      },
+      "winter_n1": {
+        "gas_kwh_lhv": 3305634.884,
+        "unserved_kwh": 29271.615,
+        "pv_kwh": 0.0,
+        "spill_kwh": 0,
+        "battery_end_kwh": 0.0,
+        "loss_kwh": 0.0
+      }
+    },
+    "2x250": {
+      "normal": {
+        "gas_kwh_lhv": 3378813.923,
+        "unserved_kwh": 0,
+        "pv_kwh": 0.0,
+        "spill_kwh": 0,
+        "battery_end_kwh": 0.0,
+        "loss_kwh": 0.0
+      },
+      "winter_n1": {
+        "gas_kwh_lhv": 3378813.923,
+        "unserved_kwh": 0,
+        "pv_kwh": 0.0,
+        "spill_kwh": 0,
+        "battery_end_kwh": 0.0,
+        "loss_kwh": 0.0
+      }
+    },
+    "hybrid": {
+      "normal": {
+        "gas_kwh_lhv": 2252926.524,
+        "unserved_kwh": 0,
+        "pv_kwh": 458169.525,
+        "spill_kwh": 532.357,
+        "battery_end_kwh": 160.0,
+        "loss_kwh": 7522.208
+      },
+      "winter_n1": {
+        "gas_kwh_lhv": 2269823.906,
+        "unserved_kwh": 0,
+        "pv_kwh": 451310.559,
+        "spill_kwh": 532.357,
+        "battery_end_kwh": 160.0,
+        "loss_kwh": 7422.195
+      }
+    }
+  },
+  "pv_only_diagnostic": {
+    "gas_kwh_lhv": 2427290.447,
+    "unserved_kwh": 0,
+    "pv_kwh": 458169.525,
+    "spill_kwh": 77560.135,
+    "battery_end_kwh": 0.0,
+    "loss_kwh": 0.0
+  }
+}

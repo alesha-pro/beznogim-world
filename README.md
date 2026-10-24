@@ -818,3 +818,59 @@ fixtures в `tests/ego-*.test.cjs` проверяют реальные mouse/tou
 Длинное изогнутое тело: тридцать перекрывающихся сегментов, сто двадцать маленьких сочленённых ног, голова с двумя усиками. Перламутровые панцирные пластины с изумрудной, сапфировой, аметистовой и цитриновой мозаикой; тонкие латунные соединения. Это неподвижный памятник, без головоломки, нового счётчика, сохранения или серверного модуля. Жителю доступен стабильный `jeweled_myriapod` и базовое `study`. Осмотр посетителем только управляет камерой и не включает песочницу. Остальные объекты, восемь модулей/32 tools и жизнь жителя сохранены, модель и расписание не менялись.
 
 Проверки: `node tests/myriapod.test.mjs` строит настоящую Three.js-геометрию и проверяет ноги/суставы/касание постамента/материалы/пакетирование/реестр. `tests/myriapod-browser.test.cjs desktop|mobile` проверяет карту, геометрическое попадание, четыре ракурса, реальные проекции вершин, приближение, короткие экраны, возврат, reload и прежние локальные сохранения. `tests/myriapod-live.test.cjs desktop|mobile` использует явно синтетический read-only HTTPS/SSE transport fixture: положение и сон не меняются, четыре потребности/история/фильтры/сворачивание работают, API-записей нет. Это не утверждение о настоящем ходе GLM и не физический телефон.
+
+## Hybrid power station (place26, sector2:-1)
+
+A **fictional accelerated energy game**, not an engineering design, measured load,
+local climate dataset, economic optimum or recommendation for gas technology.
+The original chat's design artifacts were unavailable inside the isolated workshop;
+`public/power-design/` is an independent, explicitly labelled stdlib reconstruction.
+Its author-chosen initial100kW is multiplied by the supplied scenario factor
+1.5428374077. Synthetic annual mean154.28374077kW; peak221.78kW.
+
+The saved server state is `garage.energy` (an additive version2 migration),
+public API `mechanics.garage.public.energy`. All eight modules and32 named tools
+remain; no old tool was removed to make room. The original garage remains at
+`[-32,.6,-20.6]`; the power station is `[48,.6,-24]`. Unbound tools enforce their
+respective location at runtime for changes; inspection is available anywhere.
+
+- `resident_ext_garage_pump energy=inspect`: power, load, stores and balances.
+- `resident_ext_garage_pump energy=dispatch unit=1|2 enabled=true|false`.
+- `resident_ext_garage_pump energy=delivery`: transfer ≤100000kWh LHV from a
+  finite800000kWh depot, at most once per24energy-hours; tank limit500000kWh.
+- `resident_ext_garage_launch energy=trip|repair unit=1|2`: persistent N−1 test.
+- Old pump `power/angle` and launch `mode=jump|next|restart` are unchanged and
+  cannot restart the station or refill its stores.
+
+2×250kWe, PV300kWp, battery800kWh/200kW. One energy hour is120real seconds,
+not an ordinary wall-clock hour. Autonomous60second ticks continue offline.
+Integration uses ≤.25h steps; an extreme gap processes up to8760energy-hours
+per invocation and carries the remaining interval forward rather than discarding
+it. Backward clocks do not create energy. Gas is measured in kWh LHV at40%
+electric efficiency;45% recoverable heat is displayed,15% is unrecovered loss.
+Heat does not silently change the old greenhouse or needs.
+
+PV serves demand first. Battery discharges above a20% reserve before CHP; the
+reserve is available if CHP cannot meet demand. Only surplus PV charges it.
+Both charge/discharge efficiencies are95%; power limits and capacity apply.
+A new20kW propagation house is included in aggregate demand: its fan and lights
+follow the served fraction. Old cafes, dreams, tools and needs are not disabled.
+Initial gas400000kWh and depot800000kWh are finite, never reset on publication.
+When they run out, PV and stored energy remain; there is no free gas on a tick.
+
+The spectator controls use an independent local sandbox with no API write route.
+The readonly public state and visitor state never overwrite one another.
+
+Recheck:
+```
+npm run build
+npm run test:power
+npm run test:mechanics
+node tests/bench-trial.test.cjs
+```
+The browser fixtures are synthetic HTTP/SSE transport tests using actual mechanic
+outputs, not evidence of a real GLM visit or an actual production action.
+The original16garage contract cases are retained in
+`tests/garage-legacy-cases.json` and exercised by the pure garage suite.
+Declarative unbound-tool checks use location-independent inspect; the power
+suite separately tests positive/negative location guards, N−1 and every new mode.

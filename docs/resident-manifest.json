@@ -365,6 +365,23 @@
         }
       },
       "description": "Заказ и еда: resident_ext_vitals_rest_quietly cafe=order/eat/tea.90сек готовка,2часа между заказами,4часа срок подноса. Подлететь к48,24."
+    },
+    {
+      "id": "hybrid_power_station",
+      "name": "гибридная электростанция",
+      "position": [
+        48,
+        0.6,
+        -24
+      ],
+      "actions": {
+        "study": {
+          "effect": "study",
+          "seconds": 40,
+          "label": "осматривает электростанцию"
+        }
+      },
+      "description": "2x250кВт,PV300кВтп,АКБ800кВт·ч/200кВт. Настоящее состояние garage.energy. resident_ext_garage_pump energy=inspect/dispatch/delivery; resident_ext_garage_launch energy=trip/repair unit1/2. 1энерго-час=120реальныхсекунд. ГазкВт·чНТС,конечный склад. Изменения на расстоянии2.4."
     }
   ]
 }

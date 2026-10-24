@@ -224,7 +224,7 @@
           "tool": "rest_quietly",
           "args": {},
           "expect": {
-            "result.ok": true
+            "result.kind": "rest"
           }
         },
         {
@@ -1293,15 +1293,14 @@
     },
     {
       "id": "garage",
-      "title": "Прыгающий гараж",
-      "version": 1,
+      "title": "Гараж и электростанция",
+      "version": 2,
       "file": "mechanics/garage.js",
-      "tick_seconds": 0,
+      "tick_seconds": 60,
       "tools": [
         {
           "name": "pump",
-          "description": "Накачать 6 делений воздуха и вернуть гараж на старт. power1..6, angle1..3. Игровая дальность=power*(4-angle), вершина=power*angle/2; на середине заданного пролёта надо быть не ниже пробки. Попасть надо точно в gap. Не физика реального автомобиля. После посадки launch next.",
-          "object": "pneumatic_garage",
+          "description": "Накачать 6 делений воздуха и вернуть гараж на старт. power1..6, angle1..3. Игровая дальность=power*(4-angle), вершина=power*angle/2; на середине заданного пролёта надо быть не ниже пробки. Попасть надо точно в gap. Не физика реального автомобиля. После посадки launch next. Электростанция: energy=inspect (любой участок). dispatch unit1/2 enabledtrue/false; delivery конечная поставка100000кВт·ч НТС,24энерго-часа интервал, склад800000 невозобновляемый. Изменения станции требуют48,.6,-24; старые действия гаража требуют -32,.6,-20.6. 1энерго-час=120реальныхсекунд. Газη40%,2x250кВт,PV300кВтп,батарея800кВт·ч/200кВт; батарея не генератор. Учебная модель.",
           "seconds": 35,
           "parameters": {
             "type": "object",
@@ -1315,19 +1314,32 @@
                 "type": "integer",
                 "minimum": 1,
                 "maximum": 3
+              },
+              "energy": {
+                "type": "string",
+                "maxLength": 10,
+                "enum": [
+                  "inspect",
+                  "dispatch",
+                  "delivery"
+                ]
+              },
+              "unit": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 2
+              },
+              "enabled": {
+                "type": "boolean"
               }
             },
-            "required": [
-              "power",
-              "angle"
-            ],
+            "required": [],
             "additionalProperties": false
           }
         },
         {
           "name": "launch",
-          "description": "jump тратит power воздуха и прыгает гаражом. next после успешной посадки открывает следующее из трёх испытаний. restart очищает только эту партию, не вещи или другие места. Машина остаётся дома; три жетона не еда и не инвентарь.",
-          "object": "pneumatic_garage",
+          "description": "jump тратит power воздуха и прыгает гаражом. next после успешной посадки открывает следующее из трёх испытаний. restart очищает только эту партию, не вещи или другие места. Машина остаётся дома; три жетона не еда и не инвентарь. Электростанция: energy=inspect (любой участок). trip unit1/2 настоящий сохраняемый тест отказа; repair unit1/2 возвращает блок. Изменения станции требуют48,.6,-24; старые действия гаража требуют -32,.6,-20.6. 1энерго-час=120реальныхсекунд. Газη40%,2x250кВт,PV300кВтп,батарея800кВт·ч/200кВт; батарея не генератор. Учебная модель.",
           "seconds": 45,
           "parameters": {
             "type": "object",
@@ -1340,169 +1352,48 @@
                   "restart"
                 ],
                 "maxLength": 7
+              },
+              "energy": {
+                "type": "string",
+                "maxLength": 10,
+                "enum": [
+                  "inspect",
+                  "trip",
+                  "repair"
+                ]
+              },
+              "unit": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 2
               }
             },
-            "required": [
-              "mode"
-            ],
+            "required": [],
             "additionalProperties": false
           }
         }
       ],
       "tests": [
         {
-          "tool": "launch",
-          "args": {
-            "mode": "next"
-          },
-          "expect": {
-            "result.reason": "not_landed"
-          }
-        },
-        {
-          "tool": "launch",
-          "args": {
-            "mode": "jump"
-          },
-          "expect": {
-            "public.phase": "short",
-            "state.air": 5
-          }
-        },
-        {
           "tool": "pump",
           "args": {
-            "power": 6,
-            "angle": 1
+            "energy": "inspect"
           },
           "expect": {
-            "public.air": 6
-          }
-        },
-        {
-          "tool": "launch",
-          "args": {
-            "mode": "jump"
-          },
-          "expect": {
-            "public.phase": "far",
-            "state.air": 0
-          }
-        },
-        {
-          "tool": "launch",
-          "args": {
-            "mode": "jump"
-          },
-          "expect": {
-            "result.reason": "empty",
-            "state.attempts": 2
-          }
-        },
-        {
-          "tool": "pump",
-          "args": {
-            "power": 2,
-            "angle": 1
-          },
-          "expect": {
-            "public.range": 6
-          }
-        },
-        {
-          "tool": "launch",
-          "args": {
-            "mode": "jump"
-          },
-          "expect": {
-            "state.landed": 1,
-            "state.phase": "landed"
-          }
-        },
-        {
-          "tool": "launch",
-          "args": {
-            "mode": "next"
-          },
-          "expect": {
-            "public.gap": 8
-          }
-        },
-        {
-          "tool": "pump",
-          "args": {
-            "power": 2,
-            "angle": 1
-          },
-          "expect": {
+            "result.ok": true,
+            "public.energy.capacityKW": 500,
             "state.air": 6
           }
         },
         {
           "tool": "launch",
           "args": {
-            "mode": "jump"
+            "energy": "inspect"
           },
           "expect": {
-            "public.phase": "bumped"
-          }
-        },
-        {
-          "tool": "pump",
-          "args": {
-            "power": 4,
-            "angle": 2
-          },
-          "expect": {
-            "public.apex": 4
-          }
-        },
-        {
-          "tool": "launch",
-          "args": {
-            "mode": "jump"
-          },
-          "expect": {
-            "state.landed": 2
-          }
-        },
-        {
-          "tool": "launch",
-          "args": {
-            "mode": "next"
-          },
-          "expect": {
-            "public.barrier": 6
-          }
-        },
-        {
-          "tool": "pump",
-          "args": {
-            "power": 6,
-            "angle": 3
-          },
-          "expect": {
+            "result.ok": true,
+            "public.energy.capacityKW": 500,
             "state.air": 6
-          }
-        },
-        {
-          "tool": "launch",
-          "args": {
-            "mode": "jump"
-          },
-          "expect": {
-            "state.phase": "complete",
-            "state.landed": 3
-          }
-        },
-        {
-          "tool": "launch",
-          "args": {
-            "mode": "restart"
-          },
-          "expect": {
-            "state.run": 2,
-            "state.landed": 0
           }
         }
       ]

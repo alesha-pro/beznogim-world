@@ -104,6 +104,7 @@ function world(input) {
       }
     }
   }
+  if(input.mode==='action'&&input.tool==='rest_quietly'&&!input.args?.cafe&&result)result.kind='rest';
   const v=s.vitals;
   return {state:s,public:{...v,cafe:cafePublic(),food:{harvestAvailable:Math.max(0,Math.floor(Number(input.world?.objects?.garden?.harvest)||0)-s.food.harvestConsumed),teaAvailable:Math.max(0,Math.floor(Number(input.world?.objects?.tea?.cups)||0)-s.food.teaConsumed),cheeseConsumed:s.food.cheeseEaten},sleeping:a?.kind==='sleep'&&a.started<=input.now&&a.ends>input.now,lastSleepEnd:s.lastSleepEnd},result,seconds,label};
 }

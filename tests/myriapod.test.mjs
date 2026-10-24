@@ -17,7 +17,7 @@ const ps=sculpture.geometryPoints();assert(ps.length>50000);assert(ps.every(p=>N
 const b=new THREE.Box3().setFromPoints(ps);assert(b.max.x-b.min.x>10);assert(b.max.z-b.min.z<4);assert(b.max.y-b.min.y>1);assert(s.head[0]>52);
 root.updateMatrixWorld(true);let calls=0,nacre=0;sculpture.body.traverse(o=>{if(o.isMesh){calls++;if(o.material.iridescence===1)nacre++;assert(o.geometry.attributes.position.count>0);assert(o.geometry.attributes.normal);}});assert(calls<=12);assert.equal(nacre,4);
 const manifest=JSON.parse(fs.readFileSync('public/resident-manifest.json')),o=manifest.objects.find(o=>o.id===MYRIAPOD.id);assert.deepEqual(o.position,MYRIAPOD.position);assert.equal(o.actions.study.effect,'study');assert.equal(o.actions.study.seconds,45);
-const land=JSON.parse(fs.readFileSync('src/territory.json'));assert.equal(land.sectors.find(s=>s.id==='2:0').name,'памятник многоножке');assert.equal(land.sectors.filter(s=>s.status==='settled').length,15);
+const land=JSON.parse(fs.readFileSync('src/territory.json'));assert.equal(land.sectors.find(s=>s.id==='2:0').name,'памятник многоножке');assert.equal(land.sectors.filter(s=>s.status==='settled').length,16);
 assert.equal(s.path.to[0],40.5);assert.equal(s.path.steps,26);
 const mechanics=JSON.parse(fs.readFileSync('public/world-mechanics.json'));assert.equal(mechanics.modules.length,8);assert.equal(mechanics.modules.reduce((n,m)=>n+m.tools.length,0),32);
 console.log('PASS actual sculpture: 30 segmented shells/120 articulated legs/120 grounded feet/4 nacre materials/10+worldunit silhouette/finite vertices/batched calls/stable registry/path; all 8 modules32tools retained',ps.length,calls);
