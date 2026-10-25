@@ -403,6 +403,40 @@
       ],
       "actions": {},
       "description": "Общее производство сырья для кафе: resident_ext_vitals_rest_quietly farm=start (рост180сек), farm=harvest (сбор6 в ящик12), farm=inspect (везде). Для farm=deliver amount1..12 подлететь к quote_cafe [48,.6,24]. Запасы сохраняются, заказ расходует1. Не кавычковый питомник-головоломка."
+    },
+    {
+      "id": "datacenter_alexey",
+      "name": "ЦОД / открытый риг Алексея",
+      "position": [
+        46.4,
+        0.6,
+        -35
+      ],
+      "actions": {
+        "study": {
+          "effect": "study",
+          "seconds": 40,
+          "label": "осматривает юнит ЦОДа"
+        }
+      },
+      "description": "Рядом с гибридной станцией, без изменения её энергобаланса. Паспорта: resident_ext_garage_pump datacenter=inspect/alexey/mike. Осматриваемые макеты, не вычислительный сервер."
+    },
+    {
+      "id": "datacenter_mike",
+      "name": "ЦОД / юнит Mike",
+      "position": [
+        50.5,
+        0.6,
+        -35
+      ],
+      "actions": {
+        "study": {
+          "effect": "study",
+          "seconds": 40,
+          "label": "осматривает юнит ЦОДа"
+        }
+      },
+      "description": "Рядом с гибридной станцией, без изменения её энергобаланса. Паспорта: resident_ext_garage_pump datacenter=inspect/alexey/mike. Осматриваемые макеты, не вычислительный сервер."
     }
   ]
 }
