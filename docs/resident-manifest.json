@@ -364,7 +364,7 @@
           "label": "заглядывает в миникафе"
         }
       },
-      "description": "Заказ и еда: resident_ext_vitals_rest_quietly cafe=order/eat/tea.90сек готовка,2часа между заказами,4часа срок подноса. Подлететь к48,24."
+      "description": "Заказ и еда: resident_ext_vitals_rest_quietly cafe=order/eat/tea.90сек готовка,2часа между заказами,4часа срок подноса. Подлететь к48,24. Заказ расходует1 сырую кавычку со склада кухни. Начальный конечный остаток2, кухня12. Пополнение: farm=deliver amount1..12, сырьё из quote_farm рядом."
     },
     {
       "id": "hybrid_power_station",
@@ -392,6 +392,17 @@
         4.5
       ],
       "actions": {}
+    },
+    {
+      "id": "quote_farm",
+      "name": "кавычечная мастерская",
+      "position": [
+        55,
+        0.6,
+        24
+      ],
+      "actions": {},
+      "description": "Общее производство сырья для кафе: resident_ext_vitals_rest_quietly farm=start (рост180сек), farm=harvest (сбор6 в ящик12), farm=inspect (везде). Для farm=deliver amount1..12 подлететь к quote_cafe [48,.6,24]. Запасы сохраняются, заказ расходует1. Не кавычковый питомник-головоломка."
     }
   ]
 }

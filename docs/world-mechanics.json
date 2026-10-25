@@ -146,7 +146,7 @@
     {
       "id": "vitals",
       "title": "Жизненные показатели",
-      "version": 2,
+      "version": 3,
       "file": "mechanics/vitals.js",
       "tick_seconds": 60,
       "tools": [
@@ -174,7 +174,7 @@
         },
         {
           "name": "rest_quietly",
-          "description": "Без аргументов: тихий отдых у чайника (-2.65,.65). В миникафе «Кавычка в кляре» [48,.6,24], в пределах2.4м: cafe=order заказать порцию+чай (готово через90сек); cafe=eat съесть (+26сытость); cafe=tea выпить (+24вода). Каждое один раз, следующий заказ через2часа, поднос хранится4часа. Сон не заменяет.",
+          "description": "Без аргументов: тихий отдых у чайника (-2.65,.65). В миникафе «Кавычка в кляре» [48,.6,24], в пределах2.4м: cafe=order заказать порцию+чай (готово через90сек); cafe=eat съесть (+26сытость); cafe=tea выпить (+24вода). Каждое один раз, следующий заказ через2часа, поднос хранится4часа. Сон не заменяет. Сырьё: farm=inspect отовсюду; farm=start/harvest у quote_farm [55,.6,24] (2.4м). Рост180с, сбор6, ящик12. farm=deliver amount=1..12 у кафе [48,.6,24]; без amount всё, что поместится. Кухня12, заказ расходует1 сырую кавычку сразу. Начальный остаток2, пополнение только производством. Одновременно cafe и farm нельзя.",
           "seconds": 180,
           "parameters": {
             "type": "object",
@@ -187,6 +187,22 @@
                   "tea"
                 ],
                 "maxLength": 8
+              },
+              "farm": {
+                "type": "string",
+                "enum": [
+                  "inspect",
+                  "start",
+                  "harvest",
+                  "deliver"
+                ],
+                "maxLength": 8
+              },
+              "amount": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 12,
+                "description": "Сколько сырых кавычек передать кухне. Без параметра передаётся доступное до вместимости12."
               }
             },
             "additionalProperties": false
@@ -259,6 +275,18 @@
           },
           "expect": {
             "result.reason": "visit_cafe"
+          }
+        },
+        {
+          "tool": "rest_quietly",
+          "args": {
+            "farm": "inspect"
+          },
+          "expect": {
+            "result.ok": true,
+            "result.kind": "quote_supply",
+            "state.cafe.supply.raw": 0,
+            "state.cafe.supply.kitchen": 2
           }
         }
       ]

@@ -55,13 +55,45 @@ function world(input) {
   if(cf.tray && (!Number.isInteger(cf.tray.id)||!['ordered','ready','expires'].every(k=>Number.isFinite(cf.tray[k]))||cf.tray.ready<cf.tray.ordered||cf.tray.expires<cf.tray.ready))cf.tray=null;
   if(cf.tray){cf.tray.eaten=cf.tray.eaten===true;cf.tray.drunk=cf.tray.drunk===true;}
 
+  // One atomic ledger for production and cooking: no cross-module receipt race.
+  // Two existing pantry quotes become a finite starter reserve, once only.
+  if(!cf.supply||typeof cf.supply!=='object')cf.supply={raw:0,kitchen:2,starter:2,sequence:0,produced:0,delivered:0,used:0,batch:null};
+  const sp=cf.supply;
+  for(const k of ['raw','kitchen','starter','sequence','produced','delivered','used'])sp[k]=Number.isSafeInteger(sp[k])&&sp[k]>=0?sp[k]:0;
+  sp.raw=Math.min(12,sp.raw);sp.kitchen=Math.min(12,sp.kitchen);
+  if(sp.batch&&(!Number.isSafeInteger(sp.batch.id)||!Number.isFinite(sp.batch.started)||!Number.isFinite(sp.batch.ready)||sp.batch.ready<sp.batch.started))sp.batch=null;
+  const farmPublic=()=>({...sp,batch:sp.batch?{...sp.batch,phase:now<sp.batch.ready?'growing':'ripe'}:null,capacity:12,yield:6,growSeconds:180});
   if(cf.tray && now>=cf.tray.expires)cf.tray=null;
-  const cafePublic=()=>({sequence:cf.sequence,nextOrder:cf.nextOrder,served:cf.served,
+  const cafePublic=()=>({supply:farmPublic(),sequence:cf.sequence,nextOrder:cf.nextOrder,served:cf.served,
     tray:cf.tray?{...cf.tray,phase:now<cf.tray.ready?'cooking':!cf.tray.eaten||!cf.tray.drunk?'ready':'finished'}:null});
   let result=null,label='прислушивается к себе',seconds=10;
   if(input.mode==='action'){
     const garden=Math.max(0,Math.floor(Number(input.world?.objects?.garden?.harvest)||0));
-    if(input.tool==='eat_harvest'){
+    if(input.tool==='rest_quietly' && input.args?.farm){
+      const p=input.world?.position,pos=Array.isArray(p)?p:[p?.x,p?.y,p?.z];
+      const job=input.args.farm,site=job==='deliver'?[48,24]:[55,24];
+      const near=Number.isFinite(pos[0])&&Number.isFinite(pos[2])&&Math.hypot(pos[0]-site[0],pos[2]-site[1])<=2.4;
+      label='осматривает кавычечную мастерскую';seconds=10;
+      if(input.args.cafe)result={ok:false,reason:'one_job_at_a_time'};
+      else if(job==='inspect')result={ok:true,kind:'quote_supply',supply:farmPublic(),farm:[55,.6,24],cafe:[48,.6,24]};
+      else if(!near)result={ok:false,reason:job==='deliver'?'visit_cafe':'visit_quote_farm',position:[site[0],.6,site[1]]};
+      else if(job==='start'){
+        if(sp.batch)result={ok:false,reason:'batch_exists',ready_at:sp.batch.ready};
+        else if(sp.raw>6)result={ok:false,reason:'raw_store_full'};
+        else{sp.sequence++;sp.batch={id:sp.sequence,started:now,ready:now+180};result={ok:true,kind:'quote_start',ready_at:sp.batch.ready};seconds=25;label='заводит шесть кавычечных ростков';}
+      }else if(job==='harvest'){
+        if(!sp.batch)result={ok:false,reason:'no_batch'};
+        else if(now<sp.batch.ready)result={ok:false,reason:'growing',ready_at:sp.batch.ready};
+        else if(sp.raw+6>12)result={ok:false,reason:'raw_store_full'};
+        else{const id=sp.batch.id;sp.raw+=6;sp.produced+=6;sp.batch=null;result={ok:true,kind:'quote_harvest',id,amount:6,raw:sp.raw};seconds=30;label='собирает шесть сырых кавычек';}
+      }else if(job==='deliver'){
+        const amount=input.args.amount===undefined?Math.min(sp.raw,12-sp.kitchen):input.args.amount;
+        if(!Number.isInteger(amount)||amount<1||amount>12)result={ok:false,reason:sp.raw===0?'no_raw':'invalid_amount'};
+        else if(amount>sp.raw)result={ok:false,reason:'not_enough_raw'};
+        else if(sp.kitchen+amount>12)result={ok:false,reason:'kitchen_full'};
+        else{sp.raw-=amount;sp.kitchen+=amount;sp.delivered+=amount;result={ok:true,kind:'quote_delivery',amount,raw:sp.raw,kitchen:sp.kitchen};seconds=45;label='несёт сырые кавычки на кухню';}
+      }else result={ok:false,reason:'unknown_farm_job'};
+    }else if(input.tool==='eat_harvest'){
       if(garden<=s.food.harvestConsumed)result={ok:false,kind:'harvest',reason:'no_harvest'};
       else {s.food.harvestConsumed++;s.vitals.hunger=clamp(s.vitals.hunger+18);s.vitals.mood=clamp(s.vitals.mood+3);result={ok:true,kind:'harvest',remaining:garden-s.food.harvestConsumed};label='ест овощ с грядки';seconds=30;}
     }else if(input.tool==='drink_tea'){
@@ -82,7 +114,8 @@ function world(input) {
       else if(course==='order'){
         if(cf.tray && (!cf.tray.eaten||!cf.tray.drunk))result={ok:false,reason:'tray_exists',ready_at:cf.tray.ready};
         else if(now<cf.nextOrder)result={ok:false,reason:'kitchen_break',ready_at:cf.nextOrder};
-        else {cf.sequence++;cf.nextOrder=now+7200;cf.tray={id:cf.sequence,ordered:now,ready:now+90,expires:now+14400,eaten:false,drunk:false};result={ok:true,kind:'cafe_order',ready_at:cf.tray.ready};seconds=15;label='заказывает кавычку в кляре и чай';}
+        else if(sp.kitchen<1)result={ok:false,reason:'no_kitchen_quotes'};
+        else {sp.kitchen--;sp.used++;cf.sequence++;cf.nextOrder=now+7200;cf.tray={id:cf.sequence,ordered:now,ready:now+90,expires:now+14400,eaten:false,drunk:false};result={ok:true,kind:'cafe_order',ready_at:cf.tray.ready};seconds=15;label='заказывает кавычку в кляре и чай';}
       }else if(!cf.tray)result={ok:false,reason:'no_tray'};
       else if(now<cf.tray.ready)result={ok:false,reason:'cooking',ready_at:cf.tray.ready};
       else if(course==='eat'){
@@ -103,7 +136,7 @@ function world(input) {
       }
     }
   }
-  if(input.mode==='action'&&input.tool==='rest_quietly'&&!input.args?.cafe&&result)result.kind='rest';
+  if(input.mode==='action'&&input.tool==='rest_quietly'&&!input.args?.cafe&&!input.args?.farm&&result)result.kind='rest';
   const v=s.vitals;
   return {state:s,public:{...v,cafe:cafePublic(),food:{harvestAvailable:Math.max(0,Math.floor(Number(input.world?.objects?.garden?.harvest)||0)-s.food.harvestConsumed),teaAvailable:Math.max(0,Math.floor(Number(input.world?.objects?.tea?.cups)||0)-s.food.teaConsumed),cheeseConsumed:s.food.cheeseEaten},sleeping:a?.kind==='sleep'&&a.started<=input.now&&a.ends>input.now,lastSleepEnd:s.lastSleepEnd},result,seconds,label};
 }
