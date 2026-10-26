@@ -84,15 +84,60 @@ function energyWorld(input){
  const probe=JSON.parse(JSON.stringify(s));energyFlow(probe,s.hour,1/3600);s.flow=probe.flow;
  return {state:s,public:energyPublic(s),result,seconds:10,label:'проверяет электростанцию'};
 }
+
+// Virtual computation exchange. NO model, DPC process, network or real hardware rates.
+function sharingFresh(now){return {v:1,enabled:false,seq:0,completed:0,cancelled:0,last:now,active:null,queue:[],receipts:[]};}
+function sharingResult(j){
+ const values=Array.from({length:j.batch*4},(_,i)=>(j.ticket*17+i*13)%97);
+ if(j.task==='sort')return {kind:'simulated_sort',input:values,sorted:values.slice().sort((a,b)=>a-b)};
+ if(j.task==='checksum')return {kind:'simulated_checksum',input:values,sum:values.reduce((a,b)=>a+b,0),mod97:values.reduce((a,b)=>a+b,0)%97};
+ return {kind:'simulated_route',nodes:['двор','станция','Mike','двор'],packets:values.length,hops:3,workUnits:values.length*3};
+}
+function sharingWorld(input){
+ const s=input.state?JSON.parse(JSON.stringify(input.state)):sharingFresh(input.now);
+ // Version 1 is additive. The enclosing garage migration retains all legacy state.
+ const now=Math.max(Number.isFinite(s.last)?s.last:input.now,input.now);s.last=now;
+ const remember=j=>{s.receipts.push(j);s.receipts=s.receipts.slice(-12);};
+ const start=t=>{if(s.enabled&&!s.active&&s.queue.length){const j=s.queue.shift();s.active={...j,status:'running',started:t,ends:t+j.duration};}};
+ if(s.enabled){start(now);while(s.active&&s.active.ends<=now){const j=s.active;s.active=null;s.completed++;remember({...j,status:'done',finished:j.ends,simulation:sharingResult(j)});start(j.ends);}}
+ let result=null;const a=input.args||{},op=a.sharing;
+ if(input.mode==='action'){
+  const p=input.world?.position,pos=Array.isArray(p)?p:[p?.x,p?.y,p?.z];
+  const near=Number.isFinite(pos[0])&&Number.isFinite(pos[2])&&Math.hypot(pos[0]-50.5,pos[2]+35)<=2.4;
+  const mixed=Object.keys(a).some(k=>!['sharing','task','batch','ticket'].includes(k));
+  const extra=op!=='submit'&&['task','batch','ticket'].some(k=>a[k]!==undefined);
+  if(input.tool!=='pump'||mixed||extra)result={ok:false,reason:'invalid_or_mixed_sharing_action'};
+  else if(op==='inspect')result={ok:true,kind:'virtual_sharing_status'};
+  else if(['enable','disable'].includes(op)){
+   if(!near)result={ok:false,reason:'Подлети к юниту Mike [50.5,.6,-35] для изменения разрешения'};
+   else{ s.enabled=op==='enable';let cancelled=0;
+    if(!s.enabled){for(const j of [s.active,...s.queue].filter(Boolean)){remember({...j,status:'cancelled',finished:now,simulation:null});s.cancelled++;cancelled++;}s.active=null;s.queue=[];}
+    result={ok:true,enabled:s.enabled,cancelled};
+   }
+  }else if(op==='submit'){
+   if(!['sort','checksum','route'].includes(a.task)||![1,2,3].includes(a.batch)||!Number.isInteger(a.ticket)||a.ticket<1||a.ticket>1000000000)result={ok:false,reason:'task_sort_checksum_route_batch1_3_ticket_required'};
+   else if(a.ticket<=s.seq){const job=[s.active,...s.queue,...s.receipts].find(j=>j?.ticket===a.ticket);result={ok:true,duplicate:true,ticket:a.ticket,job:job||null,reason:job?'already_accepted':'ticket_retired_no_reexecution'};}
+   else if(a.ticket!==s.seq+1)result={ok:false,reason:'use_next_ticket',nextTicket:s.seq+1};
+   else if(!s.enabled)result={ok:false,reason:'sharing_disabled'};
+   else if(s.queue.length>=3)result={ok:false,reason:'queue_full_3_waiting'};
+   else{const j={ticket:a.ticket,unit:'datacenter_mike',task:a.task,batch:a.batch,duration:60*a.batch,submitted:now,status:'queued'};s.seq=a.ticket;s.queue.push(j);start(now);result={ok:true,duplicate:false,ticket:j.ticket,kind:'virtual_task_accepted'};}
+  }else result={ok:false,reason:'unknown_sharing_action'};
+ }
+ const active=s.active?{...s.active,progress:Math.max(0,Math.min(1,(now-s.active.started)/s.active.duration))}:null;
+ return {state:s,public:{...s,active,nextTicket:s.seq+1,model:'virtual_compute_simulation',notice:'Виртуальный обмен. Не DPC, не модель и не реальный инференс. 60с × размер. Выключение отменяет незавершённые задачи.',queueCapacity:3},result,seconds:10,label:'обменивается виртуальными вычислениями'};
+}
+
 function world(input){
- if(input.mode==='action'&&input.args?.datacenter){const out=world({...input,mode:'tick'});out.result=input.tool==='pump'&&['inspect','alexey','mike'].includes(input.args.datacenter)&&!['energy','mode','power','angle','unit','enabled'].some(k=>input.args[k]!==undefined)?{ok:true,datacenter:DATACENTER_CATALOG,unit:input.args.datacenter}:{ok:false,reason:'invalid_or_mixed_datacenter_action'};out.seconds=10;out.label='читает паспорта ЦОДа';return out;}
+ if(input.mode==='action'&&input.args?.sharing){const out=world({...input,mode:'tick'});const sh=sharingWorld({...input,state:out.state.sharing});out.state.sharing=sh.state;out.public.sharing=sh.public;out.result={...sh.result,sharing:sh.public};out.seconds=10;out.label=sh.label;return out;}
+ if(input.mode==='action'&&input.args?.datacenter){const out=world({...input,mode:'tick'});out.result=input.tool==='pump'&&['inspect','alexey','mike'].includes(input.args.datacenter)&&!['energy','mode','power','angle','unit','enabled','sharing','task','batch','ticket'].some(k=>input.args[k]!==undefined)?{ok:true,datacenter:DATACENTER_CATALOG,unit:input.args.datacenter,sharing:out.public.sharing}:{ok:false,reason:'invalid_or_mixed_datacenter_action'};out.seconds=10;out.label='читает паспорта ЦОДа';return out;}
  const old=input.state||{};
  if(input.mode==='action'&&!input.args?.energy){const p=input.world?.position,pos=Array.isArray(p)?p:[p?.x,p?.y,p?.z];if(p&&(!Number.isFinite(pos[0])||!Number.isFinite(pos[2])||Math.hypot(pos[0]+32,pos[2]+20.6)>2.4))return {...world({...input,mode:'tick'}),result:{ok:false,reason:'Подлети к гаражу [-32,.6,-20.6]'}};}
  const energy=energyWorld({...input,state:old.energy||null,mode:input.mode==='action'&&input.args?.energy?'action':input.mode==='action'?'tick':input.mode});
  const garage=garageWorld({...input,state:old,mode:input.args?.energy?'tick':input.mode});
  garage.state.energy=energy.state;garage.public.energy=energy.public;
+ const sh=sharingWorld({...input,state:old.sharing||null,mode:'tick'});garage.state.sharing=sh.state;garage.public.sharing=sh.public;
  if(input.mode==='action'&&input.args?.energy){garage.result=energy.result;garage.seconds=energy.seconds;garage.label=energy.label;}
  return garage;
 }
 
-export default world;
+export default world; export {sharingWorld};

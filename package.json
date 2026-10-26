@@ -42,7 +42,8 @@
     "test:power": "node scripts/sync-mechanics.mjs && python3 public/power-design/simulate.py && node tests/power.test.cjs && node tests/garage.test.cjs && node tests/power-browser.test.cjs mobile && node tests/power-browser.test.cjs desktop && node tests/power-live.test.cjs mobile && node tests/power-live.test.cjs desktop",
     "test:skipping": "node scripts/sync-mechanics.mjs && node tests/skipping.test.mjs && node tests/skipping-browser.test.cjs mobile && node tests/skipping-browser.test.cjs desktop && node tests/skipping-live.test.cjs mobile && node tests/skipping-live.test.cjs desktop",
     "test:quote-farm": "node scripts/sync-mechanics.mjs && node tests/quote-farm.test.mjs && node tests/quote-farm-browser.test.cjs mobile && node tests/quote-farm-browser.test.cjs desktop && node tests/quote-farm-live.test.cjs mobile && node tests/quote-farm-live.test.cjs desktop",
-    "test:datacenter": "node tests/datacenter.test.cjs && node tests/datacenter-browser.test.cjs desktop && node tests/datacenter-browser.test.cjs mobile"
+    "test:datacenter": "node tests/datacenter.test.cjs && node tests/datacenter-browser.test.cjs desktop && node tests/datacenter-browser.test.cjs mobile",
+    "test:sharing": "node scripts/sync-mechanics.mjs && node tests/compute-sharing.test.mjs && node tests/compute-sharing-stress.test.mjs && node tests/compute-sharing-browser.test.cjs desktop && node tests/compute-sharing-browser.test.cjs mobile"
   },
   "dependencies": {
     "three": "0.186.1"

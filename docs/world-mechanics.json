@@ -1350,13 +1350,13 @@
     {
       "id": "garage",
       "title": "Гараж, электростанция и ЦОД",
-      "version": 3,
+      "version": 4,
       "file": "mechanics/garage.js",
-      "tick_seconds": 60,
+      "tick_seconds": 30,
       "tools": [
         {
           "name": "pump",
-          "description": "Накачать 6 делений воздуха и вернуть гараж на старт. power1..6, angle1..3. Игровая дальность=power*(4-angle), вершина=power*angle/2; на середине заданного пролёта надо быть не ниже пробки. Попасть надо точно в gap. Не физика реального автомобиля. После посадки launch next. Электростанция: energy=inspect (любой участок). dispatch unit1/2 enabledtrue/false; delivery конечная поставка100000кВт·ч НТС,24энерго-часа интервал, склад800000 невозобновляемый. Изменения станции требуют48,.6,-24; старые действия гаража требуют -32,.6,-20.6. 1энерго-час=120реальныхсекунд. Газη40%,2x250кВт,PV300кВтп,батарея800кВт·ч/200кВт; батарея не генератор. Учебная модель. ЦОД рядом [48,.6,-35]: datacenter=inspect/alexey/mike читает публичные паспорта из любой точки, без изменения энергии или запасов. Это макеты, не инференс. Для осмотра рядом есть study у datacenter_alexey и datacenter_mike. Не передавать energy вместе с datacenter.",
+          "description": "Гараж: power1..6,angle1..3 накачать6; дальность=power*(4-angle), гараж[-32,.6,-20.6]. energy=inspect отовсюду; dispatch(unit1/2,enabled)/delivery у станции[48,.6,-24]. 1энерго-час=120с; поставка100000НТС/24ч,конечныйсклад800000. datacenter=inspect/alexey/mike: паспорта из любой точки. sharing=inspect отовсюду. sharing=enable/disable у datacenter_mike[50.5,.6,-35]. sharing=submit отовсюду: task sort/checksum/route,batch1..3,ticket=public.sharing.nextTicket. Выключено по умолчанию; 60с×batch,1активная+3очередь,12квитанций. Повтор ticket не выполняется заново. disable отменяет незавершённое. Только игровая симуляция, не DPC/модель/сеть; паспорт и энергобаланс прежние. Режимы sharing/datacenter/energy/гараж НЕ смешивать.",
           "seconds": 35,
           "parameters": {
             "type": "object",
@@ -1396,6 +1396,35 @@
                   "mike"
                 ],
                 "maxLength": 7
+              },
+              "sharing": {
+                "type": "string",
+                "enum": [
+                  "inspect",
+                  "enable",
+                  "disable",
+                  "submit"
+                ],
+                "maxLength": 7
+              },
+              "task": {
+                "type": "string",
+                "enum": [
+                  "sort",
+                  "checksum",
+                  "route"
+                ],
+                "maxLength": 8
+              },
+              "batch": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 3
+              },
+              "ticket": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 1000000000
               }
             },
             "required": [],
@@ -1470,6 +1499,31 @@
             "result.ok": true,
             "result.datacenter.mike.totalRub": 569283,
             "state.air": 6
+          }
+        },
+        {
+          "tool": "pump",
+          "args": {
+            "sharing": "inspect"
+          },
+          "expect": {
+            "result.ok": true,
+            "public.sharing.enabled": false,
+            "public.sharing.nextTicket": 1
+          }
+        },
+        {
+          "tool": "pump",
+          "args": {
+            "sharing": "submit",
+            "task": "sort",
+            "batch": 1,
+            "ticket": 1
+          },
+          "expect": {
+            "result.ok": false,
+            "result.reason": "sharing_disabled",
+            "public.sharing.seq": 0
           }
         }
       ]

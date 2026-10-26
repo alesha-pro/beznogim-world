@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import {createComputeSharing} from './compute-sharing.js';
 import catalog from '../public/datacenter-catalog.json';
 export function createDatacenter({root,mat,group,box,sphere,cyl,rod,torus,sign,batchStatic,changed}){
  const house=group([48,-1.6,-35],root);house.name='little-datacenter';
@@ -72,8 +73,15 @@ export function createDatacenter({root,mat,group,box,sphere,cyl,rod,torus,sign,b
  document.querySelector('#focus-object').before(ui);
  const format=v=>v==null?'неизвестно':v.toLocaleString('ru-RU')+' ₽';
  function draw(){for(const b of ui.querySelectorAll('[data-unit]'))b.setAttribute('aria-pressed',String(tab===b.dataset.unit));const unit=tab==='all'?null:catalog[tab];const el=ui.querySelector('#dc-passport');el.replaceChildren();const add=(tag,text)=>{const n=document.createElement(tag);n.textContent=text;el.append(n);return n;};if(!unit){add('p','Два добровольно присланных юнита, рядом с настоящей станцией. Выбери риг для приближения.');return;}add('strong',unit.name+' · '+unit.os);add('p',unit.provenance);if(tab==='mike')add('p','Внешний вид корпуса условный: прислана таблица, не фото.');const details=add('details','');const summary=document.createElement('summary');summary.textContent='состав, SKU и цены';details.append(summary);for(const p of unit.parts){const item=document.createElement('p');item.textContent=p.part+': '+p.model+' · SKU: '+(p.sku||'не уточнён')+' · покупка: '+format(p.purchaseRub)+(p.status?' ('+p.status+')':'')+(p.source?' · '+p.source:'')+' · сейчас: '+format(p.currentRub);details.append(item);}if(unit.totalRub)add('p','Итог таблицы: '+format(unit.totalRub)+' · '+unit.period);add('p',unit.priceStatus);}
- for(const b of ui.querySelectorAll('[data-unit]'))b.onclick=()=>{tab=b.dataset.unit;draw();changed();};draw();
- function update(){const on=document.body.classList.contains('datacenter-look');stage.visible=!on||tab==='all';rig.visible=!on||tab!=='mike';mike.visible=!on||tab!=='alexey';}
+ const compute=createComputeSharing({ui,makeLights:()=>{
+  const blue=mat('#43cbd0',{emissive:'#227d86',emissiveIntensity:.6}),amber=mat('#edb14d',{emissive:'#b86f21',emissiveIntensity:.4}),off=mat('#344d50'),green=mat('#88ba68',{emissive:'#4d7c38',emissiveIntensity:.4});
+  const run=box([.56,2.35,1.08],[.13,.15,.06],off,mike);const queued=Array.from({length:3},(_,i)=>box([.56,1.95-i*.25,1.08],[.13,.14,.06],off,mike));
+  const done=Array.from({length:12},(_,i)=>box([-.56+i*.1,2.57,1.08],[.06,.055,.04],off,mike));let ls={};
+  return {show:d=>{run.material=d.active?blue:off;queued.forEach((m,i)=>m.material=i<d.queue.length?amber:off);done.forEach((m,i)=>m.material=i<d.receipts.filter(j=>j.status==='done').length?green:off);ls={active:!!d.active,queue:d.queue.length,done:d.receipts.filter(j=>j.status==='done').length};},animate:d=>{run.scale.y=.15*(d?.active?1+.15*Math.sin(Date.now()/220):1);},inspect:()=>ls};
+ }});
+ for(const b of ui.querySelectorAll('[data-unit]'))b.onclick=()=>{tab=b.dataset.unit;compute.show(tab);draw();changed();};draw();
+ compute.show(tab);
+ function update(){compute.update();const on=document.body.classList.contains('datacenter-look');stage.visible=!on||tab==='all';rig.visible=!on||tab!=='mike';mike.visible=!on||tab!=='alexey';}
  function geometryPoints(){house.updateWorldMatrix(true,true);const p=[];house.traverse(o=>{if(!o.isMesh||!o.visible)return;let a=o;while(a&&a!==house){if(!a.visible)return;a=a.parent;}const v=o.geometry.attributes.position;for(let i=0;i<v.count;i++)p.push(new THREE.Vector3().fromBufferAttribute(v,i).applyMatrix4(o.matrixWorld));});return p;}
- return {house,controls:ui,update,showAll:()=>{rig.visible=true;mike.visible=true;},geometryPoints,inspect:()=>({tab,location:[48,.6,-35],catalog,fanCount:fans.length,reference:'27088',rigVisible:rig.visible,mikeVisible:mike.visible}),card:()=>({action:'осмотреть ЦОД',description:'Открытая рама, яичный лоток и две истории железа. Не модели, угаданные по фото.'})};
+ return {house,controls:ui,update,showAll:()=>{rig.visible=true;mike.visible=true;},geometryPoints,inspect:()=>({tab,location:[48,.6,-35],catalog,sharing:compute.inspect(),fanCount:fans.length,reference:'27088',rigVisible:rig.visible,mikeVisible:mike.visible}),card:()=>({action:'осмотреть ЦОД',description:'Открытая рама, яичный лоток и две истории железа. Не модели, угаданные по фото.'})};
 }

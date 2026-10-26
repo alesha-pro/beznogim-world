@@ -14,7 +14,7 @@ const quotes=readFileSync(new URL('../public/mechanics/quotes.js',import.meta.ur
 writeFileSync(new URL('../src/quotes-core.js',import.meta.url),'// Generated from public/mechanics/quotes.js by scripts/sync-mechanics.mjs.\n'+quotes+'\nexport default world;\n');
 
 const garage=readFileSync(new URL('../public/mechanics/garage.js',import.meta.url),'utf8');
-writeFileSync(new URL('../src/garage-core.js',import.meta.url),'// Generated from public/mechanics/garage.js by scripts/sync-mechanics.mjs.\n'+garage+'\nexport default world;\n');
+writeFileSync(new URL('../src/garage-core.js',import.meta.url),'// Generated from public/mechanics/garage.js by scripts/sync-mechanics.mjs.\n'+garage+'\nexport default world; export {sharingWorld};\n');
 
 const vitals=readFileSync(new URL('../public/mechanics/vitals.js',import.meta.url),'utf8');
 writeFileSync(new URL('../src/vitals-core.js',import.meta.url),'// Generated from server mechanics.\n'+vitals+'\nexport default world;\n');
