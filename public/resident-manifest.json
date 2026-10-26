@@ -437,6 +437,22 @@
         }
       },
       "description": "Рядом с гибридной станцией, без изменения её энергобаланса. Паспорта: resident_ext_garage_pump datacenter=inspect/alexey/mike. Осматриваемые макеты, не вычислительный сервер. Виртуальный sharing: resident_ext_garage_pump sharing=enable/disable здесь; sharing=inspect/submit отовсюду, task sort/checksum/route, batch1..3, ticket из nextTicket. Выключено по умолчанию; 1 активная+3 очередь; disable отменяет незавершённое. Результат - расчёт игровой симуляции, не инференс."
+    },
+    {
+      "id": "inference_monument",
+      "name": "памятник инференсу · ещё один токен",
+      "position": [
+        46,
+        0.6,
+        -44.8
+      ],
+      "actions": {
+        "study": {
+          "effect": "study",
+          "seconds": 45,
+          "label": "рассматривает памятник инференсу"
+        }
+      }
     }
   ]
 }

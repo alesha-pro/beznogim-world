@@ -327,3 +327,30 @@ body.datacenter-look .hotspot.selected{visibility:hidden}
 #datacenter-controls details{display:block!important}
 #datacenter-controls{font-size:12px;line-height:1.5}#datacenter-controls details{display:block!important}#datacenter-controls p{font-size:11px;margin:7px 0}#datacenter-controls .dc-tabs{display:flex;gap:5px;flex-wrap:wrap}#datacenter-controls [aria-pressed="true"]{background:#365b50;color:#fff0c7}
 #compute-sharing{border-top:1px solid #a9b397;padding-top:8px}#compute-sharing[hidden]{display:none}.compute-heading{display:flex;align-items:center;gap:8px;justify-content:space-between}.compute-heading strong{font-size:12px}.compute-buttons{display:flex;gap:5px;flex-wrap:wrap}.compute-buttons select{min-height:36px;max-width:100%;border:1px solid #a9b397;background:#f1edd4;color:#365b50;font:inherit;border-radius:4px}#compute-status{white-space:pre-line}#compute-receipts code{font-size:10px;overflow-wrap:anywhere;white-space:normal}#compute-receipts{max-height:150px;overflow:auto}#compute-message{color:#4a675a}
+
+/* A quiet viewing card: no puzzle panel and no marker across the sculpture. */
+.inference-look .hotspot{visibility:hidden;pointer-events:none}
+@media(max-width:900px) and (orientation:portrait){.inference-look #inspector{padding:11px 14px}.inference-look #object-kicker{display:none}.inference-look #object-title{margin:2px 0 5px;font-size:20px}.inference-look #object-description{font-size:11px;line-height:1.35;margin-bottom:7px}.inference-look #focus-object{padding-bottom:8px}}
+/* Short phones keep the sculpture larger; the full label remains in the normal
+   place card. During close inspection only title, return and rotate are needed. */
+@media(max-width:900px) and (orientation:portrait) and (max-height:700px){
+ .inference-look #object-description{display:none}
+ .inference-look .resident-strip button{min-height:26px;padding:4px 5px;font-size:8px}
+ .inference-look .territory-nav .resident-vitals{padding:5px 6px;gap:4px 8px}
+ .inference-look .need-icon{width:14px;height:14px}.inference-look .need-heading{font-size:8px}
+}
+@media(max-width:900px) and (max-height:700px){
+ /* In the short inspection viewport the status/needs stay live. The normal
+    resident control row returns on close; diary is still on the footer. */
+ .inference-look .resident-strip>button{display:none}
+ .inference-look .territory-nav .resident-vitals{padding:5px 6px;gap:4px 8px}
+ .inference-look .need-icon{width:14px;height:14px}.inference-look .need-heading{font-size:8px}
+}
+
+@media(max-width:900px) and (max-height:700px){
+ .inference-look .territory-nav .resident-vitals{grid-template-columns:repeat(4,1fr);gap:4px;padding:5px}
+ .inference-look .need-heading b{display:none}
+ .inference-look .need-meter{gap:3px}.inference-look .need-heading{margin-bottom:3px}
+ .inference-look .territory-nav .resident-status{padding:2px 0}
+}
+

@@ -253,28 +253,34 @@
         {
           "tool": "rest_quietly",
           "args": {
-            "cafe": "order"
+            "cafe": "order",
+            "farm": "inspect"
           },
           "expect": {
-            "result.reason": "visit_cafe"
+            "result.reason": "one_job_at_a_time",
+            "state.cafe.supply.kitchen": 2
           }
         },
         {
           "tool": "rest_quietly",
           "args": {
-            "cafe": "eat"
+            "cafe": "eat",
+            "farm": "inspect"
           },
           "expect": {
-            "result.reason": "visit_cafe"
+            "result.reason": "one_job_at_a_time",
+            "state.cafe.supply.kitchen": 2
           }
         },
         {
           "tool": "rest_quietly",
           "args": {
-            "cafe": "tea"
+            "cafe": "tea",
+            "farm": "inspect"
           },
           "expect": {
-            "result.reason": "visit_cafe"
+            "result.reason": "one_job_at_a_time",
+            "state.cafe.supply.kitchen": 2
           }
         },
         {
