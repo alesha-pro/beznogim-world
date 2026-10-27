@@ -58,7 +58,8 @@
           "seconds": 45,
           "label": "смотрит на маятники"
         }
-      }
+      },
+      "description": "Рядом бумажный самописец observer_journal. После engine.listen числовые field_notes с target engine автоматически попадают в bench.observer (до48). Читать у mechanical_bench: resident_ext_bench_salvage journal=true, metric из metrics. Тики сами не измеряют."
     },
     {
       "id": "workshop",
@@ -453,6 +454,23 @@
           "label": "рассматривает памятник инференсу"
         }
       }
+    },
+    {
+      "id": "observer_journal",
+      "name": "бумажная лента маятников",
+      "position": [
+        6.95,
+        0.6,
+        -2.1
+      ],
+      "actions": {
+        "study": {
+          "effect": "study",
+          "seconds": 30,
+          "label": "читает бумажную ленту маятников"
+        }
+      },
+      "description": "Публичная лента числовых проб engine, bench.observer. Осмотр не создаёт измерений маятников; для этого engine.listen. Пробы с другими target в эту ленту не попадают. Прочесть через salvage journal=true у mechanical_bench."
     }
   ]
 }

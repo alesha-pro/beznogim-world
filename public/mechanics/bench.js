@@ -32,11 +32,16 @@ function world(input){
   });
   return {...t,progress,trays,remaining:t.phase==='growing'?Math.max(0,Math.min(360,Math.ceil(t.started+360-now))):0,model:'accelerated_fictional_pair'};
  };
+ // Bounded public instrument archive; no private notes or generated measurements.
+ s.observer=observerCollect(s.observer,input.world,now);
+ const journal=observerProject(s.observer);
  const targets=[6,8,9];
  let result=null;
  if(input.mode==='action'){
   const a=input.args||{};
-  if(input.tool==='fit'&&a.part==='seed'||a.trial===true&&['crank','salvage'].includes(input.tool)){
+  if(input.tool==='salvage'&&a.journal===true){
+   result=a.trial===true?{ok:false,reason:'one_job_at_a_time'}:observerRead(journal,a.metric);
+  }else if(input.tool==='fit'&&a.part==='seed'||a.trial===true&&['crank','salvage'].includes(input.tool)){
    if(!trial){trial=initialTrial();s.trial=trial;}
    if(input.tool==='fit'){
     if(![1,2,3].includes(a.value))result={ok:false,reason:'Семена: 1 кресс, 2 камнецвет, 3 бобы.'};
@@ -70,6 +75,66 @@ function world(input){
    Object.assign(s,{round:0,core:2,belt:1,phase:'ready',attempts:0,repairs:0,run:Math.min(999999,s.run+1)});result={ok:true};
   }
  }
- const p={...s,trial:projectTrial(),target:targets[s.round],speed:s.core*s.belt,picture:s.phase==='repaired'||s.phase==='complete'?s.round+1:0,bucket:s.phase==='ejected',completed:s.phase==='complete'};
- return {state:s,public:p,result,seconds:input.tool==='crank'?60:20,label:input.args?.trial===true||input.args?.part==='seed'?'занимается парным опытом':input.tool==='salvage'?'достаёт ядро из ведра':input.tool==='crank'?'крутит механический монитор':'собирает механический монитор'};
+ const p={...s,observer:journal,trial:projectTrial(),target:targets[s.round],speed:s.core*s.belt,picture:s.phase==='repaired'||s.phase==='complete'?s.round+1:0,bucket:s.phase==='ejected',completed:s.phase==='complete'};
+ return {state:s,public:p,result,seconds:input.tool==='crank'?60:20,label:input.args?.journal===true?'читает ленту маятников':input.args?.trial===true||input.args?.part==='seed'?'занимается парным опытом':input.tool==='salvage'?'достаёт ядро из ведра':input.tool==='crank'?'крутит механический монитор':'собирает механический монитор'};
+}
+
+// Numeric leaves only, not arbitrary text lifted from a field note. Paths stay bounded.
+function observerNumbers(facts){
+ const out={};let count=0;
+ const safe=k=>typeof k==='string'&&/^[\p{L}][\p{L}\p{N}_ -]{0,39}$/u.test(k)&&!['__proto__','constructor','prototype'].includes(k);
+ function walk(x,path,depth){
+  if(count>=12||depth>4||path.length>96)return;
+  if(typeof x==='number'&&Number.isFinite(x)&&Math.abs(x)<=1e9){out[path]=x;count++;return;}
+  if(!x||typeof x!=='object')return;
+  if(Array.isArray(x)){for(let i=0;i<Math.min(24,x.length);i++){
+   const row=x[i];
+   if(row&&typeof row==='object'&&safe(row.key||row.name)&&typeof row.value==='number')walk(row.value,path?path+'.'+(row.key||row.name):row.key||row.name,depth+1);
+   else walk(row,path?path+'.'+i:String(i),depth+1);
+  }}else for(const k of Object.keys(x).sort().slice(0,32))if(safe(k))walk(x[k],path?path+'.'+k:k,depth+1);
+ }
+ walk(facts,'',0);return out;
+}
+function observerCollect(old,w,now){
+ const clean=r=>r&&Number.isSafeInteger(r.id)&&r.id>0&&Number.isFinite(r.time)&&r.time>=0;
+ const s={version:1,rows:[],seen:[],total:0};
+ if(old&&typeof old==='object'){
+  s.rows=Array.isArray(old.rows)?old.rows.filter(clean).slice(-48).map(r=>({id:r.id,time:r.time,values:observerStored(r.values),running:typeof r.running==='boolean'?r.running:null})):[];
+  s.seen=Array.isArray(old.seen)?old.seen.filter(n=>typeof n==='string'&&/^[0-9]+@[0-9.]+$/.test(n)&&n.length<48).slice(-96):[];
+  s.total=Number.isSafeInteger(old.total)?Math.max(s.rows.length,Math.min(1e9,old.total)):s.rows.length;
+ }
+ for(const r of s.rows){const stamp=r.id+'@'+r.time;if(!s.seen.includes(stamp))s.seen.push(stamp);}
+ const notes=w?.field_notes;
+ if(notes&&typeof notes==='object'){
+  const candidates=Object.entries(notes).slice(0,256).filter(([key,r])=>r&&r.source==='fictional_world_simulation'&&(key==='engine'||r.target==='engine'||r.target?.id==='engine')&&clean(r)&&r.time<=now+60).map(([,r])=>({...r,time:Number.isFinite(r.checked_at)&&r.checked_at>=r.time&&r.checked_at<=now+60?r.checked_at:r.time})).sort((a,b)=>a.time-b.time||a.id-b.id);
+  for(const r of candidates){
+   const stamp=r.id+'@'+r.time;if(s.seen.includes(stamp))continue;
+   const values=observerNumbers(r.facts);if(!Object.keys(values).length)continue;
+   // A note older than the retained window cannot reappear as a new sample.
+   const last=s.rows[s.rows.length-1];if(last&&(r.time<last.time||r.time===last.time&&r.id<=last.id))continue;
+   s.rows.push({id:r.id,time:r.time,values,running:typeof w.objects?.engine?.running==='boolean'?w.objects.engine.running:null});
+   s.rows=s.rows.slice(-48);s.seen.push(stamp);s.seen=s.seen.slice(-96);s.total=Math.min(1e9,s.total+1);
+  }
+ }
+ s.seen=s.seen.slice(-96);return s;
+}
+function observerProject(s){
+ const metrics=[...new Set(s.rows.flatMap(r=>Object.keys(r.values)))].sort().slice(0,48);
+ return {version:1,source:'field_notes.engine',rows:s.rows,total:s.total,capacity:48,metrics,
+  note:'Только числовые факты игровых измерений engine; время — checked_at или time. Повторная проверка того же id с новым checked_at сохраняется. Тики не делают новые замеры. Лента хранит последние48 доступных проб; полный архив у resident_catalog. Метка running — состояние переключателя при записи, не причина изменения.'};
+}
+function observerRead(p,metric){
+ const key=metric===undefined?p.metrics[0]:metric;
+ if(key!==undefined&&!p.metrics.includes(key))return {ok:false,reason:'unknown_metric',metrics:p.metrics};
+ const points=key?p.rows.filter(r=>Object.hasOwn(r.values,key)).map(r=>({id:r.id,time:r.time,value:r.values[key],running:r.running})):[];
+ const values=points.map(r=>r.value);
+ return {ok:true,total:p.total,retained:p.rows.length,metric:key||null,metrics:p.metrics,
+  points:points.slice(-12),summary:values.length?{count:values.length,min:Math.min(...values),max:Math.max(...values),delta:values[values.length-1]-values[0]}:null,
+  note:p.note};
+}
+
+function observerStored(values){
+ const out={};if(!values||typeof values!=='object')return out;
+ for(const k of Object.keys(values).slice(0,12))if(/^[\p{L}\p{N}][\p{L}\p{N}_ .-]{0,95}$/u.test(k)&&!k.split('.').some(p=>['__proto__','constructor','prototype'].includes(p))&&typeof values[k]==='number'&&Number.isFinite(values[k])&&Math.abs(values[k])<=1e9)out[k]=values[k];
+ return out;
 }

@@ -3,7 +3,7 @@ const ctx=vm.createContext({});vm.runInContext(readFileSync('public/mechanics/be
 const w=(i)=>JSON.parse(JSON.stringify(ctx.world(i)));let r=w({mode:'migrate'});
 const mod=JSON.parse(readFileSync('public/world-mechanics.json')).modules.find(m=>m.id==='bench');
 for(const t of mod.tests){r=w({mode:'action',state:r.state,tool:t.tool,args:t.args});for(const [p,v]of Object.entries(t.expect)){let got=r;for(const k of p.split('.'))got=got[k];assert.deepEqual(got,v,p);}}
-for(const phase of ['ready','repaired','ejected','complete']){const s={round:2,core:3,belt:3,phase,run:8,attempts:42,repairs:3};assert.deepEqual(w({mode:'migrate',state:s}).state,s);assert.deepEqual(w({mode:'tick',state:s}).state,s);}
+for(const phase of ['ready','repaired','ejected','complete']){const s={round:2,core:3,belt:3,phase,run:8,attempts:42,repairs:3};assert.deepEqual(w({mode:'migrate',state:s}).state,{...s,observer:{version:1,rows:[],seen:[],total:0}});assert.deepEqual(w({mode:'tick',state:s}).state,{...s,observer:{version:1,rows:[],seen:[],total:0}});}
 r=w({mode:'action',tool:'fit',state:r.state,args:{part:'core',value:1}});assert.equal(r.result.ok,false);
 let fail=w({mode:'action',tool:'crank'});fail=w({mode:'action',tool:'crank',state:fail.state});assert.equal(fail.state.attempts,1);
 console.log('PASS bench: 16 contract steps + migration/tick each phase + invalid part');

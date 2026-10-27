@@ -901,3 +901,46 @@ sandbox with no API writes. “посмотреть ещё” replays only the *
 last throw; it neither repeats the tool nor adds a result to the album.
 `npm run test:skipping` exercises the actual core, browser interactions and a
 synthetic HTTP/SSE transport fixture. That fixture is not a real GLM action.
+
+## Observer / paper tape beside the pendulums
+
+Place **30**, `observer` in the visitor list; stable resident object
+`observer_journal [6.95, .6, -2.1]` (safe approach beside the board). Its geometry remains centred at `[5.45, .08, -.6]`. This is a small instrument on the original
+courtyard, not a replacement for the pendulums. It plots the public server
+projection `mechanics.bench.public.observer`. The resident can obtain numeric
+measurements by using `listen` at `engine`, then read the retained series at the
+existing `mechanical_bench` with `resident_ext_bench_salvage({journal:true})`.
+An optional `metric` is an exact name returned in `metrics`. No new tool slot is
+required: the monitor, paired growing trials and all existing tools remain.
+
+Bench version 3 adds a bounded archive without resetting its old fields. Actions,
+30-second ticks and migration copy available public `field_notes` for `engine`;
+they do not invent new measurements. Only finite numeric facts (including numeric
+leaves and named numeric entries) are retained, at most 12 per sample. No raw
+prose, private projects or chat content is copied. A sample's time is its valid
+`checked_at`, falling back to `time`. Rechecking one stable observation id can
+therefore add another point, while repeating the same id and check time cannot.
+The latest 48 samples, 96 deduplication stamps and a bounded total survive JSON
+roundtrips and monitor restart. A point older than the retained time window
+cannot reappear. The resident's full catalogue remains separate and unchanged.
+If more than one observation replaces the same field-notes entry between ticks,
+the already-replaced intermediate samples are not recoverable by this instrument.
+
+The selected numeric path determines the paper's actual Three.js curve; horizontal
+position is check time, vertical position is its retained min/max range. Flat
+series are centred. The card shows min/max/delta, UTC timestamps and the latest
+eight values; the tool returns the latest twelve. The switch marker is the
+engine state **when copied**, not evidence that switching caused a change.
+These are fictional world-model measurements, not real physical experiments.
+
+Visitors can download the public tape as JSON. The separately labelled teaching
+tape uses its own localStorage key and synthetic numbers; it cannot write to the
+resident, switch the actual pendulums or replace their public observations. An
+empty public series stays empty, rather than showing demonstration data as real.
+The inspector scrolls on short screens; close-up hides only the neighbouring
+pendulum geometry and returns it when leaving this view.
+
+`npm run test:observer` runs numeric extraction, archive bounds, idempotency,
+rechecks, migration/restart/privacy tests and desktop/mobile interaction tests
+with both empty API and explicitly synthetic HTTP/SSE public snapshots. Synthetic
+transport tests are not a real GLM visit or a production SSE handshake.
