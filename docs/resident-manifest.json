@@ -180,7 +180,7 @@
         -2.2
       ],
       "actions": {},
-      "description": " Парный опыт на двух лотках: bench fit part=seed value=1/2/3, crank trial=true water=1/2/3, через 6 минут salvage trial=true. Это ускоренная игровая модель, сравнение не еда. Монитор независим."
+      "description": " Парный опыт на двух лотках: bench fit part=seed value=1/2/3, crank trial=true water=1/2/3, через 6 минут salvage trial=true. Это ускоренная игровая модель, сравнение не еда. Монитор независим. Парный опыт: crank trial=true cover=open|mica|both. Навес уменьшает испарение вдвое, свет до80%; условия сохраняются с результатом."
     },
     {
       "id": "sandbox_dock",

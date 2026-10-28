@@ -12,10 +12,11 @@ function world(input){
  let trial=s.trial&&typeof s.trial==='object'?s.trial:null;
  if(trial){
   trial={...initialTrial(),...trial};
+  if(trial.cover!==undefined&&!['open','mica','both'].includes(trial.cover))trial.cover='open';
   trial.seed=bounded(trial.seed,1,3,1);trial.water=bounded(trial.water,1,3,2);
   trial.started=Number.isFinite(trial.started)?Math.max(0,trial.started):0;
   trial.sequence=bounded(trial.sequence,0,999999,0);
-  trial.records=Array.isArray(trial.records)?trial.records.filter(r=>r&&typeof r==='object'&&Number.isFinite(r.id)&&[1,2,3].includes(r.seed)&&Number.isFinite(r.soil)&&Number.isFinite(r.mica)).slice(-6).map(r=>({id:bounded(r.id,0,999999,0),seed:r.seed,water:bounded(r.water,1,3,2),soil:Math.max(0,Math.min(12,r.soil)),mica:Math.max(0,Math.min(12,r.mica)),finished:Number.isFinite(r.finished)?Math.max(0,r.finished):0})):[];
+  trial.records=Array.isArray(trial.records)?trial.records.filter(r=>r&&typeof r==='object'&&Number.isFinite(r.id)&&[1,2,3].includes(r.seed)&&Number.isFinite(r.soil)&&Number.isFinite(r.mica)).slice(-6).map(r=>({id:bounded(r.id,0,999999,0),seed:r.seed,water:bounded(r.water,1,3,2),soil:Math.max(0,Math.min(12,r.soil)),mica:Math.max(0,Math.min(12,r.mica)),finished:Number.isFinite(r.finished)?Math.max(0,r.finished):0,...(r.cover===undefined?{}:{cover:['open','mica','both'].includes(r.cover)?r.cover:'open'})})):[];
   trial.sequence=Math.max(trial.sequence,...trial.records.map(r=>r.id));
   if(!['empty','planted','growing','ready','collected'].includes(trial.phase))trial.phase='empty';
   if(trial.phase==='growing'&&now>=trial.started+360)trial.phase='ready';
@@ -25,10 +26,12 @@ function world(input){
   const t=trial||initialTrial(),progress=['ready','collected'].includes(t.phase)?1:t.phase==='growing'?Math.max(0,Math.min(1,(now-t.started)/360)):0;
   const factors=[[1,.7],[.65,1.1],[.85,.85]][t.seed-1];
   const trays=[8,15].map((loss,i)=>{
+   const covered=t.cover==='both'||t.cover==='mica'&&i===1;
+   loss*=covered?.5:1;
    const start=t.water*40,minutes=progress*6;
    // Integral of retained water (clamped at zero), not a counter of button presses.
    const wet=Math.min(minutes,start/loss),area=start*wet-loss*wet*wet/2;
-   const growth=Math.round(Math.min(12,area/60*factors[i])*10)/10;
+   const growth=Math.round(Math.min(12,area/60*factors[i]*(covered?.8:1))*10)/10;
    return {substrate:i?'mica':'soil',water:Math.round(Math.max(0,start-loss*minutes)),growth};
   });
   return {...t,progress,trays,remaining:t.phase==='growing'?Math.max(0,Math.min(360,Math.ceil(t.started+360-now))):0,model:'accelerated_fictional_pair'};
@@ -40,7 +43,9 @@ function world(input){
  let result=null;
  if(input.mode==='action'){
   const a=input.args||{};
-  if(a.capture!==undefined&&(input.tool!=='salvage'||a.journal!==true)){
+  if(a.cover!==undefined&&(input.tool!=='crank'||a.trial!==true)){
+   result={ok:false,reason:'cover_requires_trial_crank'};
+  }else if(a.capture!==undefined&&(input.tool!=='salvage'||a.journal!==true)){
    result={ok:false,reason:'capture_requires_journal'};
   }else if(input.tool==='salvage'&&a.journal===true){
    result=a.trial===true?{ok:false,reason:'one_job_at_a_time'}:a.capture!==undefined?observerCapture(s.observer,a.capture,a.metric):observerRead(journal,a.metric);
@@ -54,13 +59,14 @@ function world(input){
    }else if(input.tool==='crank'){
     if(trial.phase!=='planted')result={ok:false,reason:'Посади пару лотков: fit part=seed value=1/2/3. Готовый опыт сначала сними.'};
     else if(a.water!==undefined&&![1,2,3].includes(a.water))result={ok:false,reason:'Равный полив: 1, 2 или 3 дозы на лоток.'};
-    else{trial.water=a.water||2;trial.started=now;trial.phase='growing';result={ok:true,trial:true,ready_at:now+360,water_each:trial.water*40};}
+    else if(a.cover!==undefined&&!['open','mica','both'].includes(a.cover))result={ok:false,reason:'unknown_cover'};
+    else{if(a.cover!==undefined)trial.cover=a.cover;else delete trial.cover;trial.water=a.water||2;trial.started=now;trial.phase='growing';result={ok:true,trial:true,ready_at:now+360,water_each:trial.water*40};}
    }else if(trial.phase!=='ready')result={ok:false,reason:'Снимать можно только готовый опыт через шесть минут.'};
    else{
     const view=projectTrial();trial.sequence=Math.min(999999,trial.sequence+1);
-    const record={id:trial.sequence,seed:trial.seed,water:trial.water,soil:view.trays[0].growth,mica:view.trays[1].growth,finished:trial.started+360};
+    const record={id:trial.sequence,seed:trial.seed,water:trial.water,soil:view.trays[0].growth,mica:view.trays[1].growth,finished:trial.started+360,...(trial.cover===undefined?{}:{cover:trial.cover})};
     trial.records.push(record);trial.records=trial.records.slice(-6);trial.phase='collected';
-    result={ok:true,trial:true,comparison:record,meaning:'Игровой опыт: равный полив, разные субстраты; рост в условных единицах, не еда.'};
+    result={ok:true,trial:true,comparison:record,meaning:'Игровой опыт: равный полив, разные субстраты; навес = половина испарения и 80% света. Условия сохранены; рост в условных единицах, не еда.'};
    }
   }else if(input.tool==='fit'){
    if(s.phase!=='ready')result={ok:false,reason:s.phase==='ejected'?'Достань ядро из ведра.':'Перейди к следующему экрану.'};

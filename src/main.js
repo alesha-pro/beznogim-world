@@ -236,6 +236,9 @@ const garage=createGarage({THREE,root,M,mat,group,box,sphere,cyl,rod,sign,batchS
 const quotes=createQuotes({THREE,root,M,mat,group,box,sphere,cyl,rod,sign,batchStatic,changed:()=>{refresh();renderer.shadowMap.needsUpdate=true},watching:()=>resident?.watching(),localPlay:()=>resident.localPlay()});
 const dash=createDash({THREE,root,M,mat,group,box,sphere,rod,torus,sign,batchStatic,changed:()=>{refresh();renderer.shadowMap.needsUpdate=true},watching:()=>resident?.watching(),localPlay:()=>resident.localPlay()});
 const bench=createBench({THREE,workshop,M,mat,group,box,sphere,cyl,rod,torus,sign,changed:()=>{refresh();renderer.shadowMap.needsUpdate=true},watching:()=>resident?.watching(),localPlay:()=>resident.localPlay()});
+// The inspection cutaway is temporary; static workshop meshes return unchanged on exit.
+const trayOccluders=workshop.children.filter(o=>o!==roof&&o!==bench.house).map(o=>({object:o,visible:o.visible}));
+let trayCutaway=false;
 const observer=createObserver({root,M,mat,group,box,sphere,cyl,rod,sign,changed:()=>{refresh();renderer.shadowMap.needsUpdate=true;}});
 const sleepDream=createSleepDream({THREE,scene,root,head,M,mat,mesh,group,box,sphere,cyl,rod,torus,sign,batchStatic,chime});
 const quietDream=createQuietDream({THREE,scene,root,head,M,mat,mesh,group,box,sphere,cyl,rod,torus,sign,paperBoat,batchStatic,chime});
@@ -387,7 +390,7 @@ const resident=createResident({head,headDestination,state,controls,camera,refres
 // a temporary inspection camera, not a move of the resident or the workshop.
 let benchFrameKey='';
 const benchCorners=[];for(const x of [-5.1,-1.4])for(const y of [.98,2.48])for(const z of [-3.9,-2.05])benchCorners.push(new THREE.Vector3(x,y,z));
-const trialCorners=[];for(const x of [-3.3,-1.4])for(const y of [.96,1.85])for(const z of [-2.9,-2.05])trialCorners.push(new THREE.Vector3(x,y,z));
+const trialCorners=[];for(const x of [-3.3,-1.4])for(const y of [.96,1.93])for(const z of [-2.9,-2.05])trialCorners.push(new THREE.Vector3(x,y,z));
 const sporesCorners=[];for(const x of [-29,-19])for(const y of [-1.7,2.5])for(const z of [19.5,28.5])sporesCorners.push(new THREE.Vector3(x,y,z));
 const beaconCorners=[];for(const x of [-53.5,-42.5])for(const y of [-1.7,1.1])for(const z of [-5,5])beaconCorners.push(new THREE.Vector3(x,y,z));
 const scaleCorners=[];for(const x of [16.1,31.9])for(const y of [-1.7,1.5])for(const z of [-51.6,-44.4])scaleCorners.push(new THREE.Vector3(x,y,z));
@@ -413,12 +416,16 @@ function frameBench(){
  const dockOn=focused==='drydock'&&state.selected==='drydock'||dashOn||quoteOn||garageOn||forkOn||stillOn||seamsOn||egoOn||scaleOn||beaconOn||sporesOn;
  const on=(focused==='bench'&&state.selected==='bench'||dockOn)&&!$('#inspector').classList.contains('collapsed')&&!dreamCamera;
  document.body.classList.toggle('spores-look',on&&sporesOn);document.body.classList.toggle('beacon-look',on&&beaconOn);document.body.classList.toggle('scale-look',on&&scaleOn);document.body.classList.toggle('ego-look',on&&egoOn);document.body.classList.toggle('seams-look',on&&seamsOn);document.body.classList.toggle('still-look',on&&stillOn);document.body.classList.toggle('fork-look',on&&forkOn);document.body.classList.toggle('garage-look',on&&garageOn);document.body.classList.toggle('quotes-look',on&&quoteOn);document.body.classList.toggle('dash-look',on&&(dashOn||quoteOn||garageOn||forkOn||stillOn||seamsOn||egoOn||scaleOn||beaconOn||sporesOn));document.body.classList.toggle('bench-look',on&&!dockOn);document.body.classList.toggle('drydock-look',on&&dockOn);
+ const cutaway=on&&trayOn;
+ if(cutaway!==trayCutaway){trayCutaway=cutaway;bench.setCutaway(cutaway);for(const item of trayOccluders)item.object.visible=cutaway?false:item.visible;renderer.shadowMap.needsUpdate=true;}
  if(!on){benchFrameKey='';return;}
  if(focused==='bench')controls.maxZoom=trayOn?12:4.5;
  if(Math.abs(view.angle-view.targetAngle)>.01)return;
  const c=$('#inspector').getBoundingClientRect(),n=$('.territory-nav').getBoundingClientRect(),bar=$('.toolbar').getBoundingClientRect();
  const portrait=innerWidth<=900&&innerHeight>innerWidth;
  const rect=portrait?{left:14,right:bar.left-10,top:n.bottom+((stillOn||seamsOn||egoOn||scaleOn||beaconOn||sporesOn)?6:14),bottom:c.top-((stillOn||seamsOn||egoOn||scaleOn||beaconOn||sporesOn)?6:14)}:{left:Math.max(c.right+18,n.right+18),right:bar.left-18,top:80,bottom:innerHeight-80};
+ // The added tray canopies fit below the live status/navigation as well.
+ if(trayOn&&innerWidth>900)rect.top=Math.max(rect.top,n.bottom+8);
  // Landscape's card is on the right: use the band above it for the workbench.
  if(innerWidth<=900&&!portrait){rect.left=n.right+12;rect.right=innerWidth-16;rect.top=bar.bottom+10;rect.bottom=c.top-10;}
  if((trayOn||dashOn||quoteOn||garageOn||forkOn||stillOn||seamsOn||egoOn||scaleOn||beaconOn||sporesOn)&&innerWidth<=900&&!portrait){rect.left=12;rect.right=c.left-12;rect.top=n.bottom+10;rect.bottom=$('footer').getBoundingClientRect().top-12;}
