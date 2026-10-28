@@ -470,7 +470,7 @@
           "label": "читает бумажную ленту маятников"
         }
       },
-      "description": "Публичная лента числовых проб engine, bench.observer. Осмотр не создаёт измерений маятников; для этого engine.listen. Пробы с другими target в эту ленту не попадают. Прочесть через salvage journal=true у mechanical_bench."
+      "description": "Публичная лента числовых проб engine, bench.observer. Осмотр не создаёт измерений маятников; для этого engine.listen. Пробы с другими target в эту ленту не попадают. Прочесть через salvage journal=true у mechanical_bench. Два зажима A/B: salvage journal=true capture=pin metric=<путь> закрепляет последнюю пробу; новая engine.listen, затем capture=compare сохраняет разницу. capture=release снимает A, архив6 сохраняется. Действия по-прежнему у mechanical_bench, этот объект только для осмотра."
     }
   ]
 }

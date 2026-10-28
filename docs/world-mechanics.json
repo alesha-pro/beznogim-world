@@ -440,7 +440,7 @@
     {
       "id": "bench",
       "title": "Верстак и парные опыты",
-      "version": 3,
+      "version": 4,
       "file": "mechanics/bench.js",
       "tick_seconds": 30,
       "tools": [
@@ -498,7 +498,7 @@
         },
         {
           "name": "salvage",
-          "description": "Достать выброшенное ядро из ведра и вернуть в механизм. После ошибки это нужно до следующего запуска. С trial=true снять готовый парный опыт и сохранить сравнение роста почва/слюда; повторный сбор отклоняется. Следующий опыт можно посадить через fit part=seed. Либо journal=true: прочесть автоматически накопленные числовые пробы маятников engine у верстака. metric необязательный точный путь из metrics; последние12 точек и min/max/delta по48. engine.listen даёт пробы; копируются только field_notes с target engine, тики сами не измеряют. Не совмещать с trial. Не физические измерения.",
+          "description": "Достать выброшенное ядро; trial=true: снять готовый опыт почва/слюда без повторного сбора. Либо journal=true: числовая лента engine, metric точный путь из metrics (по умолчанию первый), последние12точек/min/max/delta по48. engine.listen даёт пробы, тик не измеряет. journal=true,capture=pin: закрепить последнюю пробу выбранного metric как A. Затем получи новую пробу (можно изменить engine.switch и вызвать engine.listen); capture=compare: сохранить A/B, delta/percent/elapsed; без новой пробы отказ, повтор идемпотентен. Метрика фиксирована до capture=release. Архив6 сравнений/закреплённая A сохраняются независимо от48точек. journal=true без capture читает всё. Не совмещать trial и journal. running — переключатель при записи, не причина изменения. Это игровые, не физические замеры.",
           "object": "mechanical_bench",
           "seconds": 20,
           "parameters": {
@@ -516,6 +516,16 @@
                 "type": "string",
                 "maxLength": 96,
                 "description": "Точный числовой путь из metrics; без параметра первый доступный."
+              },
+              "capture": {
+                "type": "string",
+                "enum": [
+                  "pin",
+                  "compare",
+                  "release"
+                ],
+                "maxLength": 7,
+                "description": "Только journal=true: pin фиксирует последнюю пробу metric; compare сохраняет разницу с более новой пробой того же факта; release снимает A, архив6 остаётся. Повтор сравнения не дублирует запись."
               }
             },
             "additionalProperties": false
@@ -679,12 +689,11 @@
         {
           "tool": "salvage",
           "args": {
-            "journal": true,
-            "trial": true
+            "capture": "pin"
           },
           "expect": {
             "result.ok": false,
-            "result.reason": "one_job_at_a_time",
+            "result.reason": "capture_requires_journal",
             "public.observer.capacity": 48
           }
         }

@@ -944,3 +944,44 @@ pendulum geometry and returns it when leaving this view.
 rechecks, migration/restart/privacy tests and desktop/mobile interaction tests
 with both empty API and explicitly synthetic HTTP/SSE public snapshots. Synthetic
 transport tests are not a real GLM visit or a production SSE handshake.
+
+
+### Two clamps A/B (bench v4)
+
+At the same place 30 paper instrument, the resident can freeze a real numeric
+sample and compare it with a later one:
+
+1. Obtain a numeric `engine.listen` observation. At `mechanical_bench`, call
+   `resident_ext_bench_salvage({journal:true, capture:"pin", metric:"<exact metric>"})`.
+2. Optionally change the engine's switch, then obtain another `engine.listen`
+   observation. Call salvage with `journal:true, capture:"compare"`.
+3. Read the frozen A/B values, numeric delta, elapsed check-time and percentage
+   change (relative to |A|; null for zero A or nonfinite percentage). Repeating
+   compare on the same sample returns the same receipt without adding a copy.
+4. `capture:"release"` frees A for a new experiment; it does **not** delete
+   the six retained comparisons or their sequence. `journal:true` without
+   capture remains a read-only series and comparison-archive query.
+
+A is pinned to one metric, so units cannot be silently mixed. A compare needs
+strictly newer check-time, not a new tick or tool invocation. A stable observation
+id with a newer `checked_at` is valid. Pin never replaces an existing anchor;
+release it explicitly first. The retained A and six frozen A/B receipts survive
+rolling-paper eviction, JSON serialization, migration, restart and offline time.
+No measurement is manufactured and no switch is changed by these tools.
+The switch labels are states when the sample was copied, **not necessarily at
+measurement time** and not causal evidence. These are fictional world samples.
+
+Two small brass/teal physical clamps on the paper show A and the latest matching
+B for the selected metric; six brass archive tabs fill as comparisons are saved.
+Clamp height is clipped to the displayed retained min/max range when an old
+frozen point has left the rolling window. Read the exact frozen values and times
+in the card/JSON, not the clamped marker height. The whole graph still shows only
+the retained numeric samples. Archive receipts carry their own frozen samples.
+
+The public card is read-only. The labelled teaching tape exposes pin/compare/
+release controls solely for its own persisted local sandbox. Its exported JSON
+is marked `demonstration_not_resident`; public JSON is marked
+`public_game_measurements`. Neither path writes to the resident API.
+`npm run test:observer-clamps` covers core invariants and desktop/mobile
+interaction with explicit synthetic public transport fixtures, not a real agent
+turn or production SSE handshake. Existing tape/monitor/trial tests still apply.

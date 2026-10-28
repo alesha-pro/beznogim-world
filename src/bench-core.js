@@ -35,13 +35,16 @@ function world(input){
  };
  // Bounded public instrument archive; no private notes or generated measurements.
  s.observer=observerCollect(s.observer,input.world,now);
- const journal=observerProject(s.observer);
+ let journal=observerProject(s.observer);
  const targets=[6,8,9];
  let result=null;
  if(input.mode==='action'){
   const a=input.args||{};
-  if(input.tool==='salvage'&&a.journal===true){
-   result=a.trial===true?{ok:false,reason:'one_job_at_a_time'}:observerRead(journal,a.metric);
+  if(a.capture!==undefined&&(input.tool!=='salvage'||a.journal!==true)){
+   result={ok:false,reason:'capture_requires_journal'};
+  }else if(input.tool==='salvage'&&a.journal===true){
+   result=a.trial===true?{ok:false,reason:'one_job_at_a_time'}:a.capture!==undefined?observerCapture(s.observer,a.capture,a.metric):observerRead(journal,a.metric);
+   journal=observerProject(s.observer);
   }else if(input.tool==='fit'&&a.part==='seed'||a.trial===true&&['crank','salvage'].includes(input.tool)){
    if(!trial){trial=initialTrial();s.trial=trial;}
    if(input.tool==='fit'){
@@ -98,7 +101,7 @@ function observerNumbers(facts){
 }
 function observerCollect(old,w,now){
  const clean=r=>r&&Number.isSafeInteger(r.id)&&r.id>0&&Number.isFinite(r.time)&&r.time>=0;
- const s={version:1,rows:[],seen:[],total:0};
+ const s={version:2,rows:[],seen:[],total:0,clamps:observerClamps(old?.clamps)};
  if(old&&typeof old==='object'){
   s.rows=Array.isArray(old.rows)?old.rows.filter(clean).slice(-48).map(r=>({id:r.id,time:r.time,values:observerStored(r.values),running:typeof r.running==='boolean'?r.running:null})):[];
   s.seen=Array.isArray(old.seen)?old.seen.filter(n=>typeof n==='string'&&/^[0-9]+@[0-9.]+$/.test(n)&&n.length<48).slice(-96):[];
@@ -121,7 +124,7 @@ function observerCollect(old,w,now){
 }
 function observerProject(s){
  const metrics=[...new Set(s.rows.flatMap(r=>Object.keys(r.values)))].sort().slice(0,48);
- return {version:1,source:'field_notes.engine',rows:s.rows,total:s.total,capacity:48,metrics,
+ return {version:2,source:'field_notes.engine',rows:s.rows,total:s.total,capacity:48,metrics,clamps:s.clamps,
   note:'Только числовые факты игровых измерений engine; время — checked_at или time. Повторная проверка того же id с новым checked_at сохраняется. Тики не делают новые замеры. Лента хранит последние48 доступных проб; полный архив у resident_catalog. Метка running — состояние переключателя при записи, не причина изменения.'};
 }
 function observerRead(p,metric){
@@ -130,7 +133,7 @@ function observerRead(p,metric){
  const points=key?p.rows.filter(r=>Object.hasOwn(r.values,key)).map(r=>({id:r.id,time:r.time,value:r.values[key],running:r.running})):[];
  const values=points.map(r=>r.value);
  return {ok:true,total:p.total,retained:p.rows.length,metric:key||null,metrics:p.metrics,
-  points:points.slice(-12),summary:values.length?{count:values.length,min:Math.min(...values),max:Math.max(...values),delta:values[values.length-1]-values[0]}:null,
+  clamps:p.clamps,points:points.slice(-12),summary:values.length?{count:values.length,min:Math.min(...values),max:Math.max(...values),delta:values[values.length-1]-values[0]}:null,
   note:p.note};
 }
 
@@ -138,6 +141,61 @@ function observerStored(values){
  const out={};if(!values||typeof values!=='object')return out;
  for(const k of Object.keys(values).slice(0,12))if(/^[\p{L}\p{N}][\p{L}\p{N}_ .-]{0,95}$/u.test(k)&&!k.split('.').some(p=>['__proto__','constructor','prototype'].includes(p))&&typeof values[k]==='number'&&Number.isFinite(values[k])&&Math.abs(values[k])<=1e9)out[k]=values[k];
  return out;
+}
+
+// Frozen numeric A/B receipts, independent of the rolling paper window.
+function observerMetric(k){return typeof k==='string'&&/^[\p{L}\p{N}][\p{L}\p{N}_ .-]{0,95}$/u.test(k)&&!k.split('.').some(p=>['__proto__','constructor','prototype'].includes(p));}
+function observerPoint(p){
+ if(!p||!Number.isSafeInteger(p.id)||p.id<=0||!Number.isFinite(p.time)||p.time<0||!Number.isFinite(p.value)||Math.abs(p.value)>1e9)return null;
+ return {id:p.id,time:p.time,value:p.value,running:typeof p.running==='boolean'?p.running:null};
+}
+function observerReceipt(id,metric,a,b){
+ const delta=b.value-a.value;
+ return {id,metric,a,b,delta,percent:a.value===0||!Number.isFinite(delta/Math.abs(a.value)*100)?null:delta/Math.abs(a.value)*100,elapsed:b.time-a.time};
+}
+function observerClamps(old){
+ const s={anchor:null,records:[],sequence:0,lastCompared:null};
+ if(!old||typeof old!=='object')return s;
+ const p=observerPoint(old.anchor);
+ if(p&&observerMetric(old.anchor.metric))s.anchor={metric:old.anchor.metric,...p};
+ if(Array.isArray(old.records))for(const r of old.records.slice(-6)){
+  const a=observerPoint(r?.a),b=observerPoint(r?.b);
+  if(!a||!b||!observerMetric(r.metric)||!Number.isSafeInteger(r.id)||r.id<=0||b.time<=a.time||s.records.some(x=>x.id>=r.id))continue;
+  s.records.push(observerReceipt(r.id,r.metric,a,b));
+ }
+ s.sequence=Math.max(...s.records.map(r=>r.id),Number.isSafeInteger(old.sequence)&&old.sequence>=0?Math.min(1e9,old.sequence):0);
+ if(s.anchor&&Number.isFinite(old.lastCompared)&&old.lastCompared>s.anchor.time)s.lastCompared=old.lastCompared;
+ // Recover the guard even if a pre-release state lacks lastCompared.
+ for(const r of s.records)if(s.anchor&&r.metric===s.anchor.metric&&r.a.id===s.anchor.id&&r.a.time===s.anchor.time)s.lastCompared=Math.max(s.lastCompared||0,r.b.time);
+ return s;
+}
+function observerCapture(s,action,metric){
+ const c=s.clamps;
+ if(!['pin','compare','release'].includes(action))return {ok:false,reason:'unknown_capture'};
+ if(action==='release'){c.anchor=null;c.lastCompared=null;return {ok:true,capture:action,retained:c.records.length};}
+ if(action==='compare'&&!c.anchor)return {ok:false,reason:'pin_first'};
+ const key=metric===undefined?(action==='compare'?c.anchor.metric:observerProject(s).metrics[0]):metric;
+ if(!observerMetric(key))return {ok:false,reason:'no_numeric_sample'};
+ if(action==='compare'&&key!==c.anchor.metric)return {ok:false,reason:'metric_mismatch',metric:c.anchor.metric};
+ const row=[...s.rows].reverse().find(r=>Object.hasOwn(r.values,key));
+ if(!row)return {ok:false,reason:'no_numeric_sample',metric:key};
+ const point={id:row.id,time:row.time,value:row.values[key],running:row.running};
+ if(action==='pin'){
+  if(c.anchor)return {ok:false,reason:'release_first',anchor:c.anchor};
+  c.anchor={metric:key,...point};c.lastCompared=null;
+  return {ok:true,capture:action,anchor:c.anchor,next:'Получи более новую числовую пробу engine.listen, затем capture=compare. Изменять switch необязательно.'};
+ }
+ if(point.time<=c.anchor.time)return {ok:false,reason:'new_sample_required',anchor:c.anchor};
+ if(c.lastCompared!==null&&point.time<=c.lastCompared){
+  const receipt=c.records.find(r=>r.metric===key&&r.a.id===c.anchor.id&&r.a.time===c.anchor.time&&r.b.id===point.id&&r.b.time===point.time);
+  return receipt?{ok:true,capture:action,duplicate:true,comparison:receipt}:{ok:false,reason:'already_compared'};
+ }
+ if(c.sequence>=1e9)return {ok:false,reason:'archive_sequence_full'};
+ // A percentage near zero can overflow: represent it as null, never Infinity.
+ const receipt=observerReceipt(++c.sequence,key,observerPoint(c.anchor),point);
+ if(!Number.isFinite(receipt.percent))receipt.percent=null;
+ c.records.push(receipt);c.records=c.records.slice(-6);c.lastCompared=point.time;
+ return {ok:true,capture:action,duplicate:false,comparison:receipt,note:'Разница двух игровых проб, не доказательство причинности. running — переключатель при записи, не во время исходного измерения.'};
 }
 
 export default world;

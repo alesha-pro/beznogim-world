@@ -1,6 +1,6 @@
 const {readFileSync}=require('fs'),vm=require('vm'),assert=require('assert/strict');
 const ctx=vm.createContext({});vm.runInContext(readFileSync('public/mechanics/bench.js','utf8'),ctx);const w=i=>JSON.parse(JSON.stringify(ctx.world(i)));
-const legacy={round:2,core:3,belt:3,phase:'complete',attempts:42,repairs:3,run:7};let x=w({mode:'migrate',now:1000,state:legacy,previous_version:1,version:2});assert.deepEqual(x.state,{...legacy,observer:{version:1,rows:[],seen:[],total:0}});
+const legacy={round:2,core:3,belt:3,phase:'complete',attempts:42,repairs:3,run:7};let x=w({mode:'migrate',now:1000,state:legacy,previous_version:1,version:2});assert.deepEqual(x.state,{...legacy,observer:{version:2,rows:[],seen:[],total:0,clamps:{anchor:null,records:[],sequence:0,lastCompared:null}}});
 function action(tool,args={},now=1000){x=w({mode:'action',state:x.state,tool,args,now});return x;}
 function tick(now){x=w({mode:'tick',state:x.state,now});return x;}
 action('fit',{part:'seed',value:1});assert.equal(x.state.phase,'complete');assert.equal(x.state.trial.phase,'planted');
