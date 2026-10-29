@@ -354,3 +354,6 @@ body.datacenter-look .hotspot.selected{visibility:hidden}
  .inference-look .territory-nav .resident-status{padding:2px 0}
 }
 
+
+/* Close inspection leaves the resident in place on the server, without covering the hardware. */
+body.datacenter-look .hotspot[data-label="голова"]{visibility:hidden}

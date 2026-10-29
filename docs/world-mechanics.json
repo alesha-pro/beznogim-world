@@ -1384,13 +1384,13 @@
     {
       "id": "garage",
       "title": "Гараж, электростанция и ЦОД",
-      "version": 4,
+      "version": 5,
       "file": "mechanics/garage.js",
       "tick_seconds": 30,
       "tools": [
         {
           "name": "pump",
-          "description": "Гараж: power1..6,angle1..3 накачать6; дальность=power*(4-angle), гараж[-32,.6,-20.6]. energy=inspect отовсюду; dispatch(unit1/2,enabled)/delivery у станции[48,.6,-24]. 1энерго-час=120с; поставка100000НТС/24ч,конечныйсклад800000. datacenter=inspect/alexey/mike: паспорта из любой точки. sharing=inspect отовсюду. sharing=enable/disable у datacenter_mike[50.5,.6,-35]. sharing=submit отовсюду: task sort/checksum/route,batch1..3,ticket=public.sharing.nextTicket. Выключено по умолчанию; 60с×batch,1активная+3очередь,12квитанций. Повтор ticket не выполняется заново. disable отменяет незавершённое. Только игровая симуляция, не DPC/модель/сеть; паспорт и энергобаланс прежние. Режимы sharing/datacenter/energy/гараж НЕ смешивать.",
+          "description": "Гараж: power1..6,angle1..3 накачать6; дальность=power*(4-angle), гараж[-32,.6,-20.6]. energy=inspect отовсюду; dispatch(unit1/2,enabled)/delivery у станции[48,.6,-24]. 1энерго-час=120с; поставка100000НТС/24ч,конечныйсклад800000. datacenter=inspect/alexey/mike: паспорта из любой точки; priceSummary отделяет строки «чек» от плана, сами чеки не проверены. sharing=inspect отовсюду. sharing=enable/disable у datacenter_mike[50.5,.6,-35]. sharing=submit отовсюду: task sort/checksum/route,batch1..3,ticket=public.sharing.nextTicket. Выключено по умолчанию; 60с×batch,1активная+3очередь,12квитанций. Повтор ticket не выполняется заново. disable отменяет незавершённое. Только игровая симуляция, не DPC/модель/сеть; паспорт и энергобаланс прежние. Режимы sharing/datacenter/energy/гараж НЕ смешивать.",
           "seconds": 35,
           "parameters": {
             "type": "object",
@@ -1532,7 +1532,11 @@
           "expect": {
             "result.ok": true,
             "result.datacenter.mike.totalRub": 569283,
-            "state.air": 6
+            "state.air": 6,
+            "result.datacenter.mike.priceSummary.receiptLabeledRub": 462388,
+            "result.datacenter.mike.priceSummary.plannedRub": 106895,
+            "result.datacenter.alexey.priceSummary.unknownAmountRows": 4,
+            "result.datacenter.mike.priceSummary.currentVerifiedRows": 0
           }
         },
         {

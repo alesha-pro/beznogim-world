@@ -72,7 +72,26 @@ export function createDatacenter({root,mat,group,box,sphere,cyl,rod,torus,sign,b
  ui.innerHTML='<div class="dc-tabs"><button data-unit="alexey">риг Алексея</button><button data-unit="mike">юнит Mike</button><button data-unit="all">весь ЦОД</button></div><div id="dc-passport"></div><small>Макеты. Без нового энергобаланса и без майнинга. Вращай вид кнопкой справа.</small><a href="./datacenter-catalog.json" target="_blank">открыть полный паспорт JSON</a>';
  document.querySelector('#focus-object').before(ui);
  const format=v=>v==null?'неизвестно':v.toLocaleString('ru-RU')+' ₽';
- function draw(){for(const b of ui.querySelectorAll('[data-unit]'))b.setAttribute('aria-pressed',String(tab===b.dataset.unit));const unit=tab==='all'?null:catalog[tab];const el=ui.querySelector('#dc-passport');el.replaceChildren();const add=(tag,text)=>{const n=document.createElement(tag);n.textContent=text;el.append(n);return n;};if(!unit){add('p','Два добровольно присланных юнита, рядом с настоящей станцией. Выбери риг для приближения.');return;}add('strong',unit.name+' · '+unit.os);add('p',unit.provenance);if(tab==='mike')add('p','Внешний вид корпуса условный: прислана таблица, не фото.');const details=add('details','');const summary=document.createElement('summary');summary.textContent='состав, SKU и цены';details.append(summary);for(const p of unit.parts){const item=document.createElement('p');item.textContent=p.part+': '+p.model+' · SKU: '+(p.sku||'не уточнён')+' · покупка: '+format(p.purchaseRub)+(p.status?' ('+p.status+')':'')+(p.source?' · '+p.source:'')+' · сейчас: '+format(p.currentRub);details.append(item);}if(unit.totalRub)add('p','Итог таблицы: '+format(unit.totalRub)+' · '+unit.period);add('p',unit.priceStatus);}
+ function draw(){
+  for(const b of ui.querySelectorAll('[data-unit]'))b.setAttribute('aria-pressed',String(tab===b.dataset.unit));
+  const unit=tab==='all'?null:catalog[tab],el=ui.querySelector('#dc-passport');el.replaceChildren();
+  const add=(tag,text,parent=el)=>{const n=document.createElement(tag);n.textContent=text;parent.append(n);return n;};
+  if(!unit){add('p','Два добровольно присланных юнита, рядом с настоящей станцией. Выбери риг для приближения.');return;}
+  add('strong',unit.name+' · '+unit.os);add('p',unit.provenance);
+  if(tab==='mike')add('p','Внешний вид корпуса условный: прислана таблица, не фото.');
+  const summary=unit.priceSummary;
+  const totals=add('p',tab==='mike'?'По строкам «чек»: '+format(summary.receiptLabeledRub)+' · план: '+format(summary.plannedRub)+'. Сами чеки не проверены.':'Стоимость неизвестна. Точные SKU, даты и суммы покупки ещё нужны.');
+  totals.className='dc-price-summary';
+  const details=add('details','');add('summary','состав, SKU и цены',details);
+  for(const p of unit.parts){
+   const label=p.status==='план'?'плановая сумма':p.status==='куплено'?'по таблице (чек)':'покупка';
+   const item=add('p',p.part+': '+p.model+' · SKU: '+(p.sku||'не уточнён')+' · '+label+': '+format(p.purchaseRub)+(p.source?' · источник: '+p.source:'')+' · сейчас: '+(p.currentRub==null?'не проверено':format(p.currentRub)),details);
+   item.dataset.priceStatus=p.status==='план'?'plan':p.status==='куплено'?'receipt-label':'unknown';
+  }
+  if(unit.totalRub)add('p','Итог таблицы (не сумма подтверждённых покупок): '+format(unit.totalRub)+' · '+unit.period);
+  add('p',unit.priceStatus);
+ }
+
  const compute=createComputeSharing({ui,makeLights:()=>{
   const blue=mat('#43cbd0',{emissive:'#227d86',emissiveIntensity:.6}),amber=mat('#edb14d',{emissive:'#b86f21',emissiveIntensity:.4}),off=mat('#344d50'),green=mat('#88ba68',{emissive:'#4d7c38',emissiveIntensity:.4});
   const run=box([.56,2.35,1.08],[.13,.15,.06],off,mike);const queued=Array.from({length:3},(_,i)=>box([.56,1.95-i*.25,1.08],[.13,.14,.06],off,mike));
