@@ -47,7 +47,8 @@
     "test:inference": "node tests/inference.test.mjs && node tests/inference-browser.test.cjs desktop && node tests/inference-browser.test.cjs mobile && node tests/inference-live.test.cjs desktop && node tests/inference-live.test.cjs mobile && node tests/inference-live.test.cjs desktop awake && node tests/inference-live.test.cjs mobile awake",
     "test:observer": "node scripts/sync-mechanics.mjs && node tests/observer.test.mjs && node tests/observer-browser.test.cjs desktop && node tests/observer-browser.test.cjs mobile && node tests/observer-browser.test.cjs desktop live && node tests/observer-browser.test.cjs mobile live",
     "test:observer-clamps": "node scripts/sync-mechanics.mjs && node tests/observer-clamps.test.mjs && node tests/observer-clamps-browser.test.cjs desktop && node tests/observer-clamps-browser.test.cjs mobile && node tests/observer-clamps-browser.test.cjs desktop live && node tests/observer-clamps-browser.test.cjs mobile live",
-    "test:trial-cover": "node scripts/sync-mechanics.mjs && node tests/trial-cover.test.mjs && node tests/trial-cover-browser.test.cjs desktop && node tests/trial-cover-browser.test.cjs mobile && node tests/trial-cover-live.test.cjs desktop && node tests/trial-cover-live.test.cjs mobile"
+    "test:trial-cover": "node scripts/sync-mechanics.mjs && node tests/trial-cover.test.mjs && node tests/trial-cover-browser.test.cjs desktop && node tests/trial-cover-browser.test.cjs mobile && node tests/trial-cover-live.test.cjs desktop && node tests/trial-cover-live.test.cjs mobile",
+    "test:radio": "node tests/radio-player.test.mjs && node tests/radio-player-browser.test.cjs desktop && node tests/radio-player-browser.test.cjs mobile"
   },
   "dependencies": {
     "three": "0.186.1"
