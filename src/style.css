@@ -357,3 +357,117 @@ body.datacenter-look .hotspot.selected{visibility:hidden}
 
 /* Close inspection leaves the resident in place on the server, without covering the hardware. */
 body.datacenter-look .hotspot[data-label="голова"]{visibility:hidden}
+
+/* RAM gallery uses the same compact, read-only viewing layout. */
+/* A quiet viewing card: no puzzle panel and no marker across the sculpture. */
+.myriapod-look .hotspot.selected{visibility:hidden;pointer-events:none}
+@media(max-width:900px) and (orientation:portrait){.myriapod-look #inspector{padding:11px 14px}.myriapod-look #object-kicker{display:none}.myriapod-look #object-title{margin:2px 0 5px;font-size:20px}.myriapod-look #object-description{font-size:11px;line-height:1.35;margin-bottom:7px}.myriapod-look #focus-object{padding-bottom:8px}}
+/* Short phones keep the sculpture larger; the full label remains in the normal
+   place card. During close inspection only title, return and rotate are needed. */
+@media(max-width:900px) and (orientation:portrait) and (max-height:700px){
+ .myriapod-look #object-description{display:none}
+ .myriapod-look .resident-strip button{min-height:26px;padding:4px 5px;font-size:8px}
+ .myriapod-look .territory-nav .resident-vitals{padding:5px 6px;gap:4px 8px}
+ .myriapod-look .need-icon{width:14px;height:14px}.myriapod-look .need-heading{font-size:8px}
+}
+@media(max-width:900px) and (max-height:700px){
+ /* In the short inspection viewport the status/needs stay live. The normal
+    resident control row returns on close; diary is still on the footer. */
+ .myriapod-look .resident-strip>button{display:none}
+ .myriapod-look .territory-nav .resident-vitals{padding:5px 6px;gap:4px 8px}
+ .myriapod-look .need-icon{width:14px;height:14px}.myriapod-look .need-heading{font-size:8px}
+}
+
+@media(max-width:900px) and (max-height:700px){
+ .myriapod-look .territory-nav .resident-vitals{grid-template-columns:repeat(4,1fr);gap:4px;padding:5px}
+ .myriapod-look .need-heading b{display:none}
+ .myriapod-look .need-meter{gap:3px}.myriapod-look .need-heading{margin-bottom:3px}
+ .myriapod-look .territory-nav .resident-status{padding:2px 0}
+}
+
+/* Two small removable trial trays share the existing workbench, not the HUD. */
+.bench-tabs{display:flex;gap:6px;margin-bottom:8px}.bench-tabs button{flex:1}
+#trial-readout,#trial-comparison{display:block;font:11px/1.5 monospace;margin:5px 0;color:#365b50}
+#trial-start,#trial-collect{width:49%;vertical-align:top}
+#trial-records{white-space:pre-line;font:10px/1.55 monospace;color:#53675b;max-height:90px;overflow:auto}
+#bench-trial-panel summary{font:11px monospace;cursor:pointer;margin:7px 0}
+
+#inspector:has(#bench-controls:not([hidden]) #bench-trial-panel:not([hidden])) #object-description{display:none}
+#inspector:has(#bench-controls:not([hidden]) #bench-trial-panel:not([hidden])) h2{font-size:23px;margin-bottom:5px}
+
+#cafe-controls{display:grid;gap:8px}#cafe-controls[hidden]{display:none}#cafe-readout{font-size:13px;color:#365b50}.cafe-buttons{display:flex;flex-wrap:wrap;gap:6px}#cafe-controls button{min-height:36px}#cafe-controls small{font-size:11px;line-height:1.45}#cafe-message{min-height:16px}
+body.cafe-look .hotspot.selected{visibility:hidden}
+@media(max-width:900px) and (max-height:700px){body.cafe-look #object-description{display:none}body.cafe-look #inspector{max-height:53dvh}body.cafe-look .resident-strip>button{display:none}body.cafe-look #cafe-controls{gap:4px}body.cafe-look #cafe-controls details{display:none}}
+@media(max-width:900px) and (orientation:landscape){body.cafe-look #inspector{max-height:calc(100dvh - 75px)}}
+
+#cafe-controls button{background:#dce2ca;color:#365b50;border:1px solid #a9b397;border-radius:4px;padding:7px 9px;font-size:12px}#cafe-controls button:disabled{opacity:.45;cursor:default}
+@media(max-width:900px) and (orientation:portrait){body.cafe-look #inspector{max-height:min(34dvh,calc(100dvh - var(--ui-card-top) - var(--ui-card-bottom)))!important;padding:11px 14px}body.cafe-look #object-description,body.cafe-look #object-kicker{display:none}body.cafe-look #object-title{font-size:20px;margin:2px 0 7px}}
+@media(max-width:900px) and (max-height:700px){body.cafe-look .territory-nav .resident-vitals{grid-template-columns:repeat(4,1fr);gap:4px;padding:5px}body.cafe-look .need-icon{width:14px;height:14px}body.cafe-look .need-heading{font-size:8px;margin-bottom:3px}body.cafe-look .need-heading b{display:none}body.cafe-look .need-meter{gap:3px}body.cafe-look .territory-nav .resident-status{padding:2px 0}}
+@media(max-width:900px) and (orientation:portrait) and (max-height:700px){body.cafe-look header h1{display:none}body.cafe-look .territory-nav,body.cafe-look .toolbar{top:44px}}
+@media(max-width:900px) and (orientation:landscape) and (max-height:600px){body.cafe-look header h1{display:none}body.cafe-look .territory-nav{top:42px}}
+
+#power-controls{display:grid;gap:8px}#power-controls[hidden]{display:none}#power-readout{font-size:13px;color:#365b50}.power-buttons{display:flex;flex-wrap:wrap;gap:6px}#power-controls button{min-height:36px}#power-controls small{font-size:11px;line-height:1.45}#power-message{min-height:16px}
+body.power-look .hotspot.selected{visibility:hidden}
+@media(max-width:900px) and (max-height:700px){body.power-look #object-description{display:none}body.power-look #inspector{max-height:53dvh}body.power-look .resident-strip>button{display:none}body.power-look #power-controls{gap:4px}body.power-look #power-controls details{display:none}}
+@media(max-width:900px) and (orientation:landscape){body.power-look #inspector{max-height:calc(100dvh - 75px)}}
+#power-controls button{background:#dce2ca;color:#365b50;border:1px solid #a9b397;border-radius:4px;padding:7px 9px;font-size:12px}#power-controls button:disabled{opacity:.45;cursor:default}
+@media(max-width:900px) and (orientation:portrait){body.power-look #inspector{max-height:min(34dvh,calc(100dvh - var(--ui-card-top) - var(--ui-card-bottom)))!important;padding:11px 14px}body.power-look #object-description,body.power-look #object-kicker{display:none}body.power-look #object-title{font-size:20px;margin:2px 0 7px}}
+@media(max-width:900px) and (max-height:700px){body.power-look .territory-nav .resident-vitals{grid-template-columns:repeat(4,1fr);gap:4px;padding:5px}body.power-look .need-icon{width:14px;height:14px}body.power-look .need-heading{font-size:8px;margin-bottom:3px}body.power-look .need-heading b{display:none}body.power-look .need-meter{gap:3px}body.power-look .territory-nav .resident-status{padding:2px 0}}
+@media(max-width:900px) and (orientation:portrait) and (max-height:700px){body.power-look header h1{display:none}body.power-look .territory-nav,body.power-look .toolbar{top:44px}}
+@media(max-width:900px) and (orientation:landscape) and (max-height:600px){body.power-look header h1{display:none}body.power-look .territory-nav{top:42px}}
+#power-readout,#power-stores{white-space:pre-line;line-height:1.5;font-variant-numeric:tabular-nums}#power-controls{font-size:12px}#power-controls details p{font-size:11px}/* The assumptions must remain reachable by scrolling even on a short phone. */
+#power-controls details{display:block!important}
+
+body.skipping-look .hotspot.selected{visibility:hidden}
+@media(max-width:900px) and (max-height:700px){body.skipping-look #object-description{display:none}body.skipping-look #inspector{max-height:53dvh}body.skipping-look .resident-strip>button{display:none}body.skipping-look #skipping-controls{gap:4px}body.skipping-look #skipping-controls details{display:none}}
+@media(max-width:900px) and (orientation:landscape){body.skipping-look #inspector{max-height:calc(100dvh - 75px)}}
+@media(max-width:900px) and (orientation:portrait){body.skipping-look #inspector{max-height:min(34dvh,calc(100dvh - var(--ui-card-top) - var(--ui-card-bottom)))!important;padding:11px 14px}body.skipping-look #object-description,body.skipping-look #object-kicker{display:none}body.skipping-look #object-title{font-size:20px;margin:2px 0 7px}}
+@media(max-width:900px) and (max-height:700px){body.skipping-look .territory-nav .resident-vitals{grid-template-columns:repeat(4,1fr);gap:4px;padding:5px}body.skipping-look .need-icon{width:14px;height:14px}body.skipping-look .need-heading{font-size:8px;margin-bottom:3px}body.skipping-look .need-heading b{display:none}body.skipping-look .need-meter{gap:3px}body.skipping-look .territory-nav .resident-status{padding:2px 0}}
+@media(max-width:900px) and (orientation:portrait) and (max-height:700px){body.skipping-look header h1{display:none}body.skipping-look .territory-nav,body.skipping-look .toolbar{top:44px}}
+@media(max-width:900px) and (orientation:landscape) and (max-height:600px){body.skipping-look header h1{display:none}body.skipping-look .territory-nav{top:42px}}
+#skipping-controls{display:grid;gap:8px}#skipping-controls[hidden]{display:none}#skipping-controls output{white-space:pre-line;font-size:13px;line-height:1.5}#skipping-controls label{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:13px}#skipping-controls select{min-height:36px;background:#eff0d5;color:#304b48;border:1px solid #91a396;border-radius:5px;padding:4px 12px}#skipping-controls button{min-height:36px}#skipping-controls small{font-size:11px;line-height:1.45;color:#607469}.skipping-row{display:flex;gap:6px}.skipping-row button{flex:1}#skipping-album{font-size:11px;line-height:1.6;list-style:none;padding:0;margin:0;max-height:100px;overflow:auto}body.skipping-look .hotspot.selected{visibility:hidden}
+
+/* The production UI shares the cafe card; hidden tabs never steal the short-screen view. */
+#cafe-controls [hidden]{display:none!important}.cafe-tabs{display:flex;gap:6px}.cafe-tabs button{flex:1}#cafe-controls [aria-pressed="true"]{background:#416d62;color:#fff1cf}#cafe-stocks{font-size:12px;font-weight:600;color:#365b50}#cafe-farm-readout{display:block;font-size:12px;margin:3px 0 6px}#cafe-kitchen-panel,#cafe-farm-panel{min-width:0}#cafe-controls details{display:block!important}body.cafe-look #inspector{overflow-y:auto}
+
+#datacenter-controls{display:grid;gap:8px}#datacenter-controls[hidden]{display:none}#datacenter-readout{font-size:13px;color:#365b50}.datacenter-buttons{display:flex;flex-wrap:wrap;gap:6px}#datacenter-controls button{min-height:36px}#datacenter-controls small{font-size:11px;line-height:1.45}#datacenter-message{min-height:16px}
+body.datacenter-look .hotspot.selected{visibility:hidden}
+@media(max-width:900px) and (max-height:700px){body.datacenter-look #object-description{display:none}body.datacenter-look #inspector{max-height:53dvh}body.datacenter-look .resident-strip>button{display:none}body.datacenter-look #datacenter-controls{gap:4px}body.datacenter-look #datacenter-controls details{display:none}}
+@media(max-width:900px) and (orientation:landscape){body.datacenter-look #inspector{max-height:calc(100dvh - 75px)}}
+#datacenter-controls button{background:#dce2ca;color:#365b50;border:1px solid #a9b397;border-radius:4px;padding:7px 9px;font-size:12px}#datacenter-controls button:disabled{opacity:.45;cursor:default}
+@media(max-width:900px) and (orientation:portrait){body.datacenter-look #inspector{max-height:min(34dvh,calc(100dvh - var(--ui-card-top) - var(--ui-card-bottom)))!important;padding:11px 14px}body.datacenter-look #object-description,body.datacenter-look #object-kicker{display:none}body.datacenter-look #object-title{font-size:20px;margin:2px 0 7px}}
+@media(max-width:900px) and (max-height:700px){body.datacenter-look .territory-nav .resident-vitals{grid-template-columns:repeat(4,1fr);gap:4px;padding:5px}body.datacenter-look .need-icon{width:14px;height:14px}body.datacenter-look .need-heading{font-size:8px;margin-bottom:3px}body.datacenter-look .need-heading b{display:none}body.datacenter-look .need-meter{gap:3px}body.datacenter-look .territory-nav .resident-status{padding:2px 0}}
+@media(max-width:900px) and (orientation:portrait) and (max-height:700px){body.datacenter-look header h1{display:none}body.datacenter-look .territory-nav,body.datacenter-look .toolbar{top:44px}}
+@media(max-width:900px) and (orientation:landscape) and (max-height:600px){body.datacenter-look header h1{display:none}body.datacenter-look .territory-nav{top:42px}}
+#datacenter-readout,#datacenter-stores{white-space:pre-line;line-height:1.5;font-variant-numeric:tabular-nums}#datacenter-controls{font-size:12px}#datacenter-controls details p{font-size:11px}/* The assumptions must remain reachable by scrolling even on a short phone. */
+#datacenter-controls details{display:block!important}
+#datacenter-controls{font-size:12px;line-height:1.5}#datacenter-controls details{display:block!important}#datacenter-controls p{font-size:11px;margin:7px 0}#datacenter-controls .dc-tabs{display:flex;gap:5px;flex-wrap:wrap}#datacenter-controls [aria-pressed="true"]{background:#365b50;color:#fff0c7}
+#compute-sharing{border-top:1px solid #a9b397;padding-top:8px}#compute-sharing[hidden]{display:none}.compute-heading{display:flex;align-items:center;gap:8px;justify-content:space-between}.compute-heading strong{font-size:12px}.compute-buttons{display:flex;gap:5px;flex-wrap:wrap}.compute-buttons select{min-height:36px;max-width:100%;border:1px solid #a9b397;background:#f1edd4;color:#365b50;font:inherit;border-radius:4px}#compute-status{white-space:pre-line}#compute-receipts code{font-size:10px;overflow-wrap:anywhere;white-space:normal}#compute-receipts{max-height:150px;overflow:auto}#compute-message{color:#4a675a}
+
+/* A quiet viewing card: no puzzle panel and no marker across the sculpture. */
+.ram-look .hotspot{visibility:hidden;pointer-events:none}
+@media(max-width:900px) and (orientation:portrait){.ram-look #inspector{padding:11px 14px}.ram-look #object-kicker{display:none}.ram-look #object-title{margin:2px 0 5px;font-size:20px}.ram-look #object-description{font-size:11px;line-height:1.35;margin-bottom:7px}.ram-look #focus-object{padding-bottom:8px}}
+/* Short phones keep the sculpture larger; the full label remains in the normal
+   place card. During close inspection only title, return and rotate are needed. */
+@media(max-width:900px) and (orientation:portrait) and (max-height:700px){
+ .ram-look #object-description{display:none}
+ .ram-look .resident-strip button{min-height:26px;padding:4px 5px;font-size:8px}
+ .ram-look .territory-nav .resident-vitals{padding:5px 6px;gap:4px 8px}
+ .ram-look .need-icon{width:14px;height:14px}.ram-look .need-heading{font-size:8px}
+}
+@media(max-width:900px) and (max-height:700px){
+ /* In the short inspection viewport the status/needs stay live. The normal
+    resident control row returns on close; diary is still on the footer. */
+ .ram-look .resident-strip>button{display:none}
+ .ram-look .territory-nav .resident-vitals{padding:5px 6px;gap:4px 8px}
+ .ram-look .need-icon{width:14px;height:14px}.ram-look .need-heading{font-size:8px}
+}
+
+@media(max-width:900px) and (max-height:700px){
+ .ram-look .territory-nav .resident-vitals{grid-template-columns:repeat(4,1fr);gap:4px;padding:5px}
+ .ram-look .need-heading b{display:none}
+ .ram-look .need-meter{gap:3px}.ram-look .need-heading{margin-bottom:3px}
+ .ram-look .territory-nav .resident-status{padding:2px 0}
+}
+
+

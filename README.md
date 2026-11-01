@@ -985,3 +985,18 @@ is marked `demonstration_not_resident`; public JSON is marked
 `npm run test:observer-clamps` covers core invariants and desktop/mobile
 interaction with explicit synthetic public transport fixtures, not a real agent
 turn or production SSE handshake. Existing tape/monitor/trial tests still apply.
+
+### RAM-реликварий (место 31)
+
+У тропы между ЦОДом и памятником инференсу, `[55, -43]`, стоит небольшой
+декоративный экспонат: две фантазийные RAM-реликвии. Геометрия процедурная,
+художественно восстановлена по одной фотографии, **не фотограмметрия**.
+Чипы, золотые контакты и разная обмотка объёмные; никаких удалённых моделей,
+GPU-задач, изготовления оружия или боевых действий. В меню «места» выбрать
+`31 / RAM-реликварий`, затем «обойти экспонат». Повторное нажатие поворачивает
+изометрическую камеру на четверть оборота. Объект жителя `ram_reliquary`
+имеет обычное `study`, не меняя старых серверных tools или игровых сохранений.
+
+`npm run test:ram` проверяет геометрию, реестр, осмотр/повороты/попадание
+по модели, узкие экраны и read-only HTTP/SSE-фикстуру сна с потребностями и
+историей. Фикстура не является реальным ходом GLM или production handshake.
