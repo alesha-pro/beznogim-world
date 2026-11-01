@@ -11,7 +11,7 @@ const anatomy=await page.evaluate(()=>__yard.inspect().ram);assert.equal(anatomy
 if(!smoke){
  for(let i=0;i<4;i++){const a=await page.evaluate(()=>__yard.inspect().angle);await click('#object-action');await page.waitForFunction(t=>Math.abs(__yard.inspect().angle-t)<.001,a+Math.PI/2);await geometry('angle'+i);}
  // Canvas click on the actual left RAM chip, with the card closed, must select this exhibit.
- await click('#close-card');const p=await page.evaluate(()=>__yard.inspect().ramScreen);assert(await page.evaluate(p=>document.elementFromPoint(p.x,p.y)?.tagName==='CANVAS',p));mobile?await page.touchscreen.tap(p.x,p.y):await page.mouse.click(p.x,p.y);await page.waitForFunction(()=>!document.querySelector('#inspector').classList.contains('collapsed')&&__yard.state.selected==='ram');await geometry('picked');
+ await click('#close-card');const p=await page.evaluate(()=>__yard.inspect().ramScreen);assert(await page.evaluate(p=>document.elementFromPoint(p.x,p.y)?.tagName==='CANVAS',p));mobile?await page.touchscreen.tap(p.x,p.y):await page.mouse.click(p.x,p.y);await page.waitForFunction(()=>__yard.survival().active);await click('#ram-exit');await page.waitForFunction(()=>!document.querySelector('#inspector').classList.contains('collapsed')&&__yard.state.selected==='ram');await geometry('picked');
  const zoom=await page.evaluate(()=>__yard.inspect().zoom);await click('#zoom-in');assert((await page.evaluate(()=>__yard.inspect().zoom))>zoom);await click('#zoom-out');
  if(mobile)for(const size of [{width:320,height:568},{width:650,height:390},{width:390,height:650},{width:844,height:390},{width:390,height:844}]){await page.setViewportSize(size);await geometry(size.width+'x'+size.height);}
  assert.deepEqual(await stable(),old);

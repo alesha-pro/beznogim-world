@@ -49,7 +49,8 @@
     "test:observer-clamps": "node scripts/sync-mechanics.mjs && node tests/observer-clamps.test.mjs && node tests/observer-clamps-browser.test.cjs desktop && node tests/observer-clamps-browser.test.cjs mobile && node tests/observer-clamps-browser.test.cjs desktop live && node tests/observer-clamps-browser.test.cjs mobile live",
     "test:trial-cover": "node scripts/sync-mechanics.mjs && node tests/trial-cover.test.mjs && node tests/trial-cover-browser.test.cjs desktop && node tests/trial-cover-browser.test.cjs mobile && node tests/trial-cover-live.test.cjs desktop && node tests/trial-cover-live.test.cjs mobile",
     "test:radio": "node tests/radio-player.test.mjs && node tests/radio-player-browser.test.cjs desktop && node tests/radio-player-browser.test.cjs mobile",
-    "test:ram": "node tests/ram-relics.test.mjs && node tests/ram-relics-browser.test.cjs desktop && node tests/ram-relics-browser.test.cjs mobile && node tests/ram-relics-live.test.cjs desktop && node tests/ram-relics-live.test.cjs mobile && node tests/ram-relics-live.test.cjs desktop awake && node tests/ram-relics-live.test.cjs mobile awake"
+    "test:ram": "node tests/ram-relics.test.mjs && node tests/ram-relics-browser.test.cjs desktop && node tests/ram-relics-browser.test.cjs mobile && node tests/ram-relics-live.test.cjs desktop && node tests/ram-relics-live.test.cjs mobile && node tests/ram-relics-live.test.cjs desktop awake && node tests/ram-relics-live.test.cjs mobile awake",
+    "test:ram-survival": "node tests/ram-survival.test.mjs"
   },
   "dependencies": {
     "three": "0.186.1"

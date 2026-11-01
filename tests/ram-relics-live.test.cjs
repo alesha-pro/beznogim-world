@@ -23,6 +23,12 @@ assert.equal((await snap()).resident.sandbox,false);
 const a=(await snap()).angle;await click('#object-action');await page.waitForFunction(t=>Math.abs(__yard.inspect().angle-t)<.001,a+Math.PI/2);await frame();
 assert.equal((await snap()).resident.sandbox,false);assert.equal((await snap()).ram.artifacts,2);if(!awake){assert.equal((await snap()).sleepBody.ends,snapshot.action.ends);assert.deepEqual((await snap()).resident.position,snapshot.position);}assert.equal(await page.locator('.need-icon').count(),4);
 await emit({mechanics:snapshot.mechanics});assert.equal((await snap()).ram.artifacts,2);
+// The visitor's independent arena never takes the resident body or writes API state.
+const bodyBefore=(await snap()).resident.position;await click('#ram-launch');await click('#ram-start');await page.waitForTimeout(400);await click('#ram-pause');assert.equal(await page.evaluate(()=>__yard.survival().state.phase),'paused');
+await emit({mechanics:{vitals:{public:{hunger:63,thirst:80,energy:91,mood:75}}}});
+assert.deepEqual((await snap()).resident.position,bodyBefore);assert.equal((await snap()).resident.sandbox,false);if(!awake)assert.equal(await page.evaluate(()=>__beznogimState.action.ends),snapshot.action.ends);
+await click('#ram-exit');assert.equal(await page.evaluate(()=>__yard.survival().active),false);assert.deepEqual(await page.locator('.need-track').evaluateAll(xs=>xs.map(x=>Number(x.getAttribute('aria-valuenow')))),[63,80,91,75]);assert.equal((await snap()).headVisible,false);await emit({mechanics:snapshot.mechanics});
+
 if(mobile){await page.setViewportSize({width:650,height:390});await frame();assert.equal((await snap()).headVisible,false);assert(await page.locator('.resident-vitals').isVisible());assert(await page.locator('.resident-status').isVisible());await page.screenshot({path:`${captureDir}/ram-live-landscape-${name}.png`});await page.setViewportSize({width:320,height:568});await frame();}
 await click('#home');await page.waitForFunction(()=>!document.body.classList.contains('ram-look'));assert.equal((await snap()).headVisible,true);
 // Direct transitions share a single cutaway lease; never restore the head to hidden on exit.
