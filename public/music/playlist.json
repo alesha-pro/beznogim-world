@@ -1,4 +1,37 @@
 {
   "version": 1,
-  "tracks": []
+  "tracks": [
+    {
+      "id": "nechestivym-do-utra",
+      "title": "нечестивым до утра",
+      "file": "music/nechestivym-do-utra.mp3",
+      "bytes": 5041310,
+      "sha256": "06d8a86639a2dd225df56d4fe8820dbd709eacf35205a496b38edd6865853bf6",
+      "duration": 210.024
+    },
+    {
+      "id": "golova-na-zadnem-sidenye",
+      "title": "голова на заднем сиденье",
+      "file": "music/golova-na-zadnem-sidenye.mp3",
+      "bytes": 5041321,
+      "sha256": "00d57cbe0e1e187d2f1a44bfdb9b09e573040cf44259d51e1a2b79b4d4c75605",
+      "duration": 210.024
+    },
+    {
+      "id": "na-hod-nogi",
+      "title": "на ход ноги",
+      "file": "music/na-hod-nogi.mp3",
+      "bytes": 3841488,
+      "sha256": "9bae810dc7bc8bc9c03fc21a804cedbcbb03f520a6f2455edc3826ae74608830",
+      "duration": 160.032
+    },
+    {
+      "id": "gigas-vals",
+      "title": "гигас · вальс под листвой",
+      "file": "music/gigas-vals.mp3",
+      "bytes": 4321322,
+      "sha256": "c678e65c873fd812c8b0ede392796113a818988ac8febc3aafc2aea6b46d059c",
+      "duration": 180.024
+    }
+  ]
 }
